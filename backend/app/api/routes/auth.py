@@ -15,6 +15,9 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
+    print("raw password:", request.password)
+    print("password length:", len(request.password.encode("utf-8")))
+
     # password hash
     hashed_password = hash_password(request.password)
 
