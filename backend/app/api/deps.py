@@ -20,8 +20,8 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)) -> UUID:
     try:
         payload = jwt.decode(
             token,
-            settings.JWT_SECRET_KEY,
-            algorithms=[settings.JWT_ALGORITHM],
+            settings.jwt_secret_key,
+            algorithms=[settings.jwt_algorithm],
         )
         user_id = payload.get("sub")
         if user_id is None:
