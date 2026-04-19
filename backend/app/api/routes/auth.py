@@ -5,7 +5,7 @@ from app.models import user
 from app.models.auth import RegisterRequest, LoginRequest
 from app.models.user import User
 from app.db.session import get_db
-from app.core.security import hash_password, verify_password
+from app.core.security import hash_password, verify_password, create_access_token
 
 router = APIRouter()
 
@@ -50,7 +50,10 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     if not verify_password(request.password, user.password_hash):
         raise HTTPException(status_code=400, detail="Invaild email or password")
 
+    # generate token
+    access_token = create_access_token(data={"sub": user.id})
+
     return {
-        "id": user.id,
-        "email": user.email
+        "access_token": access_token,
+        "token_type": "bearer"
     }

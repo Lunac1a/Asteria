@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     frontend_url: str
     database_url: str
 
+    jwt_secret_key: str
+    jwt_algorithm: str
+    jwt_expire_minutes: int
+
     class Config:
         env_file = ".env"
 
