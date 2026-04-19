@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.core.config import settings
 from app.db.session import get_db
@@ -15,7 +16,7 @@ credentials_exception = HTTPException(
     headers={"WWW-Authenticate": "Bearer"}
 )
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
+def get_current_user_id(token: str = Depends(oauth2_scheme)) -> UUID:
     try:
         payload = jwt.decode(
             token,
@@ -28,7 +29,7 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
         if user_id is None:
             raise credentials_exception
 
-        return user_id
+        return UUID(user_id)
 
     except JWTError:
         raise credentials_exception
