@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
 export async function getHealth() {
   const response = await fetch(`${API_BASE_URL}/api/health`, {
@@ -7,7 +7,7 @@ export async function getHealth() {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch health status");
+    throw new Error("Failed to fetch backend health status");
   }
 
   return response.json();

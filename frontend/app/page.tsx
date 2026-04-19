@@ -1,13 +1,13 @@
 import { getHealth } from "@/lib/api";
 
 export default async function Home() {
-  let backendStatus = "Unknown";
+  let backendStatus = "unknown";
 
   try {
     const data = await getHealth();
     backendStatus = data.status;
   } catch (error) {
-    backendStatus = "Backend not reachable";
+    backendStatus = "backend not reachable";
   }
 
   return (
