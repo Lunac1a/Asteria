@@ -43,20 +43,32 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     }
 
 @router.post("/login")
-def login(
-        form_data: OAuth2PasswordRequestForm = Depends(),
-        db: Session = Depends(get_db)
+async def login(
+    request: Request,
+    db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(User.email == form_data.username).first()
-    if not user:
+    content_type = request.headers.get("content-type", "")
+
+    if "application/json" in content_type:
+        data = await request.json()
+        email = data.get("email")
+        password = data.get("password")
+
+    else:
+        form = await request.form()
+        email = form.get("username")
+        password = form.get("password")
+
+    if not email or not password:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid email or password"
+            status_code=400,
+            detail="Email and password required"
         )
 
-    if not verify_password(form_data.password, user.password_hash):
+    user = db.query(User).filter(User.email == email).first()
+    if not user or not verify_password(password, user.password_hash):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Invalid email or password"
         )
 
