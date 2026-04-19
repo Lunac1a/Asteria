@@ -41,17 +41,14 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
 
 @router.post("/login")
 def login(request: LoginRequest, db: Session = Depends(get_db)):
-    # query user (email)
     user = db.query(User).filter(User.email == request.email).first()
     if not user:
-        raise HTTPException(status_code=400, detail="Invaild email or password")
+        raise HTTPException(status_code=400, detail="Invalid email or password")
 
-    # query password
     if not verify_password(request.password, user.password_hash):
-        raise HTTPException(status_code=400, detail="Invaild email or password")
+        raise HTTPException(status_code=400, detail="Invalid email or password")
 
-    # generate token
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
 
     return {
         "access_token": access_token,

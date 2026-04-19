@@ -15,7 +15,7 @@ credentials_exception = HTTPException(
     headers={"WWW-Authenticate": "Bearer"}
 )
 
-def get_current_user_email(token: str = Depends(oauth2_scheme)) -> str:
+def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
     try:
         payload = jwt.decode(
             token,
@@ -23,20 +23,19 @@ def get_current_user_email(token: str = Depends(oauth2_scheme)) -> str:
             algorithms=[settings.jwt_algorithm]
         )
 
-        email: str | None = payload.get("sub")
+        user_id = payload.get("sub")
 
-        if email is None:
+        if user_id is None:
             raise credentials_exception
 
-        return email
+        return user_id
 
     except JWTError:
         raise credentials_exception
 
 def get_current_user(
         db: Session = Depends(get_db),
-        current_user_email: str = Depends(get_current_user_email)
-) -> User:
+        current_user_email: str = Depends(get_current_user_id)) -> User:
     user = db.query(User).filter(User.email == current_user_email).first()
 
     if user is None:
