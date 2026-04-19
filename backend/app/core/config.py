@@ -2,11 +2,12 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_name: str = "PKC API"
-    app_host: str = "127.0.0.1"
-    app_port: int = 8000
+    app_name: str
+    app_host: str
+    app_port: int
 
-    frontend_url: str = "http://localhost:3000"
+    frontend_url: str
+    database_url: str
 
     class Config:
         env_file = ".env"
