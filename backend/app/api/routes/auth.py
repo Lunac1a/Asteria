@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 
-from app.models.auth import RegisterRequest
+from app.models import user
+from app.models.auth import RegisterRequest, LoginRequest
 from app.models.user import User
 from app.db.session import get_db
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
 
 router = APIRouter()
 
@@ -36,4 +37,20 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     return {
         "id": new_user.id,
         "email": new_user.email
+    }
+
+@router.post("/login")
+def login(request: LoginRequest, db: Session = Depends(get_db)):
+    # query user (email)
+    user = db.query(User).filter(User.email == request.email).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Invaild email or password")
+
+    # query password
+    if not verify_password(request.password, user.password_hash):
+        raise HTTPException(status_code=400, detail="Invaild email or password")
+
+    return {
+        "id": user.id,
+        "email": user.email
     }
