@@ -9,7 +9,7 @@ from app.core.security import hash_password
 router = APIRouter()
 
 @router.post("/register")
-def register(request: RegisterRequest, db: Session = Depends(get_db())):
+def register(request: RegisterRequest, db: Session = Depends(get_db)):
     # check email exist
     existing_user = db.query(User).filter(User.email == request.email).first()
     if existing_user:
