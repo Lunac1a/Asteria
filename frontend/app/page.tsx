@@ -1,5 +1,4 @@
 import { getHealth } from "@/lib/api";
-import { Analytics } from "@vercel/analytics/next"
 
 export default async function Home() {
   let backendStatus = "unknown";
