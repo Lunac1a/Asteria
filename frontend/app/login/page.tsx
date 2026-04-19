@@ -39,8 +39,11 @@ export default function LoginPage() {
       localStorage.setItem("access_token", data.access_token);
       router.push("/dashboard");
     } catch (err) {
-      // @ts-ignore
-        setError(err.message || "Something went wrong");
+      if (err instanceof Error) {
+            setError(err.message || "Something went wrong");
+          } else {
+            setError("Something went wrong");
+          }
     } finally {
       setLoading(false);
     }

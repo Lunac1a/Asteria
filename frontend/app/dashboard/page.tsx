@@ -4,8 +4,14 @@ import { useEffect, useState } from "react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+type User = {
+  id: string;
+  email: string;
+  created_at: string;
+};
+
 export default function DashboardPage() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +38,11 @@ export default function DashboardPage() {
 
         setUser(data);
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Something went wrong");
+          }
       } finally {
         setLoading(false);
       }
@@ -42,13 +52,12 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) return <p>Loading...</p>;
-
   if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (!user) return <p>No user</p>;
 
   return (
     <main style={{ padding: "2rem" }}>
       <h1>Dashboard</h1>
-
       <p><strong>Email:</strong> {user.email}</p>
       <p><strong>User ID:</strong> {user.id}</p>
       <p><strong>Created At:</strong> {user.created_at}</p>
