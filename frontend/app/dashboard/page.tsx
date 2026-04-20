@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const router = useRouter();
 
 type User = {
   id: string;
@@ -21,7 +23,8 @@ export default function DashboardPage() {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-          throw new Error("No token found");
+          router.push("/login");
+          return;
         }
 
         const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
@@ -33,16 +36,13 @@ export default function DashboardPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.detail || "Failed to fetch user");
+          router.push("/login");
+          return;
         }
 
         setUser(data);
       } catch (err) {
-        if (err instanceof Error) {
-            setError(err.message);
-          } else {
-            setError("Something went wrong");
-          }
+        router.push("/login")
       } finally {
         setLoading(false);
       }
