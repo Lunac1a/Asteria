@@ -7,15 +7,41 @@ type Message = {
   content: string;
 };
 
+type Chat = {
+  id: number;
+  title: string;
+  messages: Message[];
+};
+
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [chats, setChats] = useState<Chat[]>([
+    {
+      id: 1,
+      title: "First Chat",
+      messages: [],
+    },
+  ]);
+
+  const [activeChatId, setActiveChatId] = useState(1);
   const [input, setInput] = useState("");
+
+  const activeChat = chats.find((c) => c.id === activeChatId)!;
+
+  function handleNewChat() {
+    const newChat: Chat = {
+      id: Date.now(),
+      title: "New Chat",
+      messages: [],
+    };
+
+    setChats([newChat, ...chats]);
+    setActiveChatId(newChat.id);
+  }
 
   function handleSend() {
     if (!input.trim()) return;
 
     const newMessages: Message[] = [
-      ...messages,
       { role: "user", content: input },
       {
         role: "assistant",
@@ -23,29 +49,55 @@ export default function ChatPage() {
       },
     ];
 
-    setMessages(newMessages);
+    const updatedChats: Chat[] = chats.map((chat) => {
+      if (chat.id !== activeChatId) return chat;
+
+      return {
+        ...chat,
+        messages: [...chat.messages, ...newMessages],
+      };
+    });
+
+    setChats(updatedChats);
     setInput("");
   }
 
   return (
-    <div className="chat-page">
-      <div className="chat-workspace">
-        <div className="chat-header">
-          <h1 className="chat-title">Chat</h1>
-          <p className="chat-subtitle">
-            Interact with your personal knowledge through grounded AI assistance.
-          </p>
-        </div>
+    <div className="chat-app">
+      {/* Sidebar */}
+      <aside className="chat-sidebar">
+        <button className="btn btn-primary" onClick={handleNewChat}>
+          + New Chat
+        </button>
 
+        <div className="chat-list">
+          {chats.map((chat) => (
+            <div
+              key={chat.id}
+              className={
+                chat.id === activeChatId
+                  ? "chat-list-item active"
+                  : "chat-list-item"
+              }
+              onClick={() => setActiveChatId(chat.id)}
+            >
+              {chat.title}
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* Main */}
+      <div className="chat-main">
         <div className="chat-messages-panel">
-          {messages.length === 0 ? (
+          {activeChat.messages.length === 0 ? (
             <div className="chat-empty-state">
               <h2>Welcome to your Copilot</h2>
-              <p>Ask a question to start your first conversation.</p>
+              <p>Ask a question to start your conversation.</p>
             </div>
           ) : (
             <div className="chat-message-list">
-              {messages.map((msg, index) => (
+              {activeChat.messages.map((msg, index) => (
                 <div
                   key={index}
                   className={
@@ -64,14 +116,11 @@ export default function ChatPage() {
         <div className="chat-composer">
           <input
             className="chat-composer-input"
-            type="text"
-            placeholder="Ask something about your knowledge..."
+            placeholder="Ask something..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSend();
-              }
+              if (e.key === "Enter") handleSend();
             }}
           />
 
