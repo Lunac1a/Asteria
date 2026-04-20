@@ -79,21 +79,21 @@ export default function RegisterPage() {
   }
 
   return (
-    <main style={styles.page}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>Create your account</h1>
-        <p style={styles.subtitle}>
+    <main className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Create your account</h1>
+        <p className="auth-subtitle">
           Start building your personal knowledge workspace.
         </p>
 
-        <form onSubmit={handleRegister} style={styles.form}>
+        <form onSubmit={handleRegister} className="form-stack">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={styles.input}
+            className="input"
           />
 
           <input
@@ -102,7 +102,7 @@ export default function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={styles.input}
+            className="input"
           />
 
           <input
@@ -111,20 +111,20 @@ export default function RegisterPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            style={styles.input}
+            className="input"
           />
 
-          <button type="submit" disabled={loading} style={styles.button}>
+          <button type="submit" disabled={loading} className="btn btn-primary">
             {loading ? "Creating account..." : "Register"}
           </button>
         </form>
 
-        {error && <p style={styles.error}>{error}</p>}
-        {success && <p style={styles.success}>{success}</p>}
+        {error && <p className="error-text">{error}</p>}
+        {success && <p className="success-text">{success}</p>}
 
-        <p style={styles.footerText}>
+        <p className="helper-text">
           Already have an account?{" "}
-          <Link href="/login" style={styles.link}>
+          <Link href="/login" className="text-link">
             Login
           </Link>
         </p>
@@ -132,74 +132,3 @@ export default function RegisterPage() {
     </main>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#f7f9fc",
-    padding: "24px",
-    fontFamily: "Arial, sans-serif",
-  },
-  card: {
-    width: "100%",
-    maxWidth: "420px",
-    backgroundColor: "#ffffff",
-    borderRadius: "18px",
-    padding: "32px",
-    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.08)",
-  },
-  title: {
-    margin: "0 0 8px",
-    fontSize: "28px",
-    fontWeight: 700,
-    color: "#111827",
-  },
-  subtitle: {
-    margin: "0 0 24px",
-    color: "#4b5563",
-    lineHeight: 1.6,
-  },
-  form: {
-    display: "grid",
-    gap: "14px",
-  },
-  input: {
-    padding: "14px 16px",
-    borderRadius: "12px",
-    border: "1px solid #d1d5db",
-    fontSize: "15px",
-    outline: "none",
-  },
-  button: {
-    marginTop: "8px",
-    padding: "14px 16px",
-    borderRadius: "12px",
-    border: "none",
-    backgroundColor: "#2563eb",
-    color: "#ffffff",
-    fontSize: "15px",
-    fontWeight: 600,
-    cursor: "pointer",
-  },
-  error: {
-    marginTop: "16px",
-    color: "#dc2626",
-  },
-  success: {
-    marginTop: "16px",
-    color: "#16a34a",
-  },
-  footerText: {
-    marginTop: "20px",
-    color: "#4b5563",
-    fontSize: "14px",
-  },
-  link: {
-    color: "#2563eb",
-    textDecoration: "none",
-    fontWeight: 600,
-  },
-};
