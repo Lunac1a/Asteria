@@ -5,7 +5,7 @@ export default function LandingPage() {
     <main className="page-shell">
       <div className="container">
         <nav className="navbar">
-          <div className="nav-brand">Personal Knowledge Copilot</div>
+          <div className="nav-brand">Asteria</div>
 
           <div className="nav-actions">
             <Link href="/login">Login</Link>
@@ -17,20 +17,19 @@ export default function LandingPage() {
 
         <section className="hero">
           <div className="hero-content">
-            <p className="badge">AI-powered learning assistant</p>
+            <p className="badge">AI Learning Copilot</p>
 
-            <h1 className="hero-title">
-              Learn with your own knowledge, not generic answers.
-            </h1>
+            <h1 className="hero-title">Think, not just answer.</h1>
 
             <p className="hero-subtitle">
-              Personal Knowledge Copilot helps you organize, retrieve, and
-              interact with your own documents through grounded AI assistance.
+              Asteria is an AI learning copilot that helps you explore ideas,
+              build understanding, and learn through guided interaction with
+              your knowledge.
             </p>
 
             <div className="hero-actions">
               <Link href="/register" className="btn btn-primary">
-                Try it out
+                Start learning with Asteria
               </Link>
             </div>
           </div>
@@ -41,26 +40,26 @@ export default function LandingPage() {
 
           <div className="grid-3">
             <div className="feature-card">
-              <h3 className="card-title">Upload your knowledge</h3>
+              <h3 className="card-title">Guided learning</h3>
               <p className="card-text">
-                Build your own knowledge base from personal notes, documents,
-                and study materials.
+                Turn notes, readings, and study materials into a learning flow
+                that helps you build real understanding.
               </p>
             </div>
 
             <div className="feature-card">
-              <h3 className="card-title">Chat with grounded context</h3>
+              <h3 className="card-title">Knowledge exploration</h3>
               <p className="card-text">
-                Get responses based on your uploaded content instead of generic,
-                ungrounded answers.
+                Explore concepts through grounded conversations that stay tied
+                to your material instead of drifting into generic replies.
               </p>
             </div>
 
             <div className="feature-card">
-              <h3 className="card-title">Learn through guided thinking</h3>
+              <h3 className="card-title">Structured conversation</h3>
               <p className="card-text">
-                Use AI as a learning companion that supports understanding,
-                reflection, and structured thinking.
+                Work through questions step by step with an assistant designed
+                to support thinking, reflection, and deeper learning.
               </p>
             </div>
           </div>
@@ -81,13 +80,14 @@ export default function LandingPage() {
             </div>
 
             <div className="preview-card">
-              <h3 className="card-title">Copilot Chat</h3>
+              <h3 className="card-title">Learning Session</h3>
               <div className="chat-bubble-user">
-                Summarize the key ideas from my uploaded notes.
+                Help me connect the key ideas from my uploaded notes.
               </div>
               <div className="chat-bubble-bot">
-                I found three main themes in your notes: retrieval grounding,
-                structured learning, and production-ready system design.
+                Your notes point to three themes worth unpacking: grounded
+                retrieval, guided learning, and systems thinking. Want to work
+                through them one by one?
               </div>
             </div>
           </div>

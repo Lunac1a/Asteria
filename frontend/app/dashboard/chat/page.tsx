@@ -92,8 +92,8 @@ export default function ChatPage() {
         <div className="chat-messages-panel">
           {activeChat.messages.length === 0 ? (
             <div className="chat-empty-state">
-              <h2>Welcome to your Copilot</h2>
-              <p>Ask a question to start your conversation.</p>
+              <h2>Welcome to Asteria</h2>
+              <p>Start a learning session to explore an idea or work through a question.</p>
             </div>
           ) : (
             <div className="chat-message-list">
@@ -116,7 +116,7 @@ export default function ChatPage() {
         <div className="chat-composer">
           <input
             className="chat-composer-input"
-            placeholder="Ask something..."
+            placeholder="Ask to help you think through something..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {

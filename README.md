@@ -1,6 +1,6 @@
-# Personal Knowledge Copilot
+# Asteria
 
-A learning-oriented AI assistant built with Next.js and FastAPI.
+Asteria is an AI Learning Copilot built with Next.js and FastAPI.
 
 ## Tech Stack
 - Frontend: Next.js

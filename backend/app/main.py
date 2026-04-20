@@ -11,6 +11,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.app_name,
+    description="Backend API for Asteria, an AI Learning Copilot.",
     version="0.1.0"
 )
 

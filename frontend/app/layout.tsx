@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Knowledge Copilot",
+  title: "Asteria",
+  description: "Asteria - AI Learning Copilot",
 };
 
 export default function RootLayout({

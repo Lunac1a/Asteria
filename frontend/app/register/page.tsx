@@ -88,7 +88,7 @@ export default function RegisterPage() {
         </div>
         <h1 className="auth-title">Create your account</h1>
         <p className="auth-subtitle">
-          Start building your personal knowledge workspace.
+          Start learning with Asteria, your AI learning copilot.
         </p>
 
         <form onSubmit={handleRegister} className="form-stack">

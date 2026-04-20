@@ -79,7 +79,7 @@ export default function LoginPage() {
         </div>
         <h1 className="auth-title">Welcome back</h1>
         <p className="auth-subtitle">
-          Sign in to access your personal knowledge workspace.
+          Sign in to continue learning with Asteria.
         </p>
 
         <form onSubmit={handleLogin} className="form-stack">

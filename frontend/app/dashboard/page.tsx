@@ -13,7 +13,6 @@ type User = {
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -41,7 +40,7 @@ export default function DashboardPage() {
         }
 
         setUser(data);
-      } catch (err) {
+      } catch {
         router.push("/login")
       } finally {
         setLoading(false);
@@ -49,16 +48,18 @@ export default function DashboardPage() {
     }
 
     fetchMe();
-  }, []);
+  }, [router]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!user) return <p>No user</p>;
 
   return (
     <div className="section">
-      <h1 className="section-title">Dashboard</h1>
-      <p className="card-text">Dashboard content coming soon.</p>
+      <h1 className="section-title">Welcome to Asteria</h1>
+      <p className="card-text">
+        Your AI learning copilot is ready to help you explore ideas, revisit
+        concepts, and turn knowledge into understanding.
+      </p>
     </div>
   );
 }

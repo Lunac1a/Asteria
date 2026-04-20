@@ -22,7 +22,7 @@ export default function AppLayout({
           <div className="topbar-inner">
             <div className="topbar-left">
               <Link href="/dashboard" className="logo">
-                PK Copilot
+                Asteria
               </Link>
             </div>
 
