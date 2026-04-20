@@ -81,6 +81,11 @@ export default function RegisterPage() {
   return (
     <main className="auth-page">
       <div className="auth-card">
+        <div style={{ marginBottom: "16px" }}>
+          <Link href="/" className="back-link">
+            ← Back
+          </Link>
+        </div>
         <h1 className="auth-title">Create your account</h1>
         <p className="auth-subtitle">
           Start building your personal knowledge workspace.

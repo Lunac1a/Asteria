@@ -72,6 +72,11 @@ export default function LoginPage() {
   return (
     <main className="auth-page">
       <div className="auth-card">
+        <div style={{ marginBottom: "16px" }}>
+          <Link href="/" className="back-link">
+            ← Back
+          </Link>
+        </div>
         <h1 className="auth-title">Welcome back</h1>
         <p className="auth-subtitle">
           Sign in to access your personal knowledge workspace.
