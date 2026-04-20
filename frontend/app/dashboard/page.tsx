@@ -56,11 +56,9 @@ export default function DashboardPage() {
   if (!user) return <p>No user</p>;
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Dashboard</h1>
-      <p><strong>Email:</strong> {user.email}</p>
-      <p><strong>User ID:</strong> {user.id}</p>
-      <p><strong>Created At:</strong> {user.created_at}</p>
-    </main>
+    <div className="section">
+      <h1 className="section-title">Dashboard</h1>
+      <p className="card-text">Dashboard content coming soon.</p>
+    </div>
   );
 }
