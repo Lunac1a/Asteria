@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -16,6 +16,14 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [router]);
 
   async function handleRegister(e: { preventDefault: () => void; }) {
     e.preventDefault();
@@ -49,7 +57,7 @@ export default function RegisterPage() {
         if (typeof data.detail === "string") {
             errorMessage = data.detail;
         } else if (Array.isArray(data.detail) && data.detail.length > 0) {
-            errorMessage = data.detail.map((item: { msg: any; }) => item.msg).join(", ");
+            errorMessage = data.detail.map((item: { msg: string; }) => item.msg).join(", ");
         }
 
       throw new Error(errorMessage);
@@ -58,7 +66,7 @@ export default function RegisterPage() {
       setSuccess("Registration successful. Redirecting to login...");
       setTimeout(() => {
         router.push("/login");
-      }, 1000);
+      }, 100);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
