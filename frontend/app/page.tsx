@@ -32,9 +32,6 @@ export default function LandingPage() {
               <Link href="/register" className="btn btn-primary">
                 Try it out
               </Link>
-              <Link href="/login" className="btn btn-secondary">
-                Login
-              </Link>
             </div>
           </div>
         </section>
