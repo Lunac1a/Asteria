@@ -17,7 +17,7 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+  async function handleRegister(e: { preventDefault: () => void; }) {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -44,7 +44,15 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || "Register failed");
+        let errorMessage = "Register failed";
+
+        if (typeof data.detail === "string") {
+            errorMessage = data.detail;
+        } else if (Array.isArray(data.detail) && data.detail.length > 0) {
+            errorMessage = data.detail.map((item: { msg: any; }) => item.msg).join(", ");
+        }
+
+      throw new Error(errorMessage);
       }
 
       setSuccess("Registration successful. Redirecting to login...");
