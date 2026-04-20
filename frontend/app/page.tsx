@@ -33,9 +33,6 @@ export default function LandingPage() {
             <Link href="/register" style={styles.primaryButton}>
               Try it out
             </Link>
-            <Link href="/login" style={styles.secondaryButton}>
-              Login
-            </Link>
           </div>
         </div>
       </section>
