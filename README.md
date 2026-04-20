@@ -1,4 +1,4 @@
-Asteria
+# Asteria
 
 A learning-oriented AI assistant built with Next.js and FastAPI.
 
