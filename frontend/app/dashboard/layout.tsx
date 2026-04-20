@@ -27,10 +27,10 @@ export default function AppLayout({
             </div>
 
             <div className="topbar-center">
-              <Link href="/chat" className="topbar-link">
+              <Link href="/dashboard/chat" className="topbar-link">
                 Chat
               </Link>
-              <Link href="/quiz" className="topbar-link">
+              <Link href="/dashboard/quiz" className="topbar-link">
                 Quiz
               </Link>
             </div>
