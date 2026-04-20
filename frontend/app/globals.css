@@ -303,6 +303,7 @@ input {
   position: sticky;
   top: 0;
   z-index: 10;
+  backdrop-filter: blur(8px);
 }
 
 .topbar-inner {
