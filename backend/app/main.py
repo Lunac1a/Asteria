@@ -5,8 +5,8 @@ from app.api.router import api_router
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
-from app.models import user
-from app.models import user_llm_settings
+from app.models import user # noqa: F401
+from app.models import user_llm_settings # noqa: F401
 
 Base.metadata.create_all(bind=engine)
 
