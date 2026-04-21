@@ -1,6 +1,5 @@
 from openai import OpenAI
 
-from app.core.config import settings
 
 def generate_response(
     message: str,
