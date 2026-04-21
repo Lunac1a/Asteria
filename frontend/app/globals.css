@@ -546,11 +546,13 @@ input {
 
   .hero-content {
     max-width: 680px;
+    order: 2;
   }
 
   .hero-visual {
     justify-self: center;
     max-width: min(420px, 100%);
+    order: 1;
   }
 }
 
