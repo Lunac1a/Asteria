@@ -127,107 +127,94 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#0b1120] text-white px-6 py-10">
-        <div className="max-w-2xl mx-auto">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-            Loading settings...
-          </div>
-        </div>
-      </main>
+      <div className="settings-page">
+        <div className="card settings-card">Loading settings...</div>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#0b1120] text-white px-6 py-10">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight">LLM Settings</h1>
-          <p className="text-white/70 mt-2">
-            Configure your NVIDIA NIM API key to enable chat.
-          </p>
-        </div>
+    <div className="settings-page">
+      <div className="settings-header">
+        <h1 className="section-title">LLM Settings</h1>
+        <p className="card-text">
+          Configure your NVIDIA NIM API key to enable chat.
+        </p>
+      </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl">
-          <div className="mb-6 flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-            <div>
-              <p className="text-sm text-white/60">Provider</p>
-              <p className="font-medium capitalize">{provider}</p>
-            </div>
-
-            <div className="text-right">
-              <p className="text-sm text-white/60">API Key Status</p>
-              <p className={hasApiKey ? "text-green-400 font-medium" : "text-yellow-400 font-medium"}>
-                {hasApiKey ? "Configured" : "Not configured"}
-              </p>
-            </div>
+      <div className="card settings-card">
+        <div className="settings-status">
+          <div>
+            <p className="settings-meta-label">Provider</p>
+            <p className="settings-meta-value">{provider}</p>
           </div>
 
-          {error && (
-            <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-300">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-4 rounded-xl border border-green-500/30 bg-green-500/10 px-4 py-3 text-green-300">
-              {success}
-            </div>
-          )}
-
-          <form onSubmit={handleSave} className="space-y-5">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-white/80">
-                NVIDIA API Key
-              </label>
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder={hasApiKey ? "API key already configured. Enter a new one to replace it." : "Enter your NVIDIA API key"}
-                className="w-full rounded-xl border border-white/10 bg-[#111827] px-4 py-3 text-white outline-none transition focus:border-blue-400"
-              />
-              <p className="mt-2 text-xs text-white/50">
-                The saved key is not shown again for security reasons.
-              </p>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-white/80">
-                Model Name
-              </label>
-              <input
-                type="text"
-                value={modelName}
-                onChange={(e) => setModelName(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#111827] px-4 py-3 text-white outline-none transition focus:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-white/80">
-                Base URL
-              </label>
-              <input
-                type="text"
-                value={baseUrl}
-                onChange={(e) => setBaseUrl(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#111827] px-4 py-3 text-white outline-none transition focus:border-blue-400"
-              />
-              <p className="mt-2 text-xs text-white/50">
-                Use the API root only, not the full <code>/chat/completions</code> endpoint.
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={saving}
-              className="inline-flex items-center justify-center rounded-xl bg-blue-500 px-5 py-3 font-medium text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
+          <div className="settings-status-key">
+            <p className="settings-meta-label">API Key Status</p>
+            <p
+              className={
+                hasApiKey
+                  ? "settings-status-text configured"
+                  : "settings-status-text missing"
+              }
             >
-              {saving ? "Saving..." : "Save Settings"}
-            </button>
-          </form>
+              {hasApiKey ? "Configured" : "Not configured"}
+            </p>
+          </div>
         </div>
+
+        {error && <div className="settings-alert error">{error}</div>}
+
+        {success && <div className="settings-alert success">{success}</div>}
+
+        <form onSubmit={handleSave} className="settings-form">
+          <div className="settings-field">
+            <label className="settings-label">NVIDIA API Key</label>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder={
+                hasApiKey
+                  ? "API key already configured. Enter a new one to replace it."
+                  : "Enter your NVIDIA API key"
+              }
+              className="input"
+            />
+            <p className="settings-helper">
+              The saved key is not shown again for security reasons.
+            </p>
+          </div>
+
+          <div className="settings-field">
+            <label className="settings-label">Model Name</label>
+            <input
+              type="text"
+              value={modelName}
+              onChange={(e) => setModelName(e.target.value)}
+              className="input"
+            />
+          </div>
+
+          <div className="settings-field">
+            <label className="settings-label">Base URL</label>
+            <input
+              type="text"
+              value={baseUrl}
+              onChange={(e) => setBaseUrl(e.target.value)}
+              className="input"
+            />
+            <p className="settings-helper">
+              Use the API root only, not the full{" "}
+              <code>/chat/completions</code> endpoint.
+            </p>
+          </div>
+
+          <button type="submit" disabled={saving} className="btn btn-primary">
+            {saving ? "Saving..." : "Save Settings"}
+          </button>
+        </form>
       </div>
-    </main>
+    </div>
   );
 }

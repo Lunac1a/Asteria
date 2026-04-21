@@ -1,6 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type Message = {
   role: "user" | "assistant";
@@ -14,6 +17,8 @@ type Chat = {
 };
 
 export default function ChatPage() {
+  const router = useRouter();
+
   const [chats, setChats] = useState<Chat[]>([
     {
       id: 1,
@@ -24,6 +29,7 @@ export default function ChatPage() {
 
   const [activeChatId, setActiveChatId] = useState(1);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const activeChat = chats.find((c) => c.id === activeChatId)!;
 
@@ -34,37 +40,112 @@ export default function ChatPage() {
       messages: [],
     };
 
-    setChats([newChat, ...chats]);
+    setChats((prev) => [newChat, ...prev]);
     setActiveChatId(newChat.id);
   }
 
-  function handleSend() {
-    if (!input.trim()) return;
+  function updateActiveChatMessages(newMessages: Message[]) {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === activeChatId
+          ? {
+              ...chat,
+              messages: [...chat.messages, ...newMessages],
+            }
+          : chat
+      )
+    );
+  }
 
-    const newMessages: Message[] = [
-      { role: "user", content: input },
-      {
-        role: "assistant",
-        content: "This is a placeholder response from the AI.",
-      },
-    ];
+  function updateActiveChatTitle(firstMessage: string) {
+    setChats((prevChats) =>
+      prevChats.map((chat) => {
+        if (chat.id !== activeChatId) return chat;
+        if (chat.messages.length > 0) return chat;
 
-    const updatedChats: Chat[] = chats.map((chat) => {
-      if (chat.id !== activeChatId) return chat;
+        return {
+          ...chat,
+          title: firstMessage.slice(0, 24) || "New Chat",
+        };
+      })
+    );
+  }
 
-      return {
-        ...chat,
-        messages: [...chat.messages, ...newMessages],
-      };
-    });
+  async function handleSend() {
+    if (!input.trim() || loading) return;
 
-    setChats(updatedChats);
+    const trimmedInput = input.trim();
+    const userMessage: Message = {
+      role: "user",
+      content: trimmedInput,
+    };
+
+    updateActiveChatTitle(trimmedInput);
+    updateActiveChatMessages([userMessage]);
     setInput("");
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        localStorage.removeItem("access_token");
+        router.replace("/login");
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: trimmedInput,
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.status === 401) {
+        localStorage.removeItem("access_token");
+        router.replace("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        const errorMessage =
+          data?.detail || "Something went wrong while talking to the AI.";
+
+        updateActiveChatMessages([
+          {
+            role: "assistant",
+            content: `Error: ${errorMessage}`,
+          },
+        ]);
+        return;
+      }
+
+      updateActiveChatMessages([
+        {
+          role: "assistant",
+          content: data.answer,
+        },
+      ]);
+    } catch {
+      updateActiveChatMessages([
+        {
+          role: "assistant",
+          content: "Error: Failed to connect to the server.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="chat-app">
-      {/* Sidebar */}
       <aside className="chat-sidebar">
         <button className="btn btn-primary" onClick={handleNewChat}>
           + New Chat
@@ -87,13 +168,15 @@ export default function ChatPage() {
         </div>
       </aside>
 
-      {/* Main */}
       <div className="chat-main">
         <div className="chat-messages-panel">
           {activeChat.messages.length === 0 ? (
             <div className="chat-empty-state">
               <h2>Welcome to Asteria</h2>
-              <p>Start a learning session to explore an idea or work through a question.</p>
+              <p>
+                Start a learning session to explore an idea or work through a
+                question.
+              </p>
             </div>
           ) : (
             <div className="chat-message-list">
@@ -120,12 +203,19 @@ export default function ChatPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") handleSend();
+              if (e.key === "Enter" && !loading) {
+                handleSend();
+              }
             }}
+            disabled={loading}
           />
 
-          <button className="btn btn-primary" onClick={handleSend}>
-            Send
+          <button
+            className="btn btn-primary"
+            onClick={handleSend}
+            disabled={loading}
+          >
+            {loading ? "Thinking..." : "Send"}
           </button>
         </div>
       </div>
