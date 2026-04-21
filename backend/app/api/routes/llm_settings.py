@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -6,7 +8,7 @@ from app.schemas.llm_settings import (
     LLMSettingsCreate,
     LLMSettingsResponse,
 )
-from app.models.user_llm_setting import UserLLMSetting
+from app.models.user_llm_settings import UserLLMSetting
 
 router = APIRouter()
 
@@ -14,7 +16,7 @@ router = APIRouter()
 @router.post("/settings/llm", response_model=LLMSettingsResponse)
 def upsert_llm_settings(
     payload: LLMSettingsCreate,
-    user_id: str = Depends(get_current_user_id),
+    user_id: uuid.UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db),
 ):
     setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
@@ -25,7 +27,7 @@ def upsert_llm_settings(
         setting.base_url = payload.base_url
     else:
         setting = UserLLMSetting(
-            id=user_id,  # 临时：用 user_id 作为主键（简化）
+            id=str(user_id),
             user_id=user_id,
             provider="nvidia",
             api_key=payload.api_key,

@@ -5,13 +5,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
-user = relationship(
-    "User",
-    back_populates="llm_setting"
-)
-
 class UserLLMSetting(Base):
     __tablename__ = "user_llm_settings"
+
+    user = relationship(
+        "User",
+        back_populates="llm_setting"
+    )
 
     id: Mapped[str] = mapped_column(
         String,

@@ -6,15 +6,15 @@ import uuid
 
 from app.db.base import Base
 
-llm_setting = relationship(
-    "UserLLMSetting",
-    back_populates="user",
-    uselist=False,
-    cascade="all, delete-orphan",
-)
-
 class User(Base):
     __tablename__ = "users"
+
+    llm_setting = relationship(
+        "UserLLMSetting",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
 
     id : Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
