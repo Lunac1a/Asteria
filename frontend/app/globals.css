@@ -238,35 +238,17 @@ input {
 }
 
 .hero-visual {
-  position: relative;
   width: 100%;
-  max-width: 380px;
+  max-width: 420px;
   justify-self: end;
   aspect-ratio: 1;
-  padding: 18px;
-  border: 1px solid rgba(37, 99, 235, 0.14);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(243, 246, 251, 0.92));
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-}
-
-.hero-visual::before {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border: 1px solid rgba(37, 99, 235, 0.12);
-  border-radius: var(--radius-md);
-  pointer-events: none;
 }
 
 .hero-illustration {
-  position: relative;
-  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: var(--radius-md);
 }
 
 .grid-3 {
@@ -592,9 +574,5 @@ input {
 
   .hero-subtitle {
     font-size: 16px;
-  }
-
-  .hero-visual {
-    padding: 14px;
   }
 }
