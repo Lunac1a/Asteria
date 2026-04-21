@@ -6,7 +6,17 @@ export default function LandingPage() {
     <main className="page-shell">
       <div className="container">
         <nav className="navbar">
-          <div className="nav-brand">Asteria</div>
+          <div className="nav-brand">
+            <Image
+              className="brand-mark"
+              src="/asteria-logo.svg"
+              alt=""
+              width={28}
+              height={28}
+              priority
+            />
+            <span>Asteria</span>
+          </div>
 
           <div className="nav-actions">
             <Link href="/login">Login</Link>

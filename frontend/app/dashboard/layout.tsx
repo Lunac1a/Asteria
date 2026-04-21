@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +23,15 @@ export default function AppLayout({
           <div className="topbar-inner">
             <div className="topbar-left">
               <Link href="/dashboard" className="logo">
-                Asteria
+                <Image
+                  className="brand-mark"
+                  src="/asteria-logo.svg"
+                  alt=""
+                  width={28}
+                  height={28}
+                  priority
+                />
+                <span>Asteria</span>
               </Link>
             </div>
 
