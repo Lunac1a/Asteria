@@ -27,7 +27,7 @@ def upsert_llm_settings(
         setting.base_url = payload.base_url
     else:
         setting = UserLLMSetting(
-            id=str(user_id),
+            id=str(uuid.uuid4()),
             user_id=user_id,
             provider="nvidia",
             api_key=payload.api_key,
@@ -49,17 +49,17 @@ def upsert_llm_settings(
 
 @router.get("/settings/llm", response_model=LLMSettingsResponse)
 def get_llm_settings(
-    user_id: str = Depends(get_current_user_id),
+    user_id: uuid.UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db),
 ):
     setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
 
-    if not setting:
+    if setting is None:
         raise HTTPException(status_code=404, detail="Settings not found")
 
     return LLMSettingsResponse(
         provider=setting.provider,
         model_name=setting.model_name,
         base_url=setting.base_url,
-        has_api_key=True,
+        has_api_key=bool(setting.api_key),
     )
