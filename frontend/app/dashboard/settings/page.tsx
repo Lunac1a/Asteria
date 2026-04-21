@@ -31,7 +31,7 @@ export default function SettingsPage() {
       setSuccess("");
 
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("access_token");
 
         if (!token) {
           setError("You are not logged in.");
@@ -82,7 +82,7 @@ export default function SettingsPage() {
     setSuccess("");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("access_token");
 
       if (!token) {
         throw new Error("You are not logged in.");
