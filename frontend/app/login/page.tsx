@@ -19,7 +19,7 @@ export default function LoginPage() {
     const token = localStorage.getItem("access_token");
 
     if (token) {
-      router.push("/dashboard");
+      router.replace("/dashboard");
     }
   }, [router]);
 
@@ -57,7 +57,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("access_token", data.access_token);
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

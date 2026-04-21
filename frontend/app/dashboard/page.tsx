@@ -17,12 +17,17 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
+    function redirectToLogin() {
+      localStorage.removeItem("access_token");
+      router.replace("/login");
+    }
+
     async function fetchMe() {
       try {
         const token = localStorage.getItem("access_token");
 
         if (!token) {
-          router.push("/login");
+          redirectToLogin();
           return;
         }
 
@@ -35,13 +40,13 @@ export default function DashboardPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          router.push("/login");
+          redirectToLogin();
           return;
         }
 
         setUser(data);
       } catch {
-        router.push("/login")
+        redirectToLogin();
       } finally {
         setLoading(false);
       }
