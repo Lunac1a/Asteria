@@ -27,8 +27,8 @@ export default function AppLayout({
                   className="brand-mark"
                   src="/asteria-logo.svg"
                   alt=""
-                  width={28}
-                  height={28}
+                  width={48}
+                  height={48}
                   priority
                 />
                 <span>Asteria</span>
