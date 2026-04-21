@@ -1,10 +1,17 @@
 from sqlalchemy import String, DateTime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime, timezone
 import uuid
 
 from app.db.base import Base
+
+llm_setting = relationship(
+    "UserLLMSetting",
+    back_populates="user",
+    uselist=False,
+    cascade="all, delete-orphan",
+)
 
 class User(Base):
     __tablename__ = "users"

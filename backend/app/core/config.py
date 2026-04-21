@@ -2,16 +2,20 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_name: str
-    app_host: str
-    app_port: int
+    APP_NAME: str
+    APP_HOST: str
+    APP_PORT: int
 
-    frontend_url: str
-    database_url: str
+    FRONTEND_URL: str
+    DATABASE_URL: str
 
-    jwt_secret_key: str
-    jwt_algorithm: str
-    jwt_expire_minutes: int
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str
+    JWT_EXPIRE_MINUTES: int
+
+    NVIDIA_API_KEY: str
+    NVIDIA_API_BASE: str = "https://integrate.api.nvidia.com/v1"
+    NVIDIA_CHAT_MODEL: str
 
     class Config:
         env_file = ".env"

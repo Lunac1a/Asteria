@@ -10,14 +10,14 @@ from app.models import user
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title=settings.app_name,
+    title=settings.APP_NAME,
     description="Backend API for Asteria, an AI Learning Copilot.",
     version="0.1.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url],
+    allow_origins=[settings.FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
