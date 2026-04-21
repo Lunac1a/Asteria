@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from app.schemas.chat import ChatRequest, ChatResponse
-from app.api.deps import get_current_user_id
+from app.core.deps import get_current_user_id
 from app.services.nvidia_nim_api_service import generate_response
 
 router = APIRouter()

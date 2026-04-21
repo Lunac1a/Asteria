@@ -1,0 +1,63 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from app.core.deps import get_current_user_id, get_db
+from app.schemas.llm_settings import (
+    LLMSettingsCreate,
+    LLMSettingsResponse,
+)
+from app.models.user_llm_setting import UserLLMSetting
+
+router = APIRouter()
+
+
+@router.post("/settings/llm", response_model=LLMSettingsResponse)
+def upsert_llm_settings(
+    payload: LLMSettingsCreate,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
+
+    if setting:
+        setting.api_key = payload.api_key
+        setting.model_name = payload.model_name
+        setting.base_url = payload.base_url
+    else:
+        setting = UserLLMSetting(
+            id=user_id,  # 临时：用 user_id 作为主键（简化）
+            user_id=user_id,
+            provider="nvidia",
+            api_key=payload.api_key,
+            model_name=payload.model_name,
+            base_url=payload.base_url,
+        )
+        db.add(setting)
+
+    db.commit()
+    db.refresh(setting)
+
+    return LLMSettingsResponse(
+        provider=setting.provider,
+        model_name=setting.model_name,
+        base_url=setting.base_url,
+        has_api_key=True,
+    )
+
+
+@router.get("/settings/llm", response_model=LLMSettingsResponse)
+def get_llm_settings(
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
+
+    if not setting:
+        raise HTTPException(status_code=404, detail="Settings not found")
+
+    return LLMSettingsResponse(
+        provider=setting.provider,
+        model_name=setting.model_name,
+        base_url=setting.base_url,
+        has_api_key=True,
+    )
