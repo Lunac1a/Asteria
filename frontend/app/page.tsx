@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -32,6 +33,17 @@ export default function LandingPage() {
                 Start learning with Asteria
               </Link>
             </div>
+          </div>
+
+          <div className="hero-visual" aria-hidden="true">
+            <Image
+              className="hero-illustration"
+              src="/asteria.svg"
+              alt=""
+              width={540}
+              height={540}
+              priority
+            />
           </div>
         </section>
 
