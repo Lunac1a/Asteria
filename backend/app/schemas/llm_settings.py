@@ -9,4 +9,4 @@ class LLMSettingsResponse(BaseModel):
     provider: str
     model_name: str
     base_url: str
-    has_api_key:str
+    has_api_key:bool
