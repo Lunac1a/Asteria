@@ -39,12 +39,12 @@ export default function AppLayout({
               <Link href="/dashboard/chat" className="topbar-link">
                 Chat
               </Link>
-              <Link href="/dashboard/quiz" className="topbar-link">
-                Quiz
-              </Link>
             </div>
 
             <div className="topbar-right">
+              <Link href="/dashboard/settings" className="topbar-link">
+                Settings
+              </Link>
               <button onClick={handleLogout} className="btn btn-secondary">
                 Logout
               </button>
