@@ -1,16 +1,14 @@
 from openai import OpenAI
 
-from app.core.security import decrypt_text
-
 
 def generate_response(
     message: str,
-    encrypted_api_key: str,
+    api_key: str,
     base_url: str,
     model_name: str,
 ) -> str:
     client = OpenAI(
-        api_key=decrypt_text(encrypted_api_key),
+        api_key=api_key,
         base_url=base_url,
     )
 
