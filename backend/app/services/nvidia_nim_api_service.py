@@ -18,7 +18,7 @@ def generate_response(
             {"role": "user", "content": message}
         ],
         temperature=0.2,
-        max_tokens=512,
+        max_tokens=16384,
     )
 
     return response.choices[0].message.content or ""
