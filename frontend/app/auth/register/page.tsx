@@ -66,7 +66,7 @@ export default function RegisterPage() {
 
       setSuccess("Registration successful. Redirecting to login...");
       setTimeout(() => {
-        router.push("/login");
+        router.push("/auth/login");
       }, 100);
     } catch (err) {
       if (err instanceof Error) {
@@ -130,7 +130,7 @@ export default function RegisterPage() {
 
         <p className="helper-text">
           Already have an account?{" "}
-          <Link href="/login" className="text-link">
+          <Link href="/auth/login" className="text-link">
             Login
           </Link>
         </p>

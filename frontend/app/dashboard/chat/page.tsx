@@ -93,7 +93,7 @@ export default function ChatPage() {
 
       if (!token) {
         localStorage.removeItem("access_token");
-        router.replace("/login");
+        router.replace("/auth/login");
         return;
       }
 
@@ -112,7 +112,7 @@ export default function ChatPage() {
 
       if (response.status === 401) {
         localStorage.removeItem("access_token");
-        router.replace("/login");
+        router.replace("/auth/login");
         return;
       }
 

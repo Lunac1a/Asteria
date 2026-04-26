@@ -111,7 +111,7 @@ export default function LoginPage() {
 
         <p className="helper-text">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-link">
+          <Link href="/auth/register" className="text-link">
             Register
           </Link>
         </p>

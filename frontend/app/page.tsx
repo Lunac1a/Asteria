@@ -20,8 +20,8 @@ export default function LandingPage() {
           </div>
 
           <div className="nav-actions">
-            <Link href="/login">Login</Link>
-            <Link href="/register" className="btn btn-primary">
+            <Link href="/auth/login">Login</Link>
+            <Link href="/auth/register" className="btn btn-primary">
               Register
             </Link>
           </div>
@@ -40,7 +40,7 @@ export default function LandingPage() {
             </p>
 
             <div className="hero-actions">
-              <Link href="/register" className="btn btn-primary">
+              <Link href="/auth/register" className="btn btn-primary">
                 Start learning with Asteria
               </Link>
             </div>

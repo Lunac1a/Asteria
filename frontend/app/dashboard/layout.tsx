@@ -14,7 +14,7 @@ export default function AppLayout({
 
   function handleLogout() {
     localStorage.removeItem("access_token");
-    router.push("/login");
+    router.push("/auth/login");
   }
 
   return (
