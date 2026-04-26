@@ -2,11 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./chat.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 type Message = {
   role: "user" | "assistant";
@@ -35,6 +37,14 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
 
   const activeChat = chats.find((c) => c.id === activeChatId)!;
+
+  function scrollToBottom() {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [activeChat.messages]);
 
   function handleNewChat() {
     const newChat: Chat = {
@@ -123,7 +133,10 @@ export default function ChatPage() {
         updateActiveChatMessages([
           {
             role: "assistant",
-            content: `Error: ${errorMessage}`,
+            content:
+              errorMessage === "LLM settings not configured"
+                ? "⚠️ You need to configure your API key in Settings before using chat."
+                : `⚠️ ${errorMessage}`,
           },
         ]);
         return;
@@ -203,6 +216,7 @@ export default function ChatPage() {
                   )}
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
           )}
         </div>
