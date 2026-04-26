@@ -33,11 +33,14 @@ def chat(
             detail="Failed to decrypt LLM API key",
         )
 
-    answer = generate_response(
-        message=payload.message,
-        api_key=api_key,
-        base_url=setting.base_url,
-        model_name=setting.model_name,
-    )
+    try:
+        answer = generate_response(
+            message=payload.message,
+            api_key=api_key,
+            base_url=setting.base_url,
+            model_name=setting.model_name,
+        )
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
 
     return ChatResponse(answer=answer)
