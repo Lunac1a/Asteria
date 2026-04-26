@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import "./dashboard.css";
 
 export default function AppLayout({
   children,

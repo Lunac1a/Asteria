@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import "../auth.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -81,8 +82,8 @@ export default function RegisterPage() {
   return (
     <main className="auth-page">
       <div className="auth-card">
-        <div style={{ marginBottom: "16px" }}>
-          <Link href="/" className="back-link">
+        <div className="auth-back">
+          <Link href="/public" className="back-link">
             ← Back
           </Link>
         </div>

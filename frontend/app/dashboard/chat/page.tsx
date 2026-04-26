@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import "./chat.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

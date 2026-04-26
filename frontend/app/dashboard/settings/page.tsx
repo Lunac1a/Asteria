@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import "./settings.css";
 
 type LLMSettingsResponse = {
   provider: string;
