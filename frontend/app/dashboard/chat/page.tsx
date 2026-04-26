@@ -1,14 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./chat.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 type Message = {
   role: "user" | "assistant";
@@ -23,6 +21,7 @@ type Chat = {
 
 export default function ChatPage() {
   const router = useRouter();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const [chats, setChats] = useState<Chat[]>([
     {
@@ -41,7 +40,7 @@ export default function ChatPage() {
   function scrollToBottom() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
-
+  
   useEffect(() => {
     scrollToBottom();
   }, [activeChat.messages]);
