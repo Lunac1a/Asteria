@@ -6,7 +6,7 @@ from uuid import UUID
 
 from app.core.config import settings
 from app.db.session import get_db
-from app.models.user import User
+from app.models.users import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 
