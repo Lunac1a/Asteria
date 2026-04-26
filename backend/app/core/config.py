@@ -1,6 +1,5 @@
 from pydantic_settings import BaseSettings
 
-
 class Settings(BaseSettings):
     APP_NAME: str
     APP_HOST: str
@@ -16,6 +15,8 @@ class Settings(BaseSettings):
     NVIDIA_API_KEY: str
     NVIDIA_API_BASE: str = "https://integrate.api.nvidia.com/v1"
     NVIDIA_CHAT_MODEL: str
+
+    ENCRYPTION_KEY: str
 
     class Config:
         env_file = ".env"

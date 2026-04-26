@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_user_id, get_db
+from app.core.security import encrypt_text
 from app.schemas.llm_settings import (
     LLMSettingsCreate,
     LLMSettingsResponse,
@@ -19,10 +20,11 @@ def upsert_llm_settings(
     user_id: uuid.UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db),
 ):
+    encrypted_api_key = encrypt_text(payload.api_key)
     setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
 
     if setting:
-        setting.api_key = payload.api_key
+        setting.encrypted_api_key = encrypted_api_key
         setting.model_name = payload.model_name
         setting.base_url = payload.base_url
     else:
@@ -30,7 +32,7 @@ def upsert_llm_settings(
             id=str(uuid.uuid4()),
             user_id=user_id,
             provider="nvidia",
-            api_key=payload.api_key,
+            encrypted_api_key=encrypted_api_key,
             model_name=payload.model_name,
             base_url=payload.base_url,
         )
@@ -61,5 +63,5 @@ def get_llm_settings(
         provider=setting.provider,
         model_name=setting.model_name,
         base_url=setting.base_url,
-        has_api_key=bool(setting.api_key),
+        has_api_key=bool(setting.encrypted_api_key),
     )

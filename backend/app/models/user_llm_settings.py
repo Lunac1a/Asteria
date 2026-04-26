@@ -30,7 +30,7 @@ class UserLLMSetting(Base):
         nullable=False,
     )
 
-    api_key: Mapped[str] = mapped_column(
+    encrypted_api_key: Mapped[str] = mapped_column(
         String,
         nullable=False
     )
