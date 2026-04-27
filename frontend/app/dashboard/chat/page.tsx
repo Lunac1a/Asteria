@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import "./chat.css";
 
 type Message = {
@@ -14,6 +16,17 @@ type Chat = {
   title: string;
   messages: Message[];
 };
+
+function normalizeMarkdown(content: string) {
+  return content
+    .replace(/\r\n/g, "\n")
+    .split(/(```[\s\S]*?```)/g)
+    .map((part, index) =>
+      index % 2 === 1 ? part.trim() : part.replace(/\n{3,}/g, "\n\n").trim()
+    )
+    .join("\n\n")
+    .trim();
+}
 
 export default function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([
@@ -189,7 +202,20 @@ export default function ChatPage() {
                       : "chat-message assistant"
                   }
                 >
-                  {msg.content}
+                  <div className="markdown-content">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        a: ({ children, ...props }) => (
+                          <a {...props} target="_blank" rel="noreferrer">
+                            {children}
+                          </a>
+                        ),
+                      }}
+                    >
+                      {normalizeMarkdown(msg.content)}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               ))}
             </div>
