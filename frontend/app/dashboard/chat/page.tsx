@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import "./chat.css";
 
 type Message = {
   role: "user" | "assistant";
