@@ -1,12 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import "./chat.css";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { useState } from "react";
 
 type Message = {
   role: "user" | "assistant";
@@ -15,14 +9,12 @@ type Message = {
 
 type Chat = {
   id: number;
+  backendSessionId?: string;
   title: string;
   messages: Message[];
 };
 
 export default function ChatPage() {
-  const router = useRouter();
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
   const [chats, setChats] = useState<Chat[]>([
     {
       id: 1,
@@ -35,15 +27,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const activeChat = chats.find((c) => c.id === activeChatId)!;
-
-  function scrollToBottom() {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }
-  
-  useEffect(() => {
-    scrollToBottom();
-  }, [activeChat.messages]);
+  const activeChat = chats.find((c) => c.id === activeChatId);
 
   function handleNewChat() {
     const newChat: Chat = {
@@ -56,44 +40,33 @@ export default function ChatPage() {
     setActiveChatId(newChat.id);
   }
 
-  function updateActiveChatMessages(newMessages: Message[]) {
-    setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === activeChatId
-          ? {
-              ...chat,
-              messages: [...chat.messages, ...newMessages],
-            }
-          : chat
-      )
-    );
-  }
-
-  function updateActiveChatTitle(firstMessage: string) {
-    setChats((prevChats) =>
-      prevChats.map((chat) => {
-        if (chat.id !== activeChatId) return chat;
-        if (chat.messages.length > 0) return chat;
-
-        return {
-          ...chat,
-          title: firstMessage.slice(0, 24) || "New Chat",
-        };
-      })
-    );
-  }
-
   async function handleSend() {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || !activeChat) return;
 
     const trimmedInput = input.trim();
+
     const userMessage: Message = {
       role: "user",
       content: trimmedInput,
     };
 
-    updateActiveChatTitle(trimmedInput);
-    updateActiveChatMessages([userMessage]);
+    const currentBackendSessionId = activeChat.backendSessionId;
+
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === activeChatId
+          ? {
+              ...chat,
+              title:
+                chat.messages.length === 0
+                  ? trimmedInput.slice(0, 24)
+                  : chat.title,
+              messages: [...chat.messages, userMessage],
+            }
+          : chat
+      )
+    );
+
     setInput("");
     setLoading(true);
 
@@ -101,62 +74,73 @@ export default function ChatPage() {
       const token = localStorage.getItem("access_token");
 
       if (!token) {
-        localStorage.removeItem("access_token");
-        router.replace("/auth/login");
-        return;
+        throw new Error("Not authenticated");
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          message: trimmedInput,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            message: trimmedInput,
+            session_id: currentBackendSessionId ?? null,
+          }),
+        }
+      );
 
-      const data = await response.json().catch(() => null);
-
-      if (response.status === 401) {
-        localStorage.removeItem("access_token");
-        router.replace("/auth/login");
-        return;
-      }
+      const data = await response.json();
 
       if (!response.ok) {
-        const errorMessage =
-          data?.detail || "Something went wrong while talking to the AI.";
-
-        updateActiveChatMessages([
-          {
-            role: "assistant",
-            content:
-              errorMessage === "LLM settings not configured"
-                ? "⚠️ You need to configure your API key in Settings before using chat."
-                : `⚠️ ${errorMessage}`,
-          },
-        ]);
-        return;
+        throw new Error(data?.detail || "Chat request failed");
       }
 
-      updateActiveChatMessages([
-        {
-          role: "assistant",
-          content: data.answer,
-        },
-      ]);
-    } catch {
-      updateActiveChatMessages([
-        {
-          role: "assistant",
-          content: "Error: Failed to connect to the server.",
-        },
-      ]);
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: data.answer,
+      };
+
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === activeChatId
+            ? {
+                ...chat,
+                backendSessionId: data.session_id,
+                messages: [...chat.messages, assistantMessage],
+              }
+            : chat
+        )
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong";
+
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === activeChatId
+            ? {
+                ...chat,
+                messages: [
+                  ...chat.messages,
+                  {
+                    role: "assistant",
+                    content: `Error: ${message}`,
+                  },
+                ],
+              }
+            : chat
+        )
+      );
     } finally {
       setLoading(false);
     }
+  }
+
+  if (!activeChat) {
+    return <p>No active chat</p>;
   }
 
   return (
@@ -204,18 +188,9 @@ export default function ChatPage() {
                       : "chat-message assistant"
                   }
                 >
-                  {msg.role === "assistant" ? (
-                    <div className="markdown-content">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {msg.content}
-                      </ReactMarkdown>
-                    </div>
-                  ) : (
-                    msg.content
-                  )}
+                  {msg.content}
                 </div>
               ))}
-              <div ref={messagesEndRef} />
             </div>
           )}
         </div>

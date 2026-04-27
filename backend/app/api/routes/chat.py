@@ -36,7 +36,27 @@ def chat(
             detail="Failed to decrypt LLM API key",
         )
 
-    session = db.query(ChatSession).filter_by(user_id=user_id).first()
+    if payload.session_id:
+        session = (
+            db.query(ChatSession)
+            .filter_by(id=payload.session_id, user_id=user_id)
+            .first()
+        )
+
+        if session is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Chat session not found",
+            )
+    else:
+        session = ChatSession(
+            id=str(uuid.uuid4()),
+            user_id=user_id,
+            title=payload.message[:40] or "New Chat",
+        )
+        db.add(session)
+        db.commit()
+        db.refresh(session)
 
     if session is None:
         session = ChatSession(
@@ -76,4 +96,7 @@ def chat(
     db.add(assistant_message)
     db.commit()
 
-    return ChatResponse(answer=answer)
+    return ChatResponse(
+        answer=answer,
+        session_id=session.id
+    )
