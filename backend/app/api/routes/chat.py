@@ -68,9 +68,24 @@ def chat(
     db.add(user_message)
     db.commit()
 
+    history_messages = (
+        db.query(Message)
+        .filter_by(session_id=session.id)
+        .order_by(Message.created_at.asc())
+        .all()
+    )
+
+    llm_messages = [
+        {
+            "role": msg.role,
+            "content": msg.content,
+        }
+        for msg in history_messages
+    ]
+
     try:
         answer = generate_response(
-            message=payload.message,
+            message=llm_messages,
             api_key=api_key,
             base_url=setting.base_url,
             model_name=setting.model_name,

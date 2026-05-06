@@ -3,7 +3,7 @@ from openai import APIConnectionError, APIStatusError, RateLimitError
 
 
 def generate_response(
-    message: str,
+    messages: list[dict],
     api_key: str,
     base_url: str,
     model_name: str,
@@ -16,9 +16,7 @@ def generate_response(
     try:
         response = client.chat.completions.create(
             model=model_name,
-            messages=[
-                {"role": "user", "content": message}
-            ],
+            messages=messages,
             temperature=0.2,
             max_tokens=16384,
         )
