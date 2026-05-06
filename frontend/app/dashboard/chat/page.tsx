@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./chat.css";
@@ -29,19 +29,104 @@ function normalizeMarkdown(content: string) {
 }
 
 export default function ChatPage() {
-  const [chats, setChats] = useState<Chat[]>([
-    {
-      id: 1,
-      title: "First Chat",
-      messages: [],
-    },
-  ]);
+  const [chats, setChats] = useState<Chat[]>([]);
 
-  const [activeChatId, setActiveChatId] = useState(1);
+  const [activeChatId, setActiveChatId] = useState<number | null>(null);;
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const activeChat = chats.find((c) => c.id === activeChatId);
+
+  useEffect(() => {
+    async function loadSessions() {
+      try {
+        const token = localStorage.getItem("access_token");
+
+        if (!token) return;
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/sessions`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error("Failed to load sessions");
+        }
+
+        const loadedChats: Chat[] = data.map((session: any) => ({
+          id: Date.now() + Math.random(),
+          backendSessionId: session.id,
+          title: session.title,
+          messages: [],
+        }));
+
+        setChats(loadedChats);
+
+        if (loadedChats.length > 0) {
+          setActiveChatId(loadedChats[0].id);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadSessions();
+  }, []);
+
+  useEffect(() => {
+    async function loadMessages() {
+      if (!activeChat) return;
+
+      if (!activeChat.backendSessionId) return;
+
+      try {
+        const token = localStorage.getItem("access_token");
+
+        if (!token) return;
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/sessions/${activeChat.backendSessionId}/messages`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error("Failed to load messages");
+        }
+
+        const loadedMessages: Message[] = data.map((msg: any) => ({
+          role: msg.role,
+          content: msg.content,
+        }));
+
+        setChats((prevChats) =>
+          prevChats.map((chat) =>
+            chat.id === activeChatId
+              ? {
+                  ...chat,
+                  messages: loadedMessages,
+                }
+              : chat
+          )
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadMessages();
+  }, [activeChatId]);
 
   function handleNewChat() {
     const newChat: Chat = {
