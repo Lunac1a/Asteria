@@ -85,7 +85,7 @@ def chat(
 
     try:
         answer = generate_response(
-            message=llm_messages,
+            messages=llm_messages,
             api_key=api_key,
             base_url=setting.base_url,
             model_name=setting.model_name,
