@@ -8,6 +8,7 @@ from app.schemas.chat import ChatRequest, ChatResponse
 from app.core.deps import get_current_user_id
 from app.schemas.chat_history import ChatSessionResponse, MessageResponse
 from app.services.nvidia_nim_api_service import generate_response
+from app.utils.system_prompt import SYSTEM_PROMPT
 
 from app.models.user_llm_settings import UserLLMSetting
 from app.models.chat_sessions import ChatSession
@@ -82,6 +83,13 @@ def chat(
         }
         for msg in history_messages
     ]
+
+    system_message = {
+        "role": "system",
+        "content": SYSTEM_PROMPT,
+    }
+
+    llm_messages = [system_message] + llm_messages
 
     try:
         answer = generate_response(
