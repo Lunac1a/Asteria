@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Children, isValidElement, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import "./chat.css";
@@ -17,6 +18,16 @@ type Chat = {
   messages: Message[];
 };
 
+type ChatSessionResponse = {
+  id: string;
+  title: string;
+};
+
+type ChatMessageResponse = {
+  role: Message["role"];
+  content: string;
+};
+
 function normalizeMarkdown(content: string) {
   return content
     .replace(/\r\n/g, "\n")
@@ -28,14 +39,25 @@ function normalizeMarkdown(content: string) {
     .trim();
 }
 
+function getCodeBlockLanguage(children: ReactNode) {
+  const child = Children.toArray(children)[0];
+
+  if (!isValidElement<{ className?: string }>(child)) {
+    return null;
+  }
+
+  return child.props.className?.match(/language-([\w-]+)/)?.[1] ?? null;
+}
+
 export default function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([]);
 
-  const [activeChatId, setActiveChatId] = useState<number | null>(null);;
+  const [activeChatId, setActiveChatId] = useState<number | null>(null);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   const activeChat = chats.find((c) => c.id === activeChatId);
+  const activeBackendSessionId = activeChat?.backendSessionId;
 
   useEffect(() => {
     async function loadSessions() {
@@ -53,13 +75,13 @@ export default function ChatPage() {
           }
         );
 
-        const data = await response.json();
+        const data: ChatSessionResponse[] = await response.json();
 
         if (!response.ok) {
           throw new Error("Failed to load sessions");
         }
 
-        const loadedChats: Chat[] = data.map((session: any) => ({
+        const loadedChats: Chat[] = data.map((session) => ({
           id: Date.now() + Math.random(),
           backendSessionId: session.id,
           title: session.title,
@@ -81,9 +103,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     async function loadMessages() {
-      if (!activeChat) return;
-
-      if (!activeChat.backendSessionId) return;
+      if (!activeBackendSessionId) return;
 
       try {
         const token = localStorage.getItem("access_token");
@@ -91,7 +111,7 @@ export default function ChatPage() {
         if (!token) return;
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/sessions/${activeChat.backendSessionId}/messages`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/chat/sessions/${activeBackendSessionId}/messages`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -99,13 +119,13 @@ export default function ChatPage() {
           }
         );
 
-        const data = await response.json();
+        const data: ChatMessageResponse[] = await response.json();
 
         if (!response.ok) {
           throw new Error("Failed to load messages");
         }
 
-        const loadedMessages: Message[] = data.map((msg: any) => ({
+        const loadedMessages: Message[] = data.map((msg) => ({
           role: msg.role,
           content: msg.content,
         }));
@@ -126,7 +146,7 @@ export default function ChatPage() {
     }
 
     loadMessages();
-  }, [activeChatId]);
+  }, [activeBackendSessionId, activeChatId]);
 
   function handleNewChat() {
     const newChat: Chat = {
@@ -296,6 +316,20 @@ export default function ChatPage() {
                             {children}
                           </a>
                         ),
+                        pre: ({ children }) => {
+                          const language = getCodeBlockLanguage(children);
+
+                          return (
+                            <div className="markdown-code-block">
+                              {language ? (
+                                <div className="markdown-code-language">
+                                  {language}
+                                </div>
+                              ) : null}
+                              <pre>{children}</pre>
+                            </div>
+                          );
+                        },
                       }}
                     >
                       {normalizeMarkdown(msg.content)}

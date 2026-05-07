@@ -209,22 +209,46 @@
   padding: 0.15rem 0.35rem;
   border-radius: 6px;
   background: rgba(17, 24, 39, 0.08);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 0.9em;
+}
+
+.markdown-code-block {
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.14);
+  border-radius: 12px;
+  background: #111827;
+  margin: 0.5rem 0;
+}
+
+.markdown-code-language {
+  padding: 0.35rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .markdown-content pre {
   overflow-x: auto;
   padding: 0.85rem;
-  border-radius: 12px;
+  border-radius: 0;
   background: #111827;
   color: #f9fafb;
-  margin: 0.5rem 0;
+  margin: 0;
 }
 
 .markdown-content pre code {
+  display: block;
   padding: 0;
   background: transparent;
   color: inherit;
+  overflow-wrap: normal;
+  white-space: pre;
+  word-break: normal;
 }
 
 .markdown-content blockquote {
@@ -267,6 +291,11 @@
 }
 
 .chat-message.user .markdown-content pre {
+  background: rgba(17, 24, 39, 0.72);
+}
+
+.chat-message.user .markdown-code-block {
+  border-color: rgba(255, 255, 255, 0.22);
   background: rgba(17, 24, 39, 0.72);
 }
 
