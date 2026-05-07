@@ -215,17 +215,17 @@
 
 .markdown-code-block {
   overflow: hidden;
-  border: 1px solid rgba(17, 24, 39, 0.14);
+  border: 1px solid rgba(17, 24, 39, 0.1);
   border-radius: 12px;
-  background: #111827;
+  background: #e5e7eb;
   margin: 0.5rem 0;
 }
 
 .markdown-code-language {
   padding: 0.35rem 0.85rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: #cbd5e1;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+  background: rgba(17, 24, 39, 0.04);
+  color: #4b5563;
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -236,8 +236,8 @@
   overflow-x: auto;
   padding: 0.85rem;
   border-radius: 0;
-  background: #111827;
-  color: #f9fafb;
+  background: #e5e7eb;
+  color: #1f2937;
   margin: 0;
 }
 
@@ -249,6 +249,28 @@
   overflow-wrap: normal;
   white-space: pre;
   word-break: normal;
+}
+
+.markdown-content .token-comment {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.markdown-content .token-string {
+  color: #0f766e;
+}
+
+.markdown-content .token-number {
+  color: #b45309;
+}
+
+.markdown-content .token-keyword {
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.markdown-content .token-function {
+  color: #2563eb;
 }
 
 .markdown-content blockquote {
@@ -291,12 +313,18 @@
 }
 
 .chat-message.user .markdown-content pre {
-  background: rgba(17, 24, 39, 0.72);
+  background: rgba(30, 64, 175, 0.44);
 }
 
 .chat-message.user .markdown-code-block {
   border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(17, 24, 39, 0.72);
+  background: rgba(30, 64, 175, 0.44);
+}
+
+.chat-message.user .markdown-code-language {
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .chat-message.user .markdown-content th {

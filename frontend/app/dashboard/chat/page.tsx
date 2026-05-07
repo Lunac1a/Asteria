@@ -49,6 +49,63 @@ function getCodeBlockLanguage(children: ReactNode) {
   return child.props.className?.match(/language-([\w-]+)/)?.[1] ?? null;
 }
 
+function getCodeText(children: ReactNode) {
+  return Children.toArray(children).join("").replace(/\n$/, "");
+}
+
+const highlightKeywords =
+  "abstract|async|await|boolean|break|case|catch|class|const|continue|def|default|do|else|enum|export|extends|false|finally|for|from|function|if|import|in|interface|let|null|return|static|switch|this|throw|true|try|type|undefined|var|while|with|yield";
+
+function highlightCode(code: string) {
+  const pattern = new RegExp(
+    [
+      String.raw`(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)`,
+      String.raw`("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|` + "`" + String.raw`(?:\\.|[^` + "`" + String.raw`\\])*` + "`" + String.raw`)`,
+      String.raw`(\b\d+(?:\.\d+)?\b)`,
+      String.raw`(\b(?:` + highlightKeywords + String.raw`)\b)`,
+      String.raw`(\b[A-Za-z_$][\w$]*(?=\s*\())`,
+    ].join("|"),
+    "g"
+  );
+
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(code))) {
+    if (match.index > lastIndex) {
+      parts.push(code.slice(lastIndex, match.index));
+    }
+
+    const comment = match[1];
+    const string = match[2];
+    const number = match[3];
+    const keyword = match[4];
+    const className = comment
+      ? "token-comment"
+      : string
+      ? "token-string"
+      : number
+      ? "token-number"
+      : keyword
+      ? "token-keyword"
+      : "token-function";
+
+    parts.push(
+      <span className={className} key={`${match.index}-${match[0]}`}>
+        {match[0]}
+      </span>
+    );
+    lastIndex = pattern.lastIndex;
+  }
+
+  if (lastIndex < code.length) {
+    parts.push(code.slice(lastIndex));
+  }
+
+  return parts;
+}
+
 export default function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([]);
 
@@ -328,6 +385,25 @@ export default function ChatPage() {
                               ) : null}
                               <pre>{children}</pre>
                             </div>
+                          );
+                        },
+                        code: ({ className, children, ...props }) => {
+                          const language = className?.match(
+                            /language-([\w-]+)/
+                          )?.[1];
+
+                          if (!language) {
+                            return (
+                              <code className={className} {...props}>
+                                {children}
+                              </code>
+                            );
+                          }
+
+                          return (
+                            <code className={className} {...props}>
+                              {highlightCode(getCodeText(children))}
+                            </code>
                           );
                         },
                       }}
