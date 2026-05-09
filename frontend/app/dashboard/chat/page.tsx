@@ -315,10 +315,6 @@ export default function ChatPage() {
     }
   }
 
-  if (!activeChat) {
-    return <p>No active chat</p>;
-  }
-
   return (
     <div className="chat-app">
       <aside className="chat-sidebar">
@@ -345,7 +341,7 @@ export default function ChatPage() {
 
       <div className="chat-main">
         <div className="chat-messages-panel">
-          {activeChat.messages.length === 0 ? (
+          {!activeChat || activeChat.messages.length === 0 ? (
             <div className="chat-empty-state">
               <h2>Welcome to Asteria</h2>
               <p>
