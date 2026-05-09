@@ -28,6 +28,14 @@ type ChatMessageResponse = {
   content: string;
 };
 
+function createDraftChat(): Chat {
+  return {
+    id: Date.now() + Math.random(),
+    title: "New Chat",
+    messages: [],
+  };
+}
+
 function normalizeMarkdown(content: string) {
   return content
     .replace(/\r\n/g, "\n")
@@ -149,6 +157,10 @@ export default function ChatPage() {
 
         if (loadedChats.length > 0) {
           setActiveChatId(loadedChats[0].id);
+        } else {
+          const draftChat = createDraftChat();
+          setChats([draftChat]);
+          setActiveChatId(draftChat.id);
         }
       } catch (error) {
         console.error(error);
@@ -206,11 +218,7 @@ export default function ChatPage() {
   }, [activeBackendSessionId, activeChatId]);
 
   function handleNewChat() {
-    const newChat: Chat = {
-      id: Date.now(),
-      title: "New Chat",
-      messages: [],
-    };
+    const newChat = createDraftChat();
 
     setChats((prev) => [newChat, ...prev]);
     setActiveChatId(newChat.id);
