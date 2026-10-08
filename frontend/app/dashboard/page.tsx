@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = "";
 
 type User = {
   id: string;
@@ -65,6 +65,7 @@ export default function DashboardPage() {
         Your AI learning copilot is ready to help you explore ideas, revisit
         concepts, and turn knowledge into understanding.
       </p>
+      <a href="/dashboard/chat" className="btn btn-primary">Open your learning workspace</a>
     </div>
   );
 }

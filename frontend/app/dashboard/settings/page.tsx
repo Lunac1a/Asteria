@@ -23,7 +23,7 @@ export default function SettingsPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const apiBaseUrl = "";
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -55,7 +55,7 @@ export default function SettingsPage() {
 
         if (!res.ok) {
           const data = await res.json().catch(() => null);
-          throw new Error(data?.detail || "Failed to load settings.");
+          throw new Error(typeof data?.detail === "string" ? data.detail : "Failed to load settings.");
         }
 
         const data: LLMSettingsResponse = await res.json();
@@ -94,7 +94,7 @@ export default function SettingsPage() {
       }
 
       const payload = {
-        api_key: apiKey.trim(),
+        ...(apiKey.trim() ? { api_key: apiKey.trim() } : {}),
         model_name: modelName.trim(),
         base_url: baseUrl.trim(),
       };
@@ -111,7 +111,7 @@ export default function SettingsPage() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(data?.detail || "Failed to save settings.");
+        throw new Error(typeof data?.detail === "string" ? data.detail : "Please check the provider URL, model and API key.");
       }
 
       setHasApiKey(true);
@@ -170,8 +170,9 @@ export default function SettingsPage() {
 
         <form onSubmit={handleSave} className="settings-form">
           <div className="settings-field">
-            <label className="settings-label">NVIDIA API Key</label>
+            <label htmlFor="provider-key" className="settings-label">NVIDIA API Key</label>
             <input
+              id="provider-key"
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
@@ -188,8 +189,9 @@ export default function SettingsPage() {
           </div>
 
           <div className="settings-field">
-            <label className="settings-label">Model Name</label>
+            <label htmlFor="provider-model" className="settings-label">Model Name</label>
             <input
+              id="provider-model"
               type="text"
               value={modelName}
               onChange={(e) => setModelName(e.target.value)}
@@ -198,8 +200,9 @@ export default function SettingsPage() {
           </div>
 
           <div className="settings-field">
-            <label className="settings-label">Base URL</label>
+            <label htmlFor="provider-url" className="settings-label">Base URL</label>
             <input
+              id="provider-url"
               type="text"
               value={baseUrl}
               onChange={(e) => setBaseUrl(e.target.value)}

@@ -39,3 +39,6 @@ jobs:
 
       - name: Run lint
         run: ruff check .
+
+      - name: Run isolated API regression tests
+        run: python -m unittest discover -s tests -v

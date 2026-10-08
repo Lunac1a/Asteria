@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "../auth.css";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = "";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function LoginPage() {
     <main className="auth-page">
       <div className="auth-card">
         <div className="auth-back">
-          <Link href="/public" className="back-link">
+          <Link href="/" className="back-link">
             ← Back
           </Link>
         </div>

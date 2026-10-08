@@ -1,0 +1,48 @@
+.learning-page {padding: 26px 0 40px; color: #202a38;}
+.learning-heading h1 {font-size: 30px; margin: 4px 0 8px; letter-spacing: -.7px;}
+.learning-heading p {color: #627084; margin-bottom: 20px;}
+.eyebrow {font-size: 11px; letter-spacing: 2px; font-weight: 700; color: #536caa !important; margin: 0 !important;}
+.learning-grid {display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 22px; align-items: start;}
+.learning-sidebar {display: grid; gap: 16px;}
+.learning-card, .learning-chat {background: #fff; border: 1px solid #e0e5ec; border-radius: 14px; box-shadow: 0 4px 16px #182c4c05;}
+.learning-card {padding: 18px;}
+.learning-card h2, .learning-chat h2 {font-size: 17px; font-weight: 650; margin: 0 0 12px;}
+.learning-card label, .learning-composer label {display: block; font-size: 12px; font-weight: 600; margin: 12px 0 7px;}
+.learning-card input:not([type=file]), .learning-card select, .learning-composer textarea {width: 100%; border: 1px solid #d9e0eb; border-radius: 8px; padding: 10px; font: inherit; font-size: 14px; background: #fff; color: #202a38;}
+.learning-card input[type=file] {max-width: 100%; font-size: 12px;}
+.learning-card form button {margin-top: 10px; width: 100%;}
+.muted {color: #64748b; font-size: 12px; line-height: 1.6; margin: 8px 0;}
+.document-item {border-top: 1px solid #e6eaf0; padding-top: 12px; margin-top: 12px; font-size: 13px; overflow-wrap: anywhere;}
+.document-item p {margin: 6px 0; font-size: 12px;}
+.document-status {border-radius: 5px; padding: 2px 6px; background: #fff2d8; color: #946411;}
+.document-status.ready {background: #e5f5ec; color: #287548;}
+.document-status.failed, .document-error {color: #b43232;}
+.document-actions {display: flex; gap: 15px;}
+.document-actions button, .sources button {font-size: 12px; color: #4167ab; cursor: pointer; text-decoration: underline;}
+.session-button {width: 100%; text-align: left; padding: 10px; border-radius: 7px; font-size: 13px; margin-top: 4px; cursor: pointer; overflow-wrap: anywhere;}
+.session-button.active {background: #eef3fc; color: #355c9e;}
+.learning-chat {min-height: 620px; display: flex; flex-direction: column; overflow: hidden;}
+.learning-chat-title {padding: 20px 24px; border-bottom: 1px solid #e5eaf1;}
+.learning-chat-title h2 {margin-bottom: 4px;}
+.learning-chat-title span {font-size: 12px; color: #64748b;}
+.learning-messages {padding: 22px 24px; min-height: 330px; max-height: 65vh; overflow-y: auto; flex: 1;}
+.learning-empty {text-align: center; padding: 64px 30px; color: #627084; line-height: 1.7;}
+.learning-empty h3 {color: #2e3e56; font-size: 22px;}
+.learning-message {margin-bottom: 22px; font-size: 14px; line-height: 1.8; overflow-wrap: anywhere;}
+.learning-message.user {background: #f3f6fb; padding: 12px 16px; border-radius: 10px;}
+.message-author {display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; color: #60728c;}
+.learning-message p {margin: 8px 0;}
+.learning-message ul,.learning-message ol {padding-left: 22px;}
+.learning-message pre {overflow: auto; background: #f5f7fa; padding: 14px;}
+.sources {margin-top: 12px; border-top: 1px solid #e5eaf1; font-size: 12px;}
+.sources h3 {font-size: 12px; color: #64748b; margin: 8px 0;}
+.sources details {margin: 8px 0; border: 1px solid #dde6f4; background: #f7faff; border-radius: 8px; padding: 10px;}
+.sources summary {cursor: pointer; color: #385d9a; font-weight: 600;}
+.sources blockquote {border-left: 2px solid #a5bce0; padding-left: 12px; margin: 12px 0; color: #3f526c;}
+.learning-composer {padding: 12px 24px 18px; border-top: 1px solid #e5eaf1;}
+.learning-composer > div {display: flex; align-items: center; gap: 12px;}
+.learning-composer textarea {resize: vertical; min-height: 65px; max-height: 180px;}
+.learning-notice, .learning-error {padding: 12px 16px; margin-bottom: 16px; border-radius: 10px; font-size: 13px; background: #fff6dc; border: 1px solid #f0daa2; color: #73571b;}
+.learning-error {background: #fff0f0; border-color: #edc4c4; color: #a12e2e;}
+.learning-page button:disabled {opacity: .55; cursor: not-allowed;}
+@media (max-width: 800px) {.learning-grid {grid-template-columns: 1fr;} .learning-messages {max-height: none;} .learning-heading h1 {font-size: 24px;} .learning-chat {min-height: 480px;}}

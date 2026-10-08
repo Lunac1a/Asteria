@@ -16,7 +16,7 @@ credentials_exception = HTTPException(
     headers={"WWW-Authenticate": "Bearer"}
 )
 
-def get_current_user_id(token: str = Depends(oauth2_scheme)) -> UUID:
+def get_current_user_id(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> UUID:
     try:
         payload = jwt.decode(
             token,
@@ -27,9 +27,12 @@ def get_current_user_id(token: str = Depends(oauth2_scheme)) -> UUID:
         if user_id is None:
             raise credentials_exception
 
-        return UUID(user_id)
+        user_uuid = UUID(user_id)
+        if db.get(User, user_uuid) is None:
+            raise credentials_exception
+        return user_uuid
 
-    except JWTError:
+    except (JWTError, ValueError, TypeError, AttributeError):
         raise credentials_exception
 
 

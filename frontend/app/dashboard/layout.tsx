@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/api";
 import "./dashboard.css";
 
 export default function AppLayout({
@@ -11,11 +13,29 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!localStorage.getItem("access_token")) {
+      router.replace("/auth/login");
+      return;
+    }
+    void api("/me").then(() => {
+      if (!cancelled) setAuthenticated(true);
+    }).catch(() => {
+      if (!cancelled) setAuthError("Could not verify your account. Check the local API and refresh.");
+    });
+    return () => { cancelled = true; };
+  }, [router]);
 
   function handleLogout() {
     localStorage.removeItem("access_token");
     router.push("/auth/login");
   }
+
+  if (!authenticated) return <p role="status">{authError || "Checking your account..."}</p>;
 
   return (
     <div className="app-shell">
@@ -38,7 +58,7 @@ export default function AppLayout({
 
             <div className="topbar-center">
               <Link href="/dashboard/chat" className="topbar-link">
-                Chat
+                Learn
               </Link>
             </div>
 
