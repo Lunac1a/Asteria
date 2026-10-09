@@ -1,5 +1,5 @@
 "use client";
-import { useI18n, t } from "../lib/i18n";
+import { useI18n, t } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import "./page.css";
@@ -69,34 +69,6 @@ export default function LandingPage() {
               <h3 className="card-title">{t("Structured conversation")}</h3>
               <p className="card-text">
                 {t("Work through questions step by step with an assistant designed to support thinking, reflection, and deeper learning.")}</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section">
-          <h2 className="section-title">{t("Product preview")}</h2>
-
-          <div className="grid-2">
-            <div className="preview-card">
-              <h3 className="card-title">{t("Knowledge Base")}</h3>
-              <ul className="list">
-                <li>Week 5 lecture notes.pdf</li>
-                <li>Database revision.md</li>
-                <li>AI project brief.docx</li>
-                <li>Reading summary.txt</li>
-              </ul>
-            </div>
-
-            <div className="preview-card">
-              <h3 className="card-title">{t("Learning Session")}</h3>
-              <div className="chat-bubble-user">
-                Help me connect the key ideas from my uploaded notes.
-              </div>
-              <div className="chat-bubble-bot">
-                Your notes point to three themes worth unpacking: grounded
-                retrieval, guided learning, and systems thinking. Want to work
-                through them one by one?
-              </div>
             </div>
           </div>
         </section>
