@@ -1,24 +1,46 @@
 # Python
-backend/.venv/
+.venv/
 __pycache__/
 *.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
 
 # Node
 frontend/node_modules/
 frontend/.next/
+frontend/out/
+*.tsbuildinfo
 
-# Env
+# Local credentials (keep example templates)
 .env
 .env.local
 backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env.*
+!frontend/.env.local.example
 
-# IDE
+# Local documents, uploads, model caches and logs
+/data/
+/docs/
+*.log
+*.tmp
+*.temp
+# Reproducible cleanup inventories; important stage evidence stays visible.
+/artifacts/repository-cleanup/
+
+# IDE / OS
 .idea/
 .vscode/
-
-# OS
 .DS_Store
 Thumbs.db
 
-/data/
-/docs/
+# Generated local PDF viewer worker
+frontend/public/pdf.worker.min.mjs
+
+# Private development notes
+/.local/

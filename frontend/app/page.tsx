@@ -1,48 +1,39 @@
+"use client";
+import { useI18n, t } from "../lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import "./page.css";
 
 export default function LandingPage() {
+ useI18n();
   return (
     <main className="page-shell">
       <div className="container">
         <nav className="navbar">
           <div className="nav-brand">
-            <Image
-              className="brand-mark"
-              src="/asteria-logo.svg"
-              alt=""
-              width={48}
-              height={48}
-              priority
-            />
+            <span className="brand-mark" aria-hidden="true" />
             <span>Asteria</span>
           </div>
 
           <div className="nav-actions">
-            <Link href="/auth/login">Login</Link>
+            <Link href="/auth/login">{t("Login")}</Link>
             <Link href="/auth/register" className="btn btn-primary">
-              Register
-            </Link>
+              {t("Register")}</Link>
           </div>
         </nav>
 
         <section className="hero">
           <div className="hero-content">
-            <p className="badge">AI Learning Copilot</p>
+            <p className="badge">{t("AI Learning Copilot")}</p>
 
-            <h1 className="hero-title">Think, not just answer.</h1>
+            <h1 className="hero-title">{t("Think, not just answer.")}</h1>
 
             <p className="hero-subtitle">
-              Asteria is an AI learning copilot that helps you explore ideas,
-              build understanding, and learn through guided interaction with
-              your knowledge.
-            </p>
+              {t("Asteria is an AI learning copilot that helps you explore ideas, build understanding, and learn through guided interaction with your knowledge.")}</p>
 
             <div className="hero-actions">
               <Link href="/auth/register" className="btn btn-primary">
-                Start learning with Asteria
-              </Link>
+                {t("Start learning with Asteria")}</Link>
             </div>
           </div>
 
@@ -59,41 +50,35 @@ export default function LandingPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title">Core features</h2>
+          <h2 className="section-title">{t("Core features")}</h2>
 
           <div className="grid-3">
             <div className="feature-card">
-              <h3 className="card-title">Guided learning</h3>
+              <h3 className="card-title">{t("Guided learning")}</h3>
               <p className="card-text">
-                Turn notes, readings, and study materials into a learning flow
-                that helps you build real understanding.
-              </p>
+                {t("Turn notes, readings, and study materials into a learning flow that helps you build real understanding.")}</p>
             </div>
 
             <div className="feature-card">
-              <h3 className="card-title">Knowledge exploration</h3>
+              <h3 className="card-title">{t("Knowledge exploration")}</h3>
               <p className="card-text">
-                Explore concepts through grounded conversations that stay tied
-                to your material instead of drifting into generic replies.
-              </p>
+                {t("Explore concepts through grounded conversations that stay tied to your material instead of drifting into generic replies.")}</p>
             </div>
 
             <div className="feature-card">
-              <h3 className="card-title">Structured conversation</h3>
+              <h3 className="card-title">{t("Structured conversation")}</h3>
               <p className="card-text">
-                Work through questions step by step with an assistant designed
-                to support thinking, reflection, and deeper learning.
-              </p>
+                {t("Work through questions step by step with an assistant designed to support thinking, reflection, and deeper learning.")}</p>
             </div>
           </div>
         </section>
 
         <section className="section">
-          <h2 className="section-title">Product preview</h2>
+          <h2 className="section-title">{t("Product preview")}</h2>
 
           <div className="grid-2">
             <div className="preview-card">
-              <h3 className="card-title">Knowledge Base</h3>
+              <h3 className="card-title">{t("Knowledge Base")}</h3>
               <ul className="list">
                 <li>Week 5 lecture notes.pdf</li>
                 <li>Database revision.md</li>
@@ -103,7 +88,7 @@ export default function LandingPage() {
             </div>
 
             <div className="preview-card">
-              <h3 className="card-title">Learning Session</h3>
+              <h3 className="card-title">{t("Learning Session")}</h3>
               <div className="chat-bubble-user">
                 Help me connect the key ideas from my uploaded notes.
               </div>

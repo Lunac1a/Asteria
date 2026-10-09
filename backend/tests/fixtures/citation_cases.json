@@ -1,0 +1,72 @@
+[
+  {
+    "question": "Explain only what these materials support.",
+    "sources": [
+      {
+        "number": 1,
+        "page": 1,
+        "filename": "Search fundamentals.pdf",
+        "content": "Search fundamentals\nA short reference for the Asteria Chat interface review.\nUniform-cost search selects the frontier node with the lowest path cost g(n).\nA* adds a heuristic estimate h(n) to prioritize promising paths.\nThe evaluation function is f(n) = g(n) + h(n).\nSearch fundamentals | 1\n"
+      },
+      {
+        "number": 2,
+        "page": 2,
+        "filename": "Search fundamentals.pdf",
+        "content": "The role of the heuristic\nIn A* search, g(n) is the path cost from the start to node n.\nh(n) estimates the remaining cost from node n to a goal.\nA* selects the frontier node with the lowest estimated total cost f(n).\nIf h(n) is zero everywhere, f(n) equals g(n), so A* behaves like\nuniform-cost search under the same graph-search assumptions.\nAn admissible heuristic never overestimates the actual remaining cost.\nThis is a reference document for UI verification, not a learning assessment.\nSearch fundamentals | 2\n"
+      }
+    ],
+    "answer": "A* combines the path cost so far, g(n), with the estimated remaining cost, h(n): f(n) = g(n) + h(n). It selects the frontier node with the lowest f(n). [1]",
+    "citations": [
+      1
+    ],
+    "claims": [
+      {
+        "text": "A* combines the path cost so far, g(n), with the estimated remaining cost, h(n): f(n) = g(n) + h(n). It selects the frontier node with the lowest f(n). [1]",
+        "citations": [
+          1
+        ],
+        "quotes": [
+          {
+            "citation": 1,
+            "text": "Search fundamentals\nA short reference for the Asteria Chat interface review.\nUniform-cost search selects the frontier node with the lowest path cost g(n).\nA* adds a heuristic estimate h(n) to prioritize promising paths.\nThe evaluation function is f(n) = g(n) + h(n).\nSearch fundamentals | 1\n"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question": "Explain only what these materials support.",
+    "sources": [
+      {
+        "number": 1,
+        "page": 1,
+        "filename": "Search fundamentals.pdf",
+        "content": "Search fundamentals\nA short reference for the Asteria Chat interface review.\nUniform-cost search selects the frontier node with the lowest path cost g(n).\nA* adds a heuristic estimate h(n) to prioritize promising paths.\nThe evaluation function is f(n) = g(n) + h(n).\nSearch fundamentals | 1\n"
+      },
+      {
+        "number": 2,
+        "page": 2,
+        "filename": "Search fundamentals.pdf",
+        "content": "The role of the heuristic\nIn A* search, g(n) is the path cost from the start to node n.\nh(n) estimates the remaining cost from node n to a goal.\nA* selects the frontier node with the lowest estimated total cost f(n).\nIf h(n) is zero everywhere, f(n) equals g(n), so A* behaves like\nuniform-cost search under the same graph-search assumptions.\nAn admissible heuristic never overestimates the actual remaining cost.\nThis is a reference document for UI verification, not a learning assessment.\nSearch fundamentals | 2\n"
+      }
+    ],
+    "answer": "A* selects the frontier node with the lowest estimated total cost f(n). [2]",
+    "citations": [
+      2
+    ],
+    "claims": [
+      {
+        "text": "A* selects the frontier node with the lowest estimated total cost f(n). [2]",
+        "citations": [
+          2
+        ],
+        "quotes": [
+          {
+            "citation": 2,
+            "text": "The role of the heuristic\nIn A* search, g(n) is the path cost from the start to node n.\nh(n) estimates the remaining cost from node n to a goal.\nA* selects the frontier node with the lowest estimated total cost f(n).\nIf h(n) is zero everywhere, f(n) equals g(n), so A* behaves like\nuniform-cost search under the same graph-search assumptions.\nAn admissible heuristic never overestimates the actual remaining cost.\nThis is a reference document for UI verification, not a learning assessment.\nSearch fundamentals | 2\n"
+          }
+        ]
+      }
+    ]
+  }
+]

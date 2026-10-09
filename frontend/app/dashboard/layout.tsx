@@ -1,62 +1,24 @@
 "use client";
+import { useI18n, t, uiError } from "../../lib/i18n";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/api";
+import AppShell from "../../components/app-shell";
 import "./dashboard.css";
-
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+ useI18n();
   const router = useRouter();
-
-  function handleLogout() {
-    localStorage.removeItem("access_token");
-    router.push("/auth/login");
-  }
-
-  return (
-    <div className="app-shell">
-      <header className="app-topbar">
-        <div className="app-container">
-          <div className="topbar-inner">
-            <div className="topbar-left">
-              <Link href="/dashboard" className="logo">
-                <Image
-                  className="brand-mark"
-                  src="/asteria-logo.svg"
-                  alt=""
-                  width={48}
-                  height={48}
-                  priority
-                />
-                <span>Asteria</span>
-              </Link>
-            </div>
-
-            <div className="topbar-center">
-              <Link href="/dashboard/chat" className="topbar-link">
-                Chat
-              </Link>
-            </div>
-
-            <div className="topbar-right">
-              <Link href="/dashboard/settings" className="topbar-link">
-                Settings
-              </Link>
-              <button onClick={handleLogout} className="btn btn-secondary">
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="app-main">
-        <div className="app-container">{children}</div>
-      </main>
-    </div>
-  );
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authError, setAuthError] = useState("");
+  useEffect(() => {
+    let cancelled = false;
+    if (!localStorage.getItem("access_token")) { router.replace("/auth/login"); return; }
+    void api("/me").then(() => { if (!cancelled) setAuthenticated(true); }).catch(() => {
+      if (!cancelled) setAuthError("Could not verify your account. Please refresh and try again.");
+    });
+    return () => { cancelled = true; };
+  }, [router]);
+  if (!authenticated) return <div className="auth-check" role="status">{authError ? uiError(authError) : t("Checking your account…")}{authError && <button className="d1-button" onClick={() => window.location.reload()}>{t("Try again")}</button>}</div>;
+  return <AppShell>{children}</AppShell>;
 }

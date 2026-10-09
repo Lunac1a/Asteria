@@ -1,0 +1,168 @@
+[
+  {
+    "id": "valid",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "accepted",
+    "finish": "stop"
+  },
+  {
+    "id": "whole-fence",
+    "raw": "```json\n{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}\n```",
+    "expected": "accepted",
+    "finish": "stop"
+  },
+  {
+    "id": "missing-answer",
+    "raw": "{\"citations\": [], \"basis\": \"general\"}",
+    "expected": "schema_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "missing-citations",
+    "raw": "{\"answer\": \"x\", \"basis\": \"general\"}",
+    "expected": "schema_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "wrong-answer-type",
+    "raw": "{\"answer\": 4, \"citations\": [], \"basis\": \"general\"}",
+    "expected": "schema_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "boolean-citation",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [true], \"basis\": \"general\"}",
+    "expected": "schema_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "unknown-basis",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"unknown\"}",
+    "expected": "schema_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "invalid-json",
+    "raw": "{\"answer\":",
+    "expected": "json_parse",
+    "finish": "stop"
+  },
+  {
+    "id": "truncated-valid-json",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "output_truncated",
+    "finish": "length"
+  },
+  {
+    "id": "truncated-invalid-json",
+    "raw": "{\"answer\":",
+    "expected": "output_truncated",
+    "finish": "length"
+  },
+  {
+    "id": "empty",
+    "raw": "",
+    "expected": "empty_response",
+    "finish": "stop"
+  },
+  {
+    "id": "whitespace",
+    "raw": "  ",
+    "expected": "empty_response",
+    "finish": "stop"
+  },
+  {
+    "id": "illegal-citation",
+    "raw": "{\"answer\": \"Claim [99]\", \"citations\": [99], \"basis\": \"grounded\"}",
+    "expected": "citation_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "undeclared-inline",
+    "raw": "{\"answer\": \"Claim [1]\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "citation_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "grounded-no-citations",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"grounded\"}",
+    "expected": "citation_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "duplicate-key",
+    "raw": "{\"answer\":\"x\",\"answer\":\"y\",\"basis\":\"general\",\"citations\":[]}",
+    "expected": "json_parse",
+    "finish": "stop"
+  },
+  {
+    "id": "nan",
+    "raw": "{\"answer\":\"x\",\"basis\":\"general\",\"citations\":[],\"bad\":NaN}",
+    "expected": "json_parse",
+    "finish": "stop"
+  },
+  {
+    "id": "trailing-prose",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"} Done.",
+    "expected": "json_parse",
+    "finish": "stop"
+  },
+  {
+    "id": "root-list",
+    "raw": "[]",
+    "expected": "schema_validation",
+    "finish": "stop"
+  },
+  {
+    "id": "missing-finish",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "incomplete_response",
+    "finish": null
+  },
+  {
+    "id": "tool-call-finish",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "incomplete_response",
+    "finish": "tool_calls"
+  },
+  {
+    "id": "refusal",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "provider_refusal",
+    "finish": "stop",
+    "refusal": "Synthetic refusal"
+  },
+  {
+    "id": "content-filter",
+    "raw": "{\"answer\": \"A bounded answer.\", \"citations\": [], \"basis\": \"general\"}",
+    "expected": "provider_refusal",
+    "finish": "content_filter"
+  },
+  {
+    "id": "provider-timeout",
+    "raw": null,
+    "expected": "provider_timeout",
+    "finish": "stop",
+    "transport": "timeout"
+  },
+  {
+    "id": "provider-rate-limit",
+    "raw": null,
+    "expected": "provider_rate_limit",
+    "finish": "stop",
+    "transport": "429"
+  },
+  {
+    "id": "provider-500",
+    "raw": null,
+    "expected": "provider_status",
+    "finish": "stop",
+    "transport": "500"
+  },
+  {
+    "id": "invalid-latex-escape",
+    "raw": "{\"answer\":\"Math \\(f(n)\\)\",\"citations\":[],\"basis\":\"general\"}",
+    "expected": "json_parse",
+    "finish": "stop"
+  }
+]

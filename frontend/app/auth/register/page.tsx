@@ -1,13 +1,16 @@
 "use client";
+import { useI18n, t, uiError } from "../../../lib/i18n";
+
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "../auth.css";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = "";
 
 export default function RegisterPage() {
+ useI18n();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -83,19 +86,17 @@ export default function RegisterPage() {
     <main className="auth-page">
       <div className="auth-card">
         <div className="auth-back">
-          <Link href="/public" className="back-link">
-            ← Back
-          </Link>
+          <Link href="/" className="back-link">
+            {t("← Back")}</Link>
         </div>
-        <h1 className="auth-title">Create your account</h1>
+        <h1 className="auth-title">{t("Create your account")}</h1>
         <p className="auth-subtitle">
-          Start learning with Asteria, your AI learning copilot.
-        </p>
+          {t("Start learning with Asteria, your AI learning copilot.")}</p>
 
         <form onSubmit={handleRegister} className="form-stack">
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t("Email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -104,7 +105,7 @@ export default function RegisterPage() {
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t("Password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -113,7 +114,7 @@ export default function RegisterPage() {
 
           <input
             type="password"
-            placeholder="Confirm password"
+            placeholder={t("Confirm password")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -121,18 +122,17 @@ export default function RegisterPage() {
           />
 
           <button type="submit" disabled={loading} className="btn btn-primary">
-            {loading ? "Creating account..." : "Register"}
+            {loading ? t("Creating account...") : t("Register")}
           </button>
         </form>
 
-        {error && <p className="error-text">{error}</p>}
-        {success && <p className="success-text">{success}</p>}
+        {error && <p className="error-text">{uiError(error)}</p>}
+        {success && <p className="success-text">{t(success)}</p>}
 
         <p className="helper-text">
-          Already have an account?{" "}
+          {t("Already have an account?")}{" "}
           <Link href="/auth/login" className="text-link">
-            Login
-          </Link>
+            {t("Login")}</Link>
         </p>
       </div>
     </main>
