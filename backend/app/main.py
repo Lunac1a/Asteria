@@ -33,11 +33,18 @@ def create_app():
         allow_headers=["*"],
     )
     application.include_router(api_router)
+
     @application.exception_handler(StarletteHTTPException)
     async def categorized_error(request: Request, error: StarletteHTTPException):
-        category = getattr(error, 'generation_category', None)
-        if category: record_error(category)
-        return JSONResponse(status_code=error.status_code, content={'detail': error.detail}, headers=error.headers)
+        category = getattr(error, "generation_category", None)
+        if category:
+            record_error(category)
+        return JSONResponse(
+            status_code=error.status_code,
+            content={"detail": error.detail},
+            headers=error.headers,
+        )
+
     application.add_middleware(RequestLimits)
     application.add_middleware(RuntimeMetrics)
     return application

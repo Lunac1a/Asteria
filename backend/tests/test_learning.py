@@ -21,7 +21,7 @@ from app.core.security import create_access_token, decrypt_text
 from app.models.knowledge import Chunk, Document
 from app.models.messages import Message
 from app.models.user_llm_settings import UserLLMSetting
-from app.services.rag_service import grounded_answer, ABSTAIN
+from app.services.rag_service import grounded_answer
 from app.services.knowledge_service import run_worker
 
 from make_test_pdf import make_pdf  # noqa: E402
@@ -31,7 +31,12 @@ class LearningAPITests(unittest.TestCase):
     def setUp(self):
         temp_root = Path(__file__).resolve().parents[2] / "data" / "test-runs"
         temp_root.mkdir(parents=True, exist_ok=True)
-        self.enterContext(patch("app.services.smart_routing.provider_completion", return_value='{"intent":"general"}'))
+        self.enterContext(
+            patch(
+                "app.services.smart_routing.provider_completion",
+                return_value='{"intent":"general"}',
+            )
+        )
         self.temp = tempfile.TemporaryDirectory(dir=temp_root)
         self.addCleanup(self.temp.cleanup)
         for key, value in {
@@ -289,7 +294,11 @@ class LearningAPITests(unittest.TestCase):
                     if '"supported":false' in result:
                         self.assertEqual(
                             grounded_answer(db, user_id, "Question", [], sources),
-                            ("The available workspace materials do not support an answer. Please add relevant materials or ask a more specific question.", [], "insufficient"),
+                            (
+                                "The available workspace materials do not support an answer. Please add relevant materials or ask a more specific question.",
+                                [],
+                                "insufficient",
+                            ),
                         )
                     else:
                         with self.assertRaises(
@@ -297,7 +306,6 @@ class LearningAPITests(unittest.TestCase):
                         ) as exc:
                             grounded_answer(db, user_id, "Question", [], sources)
                         self.assertEqual(exc.exception.status_code, 502)
-
 
     def test_settings_keeps_key_and_rejects_untrusted_urls(self):
         payload = {
@@ -351,10 +359,19 @@ class LearningAPITests(unittest.TestCase):
         )
 
         corrected_url = "https://compatible.example/v1"
-        with patch.object(settings, "LLM_ALLOWED_BASE_URLS", payload["base_url"] + "," + corrected_url):
-            response = self.client.post("/api/settings/llm", json={**payload, "base_url": corrected_url}, headers=self.a)
+        with patch.object(
+            settings, "LLM_ALLOWED_BASE_URLS", payload["base_url"] + "," + corrected_url
+        ):
+            response = self.client.post(
+                "/api/settings/llm",
+                json={**payload, "base_url": corrected_url},
+                headers=self.a,
+            )
             self.assertEqual(response.status_code, 400)
-            self.assertEqual(self.client.get("/api/settings/llm", headers=self.a).json()["base_url"], payload["base_url"])
+            self.assertEqual(
+                self.client.get("/api/settings/llm", headers=self.a).json()["base_url"],
+                payload["base_url"],
+            )
 
     def test_malformed_auth_and_unknown_users_are_rejected(self):
         for data in [
@@ -510,7 +527,11 @@ class LearningAPITests(unittest.TestCase):
                         }
                     ),
                 ):
-                    result = self.ask("Explain photosynthesis" if basis == "general" else "Explain photosynthesis from the document").json()
+                    result = self.ask(
+                        "Explain photosynthesis"
+                        if basis == "general"
+                        else "Explain photosynthesis from the document"
+                    ).json()
                     self.assertEqual(result["answer_basis"], basis)
                     history = self.client.get(
                         f"/api/chat/sessions/{result['session_id']}/messages",
@@ -521,7 +542,9 @@ class LearningAPITests(unittest.TestCase):
                     if basis == "grounded":
                         self.assertEqual(strict.json()["answer_basis"], "grounded")
                     else:
-                        self.assertEqual(strict.status_code, 502) # Invalid contract is not evidence absence.
+                        self.assertEqual(
+                            strict.status_code, 502
+                        )  # Invalid contract is not evidence absence.
         with patch("app.api.routes.chat.retrieve", return_value=[]):
             self.assertEqual(
                 self.ask("课程截止日期是什么？").json()["answer_basis"], "insufficient"
@@ -574,7 +597,6 @@ class LearningAPITests(unittest.TestCase):
         with self.factory() as db:
             self.assertEqual(db.query(Message).count(), 0)
 
-
     def test_completed_turn_recovery_is_owner_scoped_and_modes_survive(self):
         request_id = str(uuid.uuid4())
         result = self.ask(
@@ -622,7 +644,9 @@ class LearningAPITests(unittest.TestCase):
             with (
                 self.subTest(result=result),
                 patch.object(settings, "LLM_BACKEND", "provider"),
-                patch("app.services.rag_service.generate_response", return_value=result),
+                patch(
+                    "app.services.rag_service.generate_response", return_value=result
+                ),
             ):
                 response = self.ask("Explain photosynthesis")
                 self.assertEqual(response.status_code, 502)
@@ -648,7 +672,9 @@ class LearningAPITests(unittest.TestCase):
             ),
         ):
             response = self.ask("When is the assignment due?")
-        self.assertEqual(response.status_code, 502) # Unsupported general fallback is invalid.
+        self.assertEqual(
+            response.status_code, 502
+        )  # Unsupported general fallback is invalid.
         with (
             patch("app.api.routes.chat.retrieve", return_value=[]),
             patch("app.services.rag_service.generate_response") as generate,
