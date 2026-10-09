@@ -1,6 +1,6 @@
 """Auth API regressions using synthetic settings and an isolated SQLite database.
 
-Do not import app.main: its import currently creates tables in the configured DB.
+Application settings are synthetic and do not depend on the local .env.
 Run from backend with: python -m unittest discover -s tests -v
 """
 
@@ -21,16 +21,28 @@ from sqlalchemy.pool import StaticPool
 # No production database, provider key, JWT secret or encryption key is used.
 with patch.dict("os.environ", {
     "APP_NAME": "Asteria auth tests",
-    "APP_HOST": "127.0.0.1",
     "APP_PORT": "8000",
     "FRONTEND_URL": "http://testserver",
     "DATABASE_URL": "sqlite://",
     "JWT_SECRET_KEY": "synthetic-test-secret-never-use-in-production",
     "JWT_ALGORITHM": "HS256",
     "JWT_EXPIRE_MINUTES": "60",
-    "NVIDIA_API_KEY": "synthetic-unused-provider-key",
-    "NVIDIA_API_BASE": "https://provider.invalid/v1",
-    "NVIDIA_CHAT_MODEL": "unused-test-model",
+    "LOCAL_DATA_DIR": "../data/test-runs",
+    "EMBEDDING_BACKEND": "test",
+    "EMBEDDING_MODEL": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "LLM_BACKEND": "test",
+    "LLM_ALLOWED_BASE_URLS": "https://integrate.api.nvidia.com/v1",
+    "PROVIDER_IS_SIMULATED": "false",
+    "RUNTIME_METRICS_ENABLED": "false",
+    "CITATION_AUDIT_ENABLED": "false",
+    "CITATION_AUDIT_TIMEOUT_SECONDS": "18",
+    "GENERATION_JSON_SCHEMA_PROFILES": "[]",
+    "RETRIEVAL_MIN_SCORE": "0.35",
+    "RETRIEVAL_LEXICAL_RESCUE": "true",
+    "INDEX_TIMEOUT_SECONDS": "90",
+    "QUERY_TIMEOUT_SECONDS": "30",
+    "MAX_UPLOAD_BYTES": "10485760",
+    "MAX_WORKSPACE_CHUNKS": "2000",
     "ENCRYPTION_KEY": Fernet.generate_key().decode(),
 }):
     from app.api.routes.auth import router

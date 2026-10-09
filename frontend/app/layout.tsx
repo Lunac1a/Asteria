@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LocaleProvider } from "../lib/i18n";
 
 export const metadata: Metadata = {
   title: "Asteria",
@@ -16,7 +17,7 @@ export default function RootLayout({
       lang="en"
       className="h-full antialiased"
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col"><LocaleProvider>{children}</LocaleProvider></body>
     </html>
   );
 }

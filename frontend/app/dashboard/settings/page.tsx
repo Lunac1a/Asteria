@@ -1,4 +1,6 @@
 "use client";
+import { useI18n, t, uiError, setLocale } from "../../../lib/i18n";
+
 
 import { useEffect, useState } from "react";
 import "./settings.css";
@@ -11,12 +13,13 @@ type LLMSettingsResponse = {
 };
 
 export default function SettingsPage() {
+ const locale = useI18n();
   const [apiKey, setApiKey] = useState("");
   const [modelName, setModelName] = useState("");
-  const [baseUrl, setBaseUrl] = useState("https://integrate.api.nvidia.com/v1");
+  const [baseUrl, setBaseUrl] = useState("");
 
   const [hasApiKey, setHasApiKey] = useState(false);
-  const [provider, setProvider] = useState("nvidia");
+  const [provider, setProvider] = useState("openai_compatible");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -60,9 +63,9 @@ export default function SettingsPage() {
 
         const data: LLMSettingsResponse = await res.json();
 
-        setProvider(data.provider || "nvidia");
-        setModelName(data.model_name || "qwen/qwen3.5-122b-a10b");
-        setBaseUrl(data.base_url || "https://integrate.api.nvidia.com/v1");
+        setProvider(data.provider || "openai_compatible");
+        setModelName(data.model_name || "");
+        setBaseUrl(data.base_url || "");
         setHasApiKey(Boolean(data.has_api_key));
       } catch (err) {
         const message =
@@ -90,10 +93,11 @@ export default function SettingsPage() {
       }
 
       if (!apiKey.trim() && !hasApiKey) {
-        throw new Error("Please enter your NVIDIA API key.");
+        throw new Error("Please enter your provider API key.");
       }
 
       const payload = {
+        provider,
         ...(apiKey.trim() ? { api_key: apiKey.trim() } : {}),
         model_name: modelName.trim(),
         base_url: baseUrl.trim(),
@@ -111,7 +115,14 @@ export default function SettingsPage() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(typeof data?.detail === "string" ? data.detail : "Please check the provider URL, model and API key.");
+        const fields: Record<string, string> = { base_url: "Base URL", model_name: "Model Name", api_key: "API Key", provider: "Service" };
+        const validation = Array.isArray(data?.detail)
+          ? data.detail.map((issue: { loc?: string[]; msg?: string }) => {
+              const field = issue.loc?.at(-1) ?? "";
+              return `${fields[field] ?? "Settings"}: ${issue.msg ?? "Invalid value"}`;
+            }).join("; ")
+          : "";
+        throw new Error(typeof data?.detail === "string" ? data.detail : validation || "Settings could not be saved. Please try again.");
       }
 
       setHasApiKey(true);
@@ -129,7 +140,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="settings-page">
-        <div className="card settings-card">Loading settings...</div>
+        <div className="card settings-card">{t("Loading settings...")}</div>
       </div>
     );
   }
@@ -137,21 +148,23 @@ export default function SettingsPage() {
   return (
     <div className="settings-page">
       <div className="settings-header">
-        <h1 className="section-title">LLM Settings</h1>
+        <h1 className="section-title">{t("Settings")}</h1>
         <p className="card-text">
-          Configure your NVIDIA NIM API key to enable chat.
-        </p>
+          {t("Connect an OpenAI-compatible API.")}</p>
       </div>
 
+      <section className="card settings-card" aria-labelledby="language-heading">
+        <h2 id="language-heading">{t("Interface language")}</h2>
+        <label className="settings-label" htmlFor="ui-language">{t("Language")}</label>
+        <select id="ui-language" className="input" value={locale} onChange={event => setLocale(event.target.value === 'zh-CN' ? 'zh-CN' : 'en')}>
+          <option value="en">English</option><option value="zh-CN">简体中文</option>
+        </select>
+        <p className="settings-helper">{t("Only changes the interface. Your content and AI response language stay unchanged.")}</p>
+      </section>
       <div className="card settings-card">
         <div className="settings-status">
-          <div>
-            <p className="settings-meta-label">Provider</p>
-            <p className="settings-meta-value">{provider}</p>
-          </div>
-
           <div className="settings-status-key">
-            <p className="settings-meta-label">API Key Status</p>
+            <p className="settings-meta-label">{t("API Key Status")}</p>
             <p
               className={
                 hasApiKey
@@ -159,63 +172,64 @@ export default function SettingsPage() {
                   : "settings-status-text missing"
               }
             >
-              {hasApiKey ? "Configured" : "Not configured"}
+              {hasApiKey ? t("Configured") : t("Not configured")}
             </p>
           </div>
         </div>
 
-        {error && <div className="settings-alert error">{error}</div>}
+        {error && <div className="settings-alert error">{uiError(error)}</div>}
 
-        {success && <div className="settings-alert success">{success}</div>}
+        {success && <div className="settings-alert success">{t(success)}</div>}
 
         <form onSubmit={handleSave} className="settings-form">
           <div className="settings-field">
-            <label htmlFor="provider-key" className="settings-label">NVIDIA API Key</label>
+            <label htmlFor="provider-url" className="settings-label">{t("Base URL")}</label>
+            <input
+              id="provider-url"
+              type="url"
+              placeholder="https://api.example.com/v1"
+              required
+              value={baseUrl}
+              onChange={(e) => setBaseUrl(e.target.value)}
+              className="input"
+            />
+            <p className="settings-helper">
+              {t("Use the API root only, not the full")}{" "}
+              <code>/chat/completions</code> {t("endpoint.")}
+            </p>
+          </div>
+
+          <div className="settings-field">
+            <label htmlFor="provider-key" className="settings-label">{t("API Key")}</label>
             <input
               id="provider-key"
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder={
-                hasApiKey
-                  ? "API key already configured. Enter a new one to replace it."
-                  : "Enter your NVIDIA API key"
+                hasApiKey ? t("API key already configured. Enter a new one to replace it.") : t("Enter your provider API key")
               }
               className="input"
             />
             <p className="settings-helper">
-              The saved key is not shown again for security reasons.
-            </p>
+              {t("The saved key is not shown again. Enter a new key when changing the URL.")}</p>
           </div>
 
           <div className="settings-field">
-            <label htmlFor="provider-model" className="settings-label">Model Name</label>
+            <label htmlFor="provider-model" className="settings-label">{t("Model Name")}</label>
             <input
               id="provider-model"
               type="text"
               value={modelName}
               onChange={(e) => setModelName(e.target.value)}
               className="input"
+              required
             />
-          </div>
-
-          <div className="settings-field">
-            <label htmlFor="provider-url" className="settings-label">Base URL</label>
-            <input
-              id="provider-url"
-              type="text"
-              value={baseUrl}
-              onChange={(e) => setBaseUrl(e.target.value)}
-              className="input"
-            />
-            <p className="settings-helper">
-              Use the API root only, not the full{" "}
-              <code>/chat/completions</code> endpoint.
-            </p>
+            <p className="settings-helper">{t("Enter an exact model name available to your API key.")}</p>
           </div>
 
           <button type="submit" disabled={saving} className="btn btn-primary">
-            {saving ? "Saving..." : "Save Settings"}
+            {saving ? t("Saving...") : t("Save Settings")}
           </button>
         </form>
       </div>

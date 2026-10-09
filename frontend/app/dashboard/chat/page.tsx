@@ -1,173 +1,144 @@
 "use client";
+import { useI18n, t, uiError, getLocale } from "../../../lib/i18n";
 
-import { useEffect, useRef, useState } from "react";
+import {Suspense,useEffect,useLayoutEffect,useRef,useState} from "react";
+import {useRouter,useSearchParams} from "next/navigation";
+import Link from "next/link";
+import SourcePanel from "./source-panel";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { api, openDocument } from "../../../lib/api";
+import {api} from "../../../lib/api";
+import {chatError,readingText,conversationUrl,parsePending,validType,type Answer,type ChatMessage,type ChatSession,type PendingTurn,type Source} from "../../../lib/chat-model";
+import Icon from "../../../components/icon";
+import NewChatButton,{NewChatDialog} from "../../../components/new-chat";
+import ChatPanel from "./chat-panel";
 import "./learning.css";
+import {LearningActions,LearningGoal,LearningNotes,RecapFlow,RecapHistory,FinishedComposer} from "./learning-experience";
+import {learningPath,type LearningState} from "../../../lib/learning-model";
+const pageSize=50;
 
-type Workspace = { id: string; name: string };
-type Document = { id: string; name: string; status: string; error: string | null; chunk_count: number; size_bytes: number; embedding_model: string };
-type Source = { number: number; document_id: string; document_name: string; page: number | null; content: string; chunk_id: string };
-type Message = { role: string; content: string; sources?: Source[]; ai_mode?: string };
-type Session = { id: string; title: string };
-type Config = { embedding_backend: string; embedding_model: string; llm_backend: string; max_upload_bytes: number };
-type Answer = { session_id: string; answer: string; sources: Source[]; ai_mode: string };
-
-export default function ChatPage() {
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [workspaceId, setWorkspaceId] = useState("");
-  const [workspaceName, setWorkspaceName] = useState("");
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [sessionId, setSessionId] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [question, setQuestion] = useState("");
-  const [config, setConfig] = useState<Config | null>(null);
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState("");
-  const [loading, setLoading] = useState(true);
-  const pending = useRef<{ id: string; question: string; session: string; workspace: string } | null>(null);
-  const end = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const [spaces, configuration] = await Promise.all([api<Workspace[]>("/workspaces"), api<Config>("/learning/config")]);
-        if (cancelled) return;
-        setWorkspaces(spaces);
-        setConfig(configuration);
-        const saved = localStorage.getItem("asteria.workspace");
-        const selected = spaces.find((space) => space.id === saved)?.id ?? spaces[0]?.id ?? "";
-        setWorkspaceId(selected);
-      } catch (e) { if (!cancelled) setError(e instanceof Error ? e.message : "Could not load workspaces"); }
-      finally { if (!cancelled) setLoading(false); }
-    }
-    void load();
-    return () => { cancelled = true; };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      if (!workspaceId) return;
-      setBusy("Loading materials...");
-      try {
-        const [docs, chats] = await Promise.all([api<Document[]>(`/workspaces/${workspaceId}/documents`), api<Session[]>(`/chat/sessions?workspace_id=${workspaceId}`)]);
-        const saved = localStorage.getItem(`asteria.session.${workspaceId}`);
-        const selected = chats.find((chat) => chat.id === saved)?.id ?? chats[0]?.id ?? "";
-        const history = selected ? await api<Message[]>(`/chat/sessions/${selected}/messages`) : [];
-        if (cancelled) return;
-        setDocuments(docs); setSessions(chats); setSessionId(selected); setMessages(history);
-        localStorage.setItem("asteria.workspace", workspaceId);
-      } catch (e) { if (!cancelled) setError(e instanceof Error ? e.message : "Could not load materials"); }
-      finally { if (!cancelled) setBusy(""); }
-    }
-    void load();
-    return () => { cancelled = true; };
-  }, [workspaceId]);
-
-  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, [messages, busy]);
-
-  async function createWorkspace(e: React.FormEvent) {
-    e.preventDefault(); setError(""); setBusy("Creating workspace...");
-    try {
-      const workspace = await api<Workspace>("/workspaces", { method: "POST", body: JSON.stringify({ name: workspaceName }) });
-      setWorkspaces((previous) => [workspace, ...previous]); setWorkspaceId(workspace.id); setWorkspaceName("");
-      setDocuments([]); setSessions([]); setSessionId(""); setMessages([]); pending.current = null;
-    } catch (e) { setError(e instanceof Error ? e.message : "Create failed"); }
-    finally { setBusy(""); }
+function Chat({workspaceId,requestedSession,draftType}:{workspaceId:string;requestedSession:string;draftType:string}) {
+ useI18n();
+ const router=useRouter();
+ const [space,setSpace]=useState<{id:string;name:string}|null>(null);
+ const [session,setSession]=useState<ChatSession|null>(null);
+ const [sessions,setSessions]=useState<ChatSession[]>([]);
+ const [messages,setMessages]=useState<ChatMessage[]>([]);
+ const [question,setQuestion]=useState("");
+ const [loading,setLoading]=useState(true);
+ const [loadError,setLoadError]=useState("");
+ const [error,setError]=useState("");
+ const [busy,setBusy]=useState(false);
+ const [pendingTurn,setPendingTurn]=useState<PendingTurn|null>(null);
+ const [refresh,setRefresh]=useState(0);
+ const [panel,setPanel]=useState<"sessions"|"sources"|"notes"|"recaps"|"finish"|null>(null);
+ const [learningState,setLearningState]=useState<LearningState|null>(null);
+ const [selection,setSelection]=useState<{sources:Source[];initial:number}|null>(null);
+ const [moreHistory,setMoreHistory]=useState(false);
+ const [moreSessions,setMoreSessions]=useState(false);
+ const [paging,setPaging]=useState(false);
+ const [copied,setCopied]=useState<number|null>(null);
+ const [atBottom,setAtBottom]=useState(true);
+ const request=useRef<AbortController|null>(null);
+ const sending=useRef(false);
+ const mounted=useRef(true);
+ const scroller=useRef<HTMLDivElement>(null);
+ const textarea=useRef<HTMLTextAreaElement>(null);
+ const scrollMode=useRef<"bottom"|number|null>("bottom");
+ const storage=useRef("");
+ const [draftKey,setDraftKey]=useState("");
+ const type=session?.session_type??(!requestedSession?validType(draftType):null);
+ const learning=type==="learning";
+ const title=session?.title??(type?(learning?t("New learning session"):t("New conversation")):"New Chat");
+ const label=learning?"Learning":type==="questioning"?"Questioning":"Conversation";
+ const lastSources=[...messages].reverse().find(m=>m.sources?.length)?.sources??[];
+ useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;request.current?.abort();};},[]);
+ useEffect(()=>{
+  let cancelled=false;
+  async function load(){
+   try{
+    const id=workspaceId;
+    if(!id&&requestedSession){const found=await api<ChatSession[]>(`/chat/sessions?session_id=${encodeURIComponent(requestedSession)}`);if(!found[0]?.workspace_id)throw Error("Conversation unavailable");router.replace(conversationUrl(found[0].workspace_id,requestedSession));return;}
+    if(!id)throw Error("Choose a workspace to start a conversation.");
+    const [current,chats,specific]=await Promise.all([api<{id:string;name:string}>(`/workspaces/${encodeURIComponent(id)}`),api<ChatSession[]>(`/chat/sessions?workspace_id=${encodeURIComponent(id)}&limit=${pageSize}`),requestedSession?api<ChatSession[]>(`/chat/sessions?workspace_id=${encodeURIComponent(id)}&session_id=${encodeURIComponent(requestedSession)}`):Promise.resolve([])]);
+    if(requestedSession&&!specific[0])throw Error("Conversation unavailable");
+    const currentType=requestedSession?specific[0].session_type:validType(draftType);
+    let owner="";try{owner=JSON.parse(atob((localStorage.getItem("access_token")??"").split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).sub??"";}catch{}
+    const key=`asteria.chat.v3.${owner}.${id}.${requestedSession||'draft-'+currentType}`;
+    const pending=parsePending(sessionStorage.getItem(key+'.pending'),id,requestedSession,currentType);
+    if(pending){const recovered=await api<Answer>(`/chat/turns/${pending.id}`).catch(()=>null);if(cancelled)return;if(recovered){sessionStorage.removeItem(key+'.pending');sessionStorage.removeItem(key);if(recovered.session_id!==requestedSession){router.replace(conversationUrl(id,recovered.session_id));return;}}}
+    const history=requestedSession?await api<ChatMessage[]>(`/chat/sessions/${encodeURIComponent(requestedSession)}/messages?limit=${pageSize}`):[];
+    const learningData=currentType==="learning"&&requestedSession?await api<LearningState>(learningPath(requestedSession)):null;
+    if(cancelled)return;
+    setLearningState(learningData);
+    storage.current=key;setDraftKey(key);setSpace(current);setSessions(chats);setSession(specific[0]??null);setMessages(history);setMoreHistory(history.length===pageSize);setMoreSessions(chats.length===pageSize);
+    const stillPending=parsePending(sessionStorage.getItem(key+'.pending'),id,requestedSession,currentType);
+    setPendingTurn(stillPending);setQuestion(sessionStorage.getItem(key)??stillPending?.question??"");if(stillPending)setError("Your last response may still be finishing. Retry to recover it without sending a duplicate.");setLoadError("");
+   }catch{if(!cancelled)setLoadError(workspaceId?"We couldn't open this conversation. It may be unavailable, or the connection may have failed.":"Choose a workspace to open or start a conversation.");}
+   finally{if(!cancelled)setLoading(false);}
   }
-
-  async function refreshDocuments() { setDocuments(await api<Document[]>(`/workspaces/${workspaceId}/documents`)); }
-
-  async function upload(file: File | undefined) {
-    if (!file || !workspaceId) return;
-    setError("");
-    if (file.size > (config?.max_upload_bytes ?? 10 * 1024 * 1024)) { setError("Maximum file size is 10 MiB."); return; }
-    setBusy("Parsing and indexing your document...");
-    try {
-      const data = new FormData(); data.append("file", file);
-      const doc = await api<Document>(`/workspaces/${workspaceId}/documents`, { method: "POST", body: data });
-      await refreshDocuments();
-      if (doc.status === "failed") setError(doc.error ?? "Index failed. Try again.");
-    } catch (e) { setError(e instanceof Error ? e.message : "Upload failed"); await refreshDocuments().catch(() => {}); }
-    finally { setBusy(""); }
-  }
-
-  async function documentAction(doc: Document, action: "delete" | "reindex") {
-    if (action === "delete" && !window.confirm(`Delete ${doc.name} and its index? Historical citation excerpts will remain in your chats.`)) return;
-    setError(""); setBusy(action === "delete" ? "Deleting document..." : "Rebuilding index...");
-    try {
-      await api(`/workspaces/${workspaceId}/documents/${doc.id}${action === "reindex" ? "/reindex" : ""}`, { method: action === "delete" ? "DELETE" : "POST" });
-      await refreshDocuments();
-    } catch (e) { setError(e instanceof Error ? e.message : "Document action failed"); }
-    finally { setBusy(""); }
-  }
-
-  async function selectSession(id: string) {
-    setError(""); setBusy("Opening session...");
-    try {
-      const history = id ? await api<Message[]>(`/chat/sessions/${id}/messages`) : [];
-      setSessionId(id); setMessages(history); pending.current = null;
-      localStorage.setItem(`asteria.session.${workspaceId}`, id);
-    } catch (e) { setError(e instanceof Error ? e.message : "Could not open session"); }
-    finally { setBusy(""); }
-  }
-
-  async function send(e: React.FormEvent) {
-    e.preventDefault();
-    if (!question.trim() || !workspaceId || busy) return;
-    const text = question.trim(); setError(""); setBusy("Finding evidence and preparing your answer...");
-    if (!pending.current || pending.current.question !== text || pending.current.session !== sessionId || pending.current.workspace !== workspaceId) {
-      pending.current = { id: crypto.randomUUID(), question: text, session: sessionId, workspace: workspaceId };
-    }
-    try {
-      const answer = await api<Answer>("/chat", { method: "POST", body: JSON.stringify({ message: text, workspace_id: workspaceId, session_id: sessionId || null, request_id: pending.current.id }) });
-      setMessages((previous) => [...previous, { role: "user", content: text }, { role: "assistant", content: answer.answer, sources: answer.sources, ai_mode: answer.ai_mode }]);
-      setSessionId(answer.session_id); setQuestion(""); pending.current = null;
-      localStorage.setItem(`asteria.session.${workspaceId}`, answer.session_id);
-      setSessions(await api<Session[]>(`/chat/sessions?workspace_id=${workspaceId}`));
-    } catch (e) { setError(e instanceof Error ? e.message : "Answer failed. Your question is kept for retry."); }
-    finally { setBusy(""); }
-  }
-
-  if (loading) return <p role="status">Loading your learning spaces...</p>;
-  const simulated = config?.llm_backend === "test" || config?.embedding_backend === "test";
-  return (
-    <div className="learning-page">
-      <div className="learning-heading"><div><p className="eyebrow">PERSONAL LEARNING COPILOT</p><h1>Learn from your course materials</h1><p>Choose a course, add your notes, and ask questions with evidence.</p></div></div>
-      {simulated && <div className="learning-notice" role="status">Test mode — {config?.embedding_backend === "test" ? "simulated embeddings" : "local BGE embeddings"}; {config?.llm_backend === "test" ? "simulated LLM answers" : "provider LLM"}. This is not a real AI end-to-end validation.</div>}
-      {error && <div className="learning-error" role="alert">{error}</div>}
-      <div className="learning-grid">
-        <aside className="learning-sidebar">
-          <section className="learning-card"><h2>Workspace</h2>
-            <label htmlFor="workspace">Your course</label>
-            <select id="workspace" value={workspaceId} disabled={Boolean(busy)} onChange={(e) => { setWorkspaceId(e.target.value); setMessages([]); setSessionId(""); setDocuments([]); setSessions([]); setError(""); pending.current = null; }}>
-              <option value="" disabled>Select a workspace</option>{workspaces.map((space) => <option key={space.id} value={space.id}>{space.name}</option>)}
-            </select>
-            <form onSubmit={createWorkspace}><label htmlFor="workspace-name">New course name</label><input id="workspace-name" value={workspaceName} onChange={(e) => setWorkspaceName(e.target.value)} maxLength={120} placeholder="e.g. COMP101" required disabled={Boolean(busy)} /><button className="btn btn-secondary" disabled={Boolean(busy) || !workspaceName.trim()}>Create Workspace</button></form>
-          </section>
-          <section className="learning-card"><h2>Course materials</h2><p className="muted">Text PDF, Markdown or TXT · up to 10 MiB and 100 PDF pages.</p>
-            <label className="upload-label" htmlFor="course-file">Upload course document</label><input id="course-file" type="file" accept=".pdf,.txt,.md" disabled={!workspaceId || Boolean(busy)} onChange={(e) => { void upload(e.target.files?.[0]); e.target.value = ""; }} />
-            {!documents.length && <p className="muted">Add a document to build your course index.</p>}
-            {documents.map((doc) => <article className="document-item" key={doc.id}><strong>{doc.name}</strong><p><span className={`document-status ${doc.status}`}>{doc.status}</span> · {doc.chunk_count} chunks</p>{doc.error && <p className="document-error">{doc.error}</p>}<div className="document-actions"><button disabled={Boolean(busy)} onClick={() => void documentAction(doc, "reindex")}>Reindex</button><button disabled={Boolean(busy)} onClick={() => void documentAction(doc, "delete")}>Delete</button></div></article>)}
-          </section>
-          <section className="learning-card"><h2>Sessions</h2><button className="btn btn-secondary" disabled={!workspaceId || Boolean(busy)} onClick={() => void selectSession("")}>+ New Chat</button><p className="muted">Latest 100 sessions; latest 200 messages per session.</p>{sessions.map((session) => <button className={`session-button ${session.id === sessionId ? "active" : ""}`} key={session.id} disabled={Boolean(busy)} onClick={() => void selectSession(session.id)}>{session.title}</button>)}</section>
-        </aside>
-        <section className="learning-chat" aria-label="Knowledge chat">
-          <div className="learning-chat-title"><h2>{workspaces.find((space) => space.id === workspaceId)?.name ?? "Your learning space"}</h2><span>Answers grounded in your documents</span></div>
-          <div className="learning-messages" aria-live="polite">
-            {!messages.length && <div className="learning-empty"><h3>What would you like to understand?</h3><p>Upload your course materials, then ask about a concept. Open each source to check the original passage.</p></div>}
-            {messages.map((message, index) => <article className={`learning-message ${message.role}`} key={index}><strong className="message-author">{message.role === "user" ? "You" : "Asteria"}</strong><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
-              {message.sources?.length ? <div className="sources"><h3>Sources</h3>{message.sources.map((source) => <details key={`${source.number}-${source.chunk_id}`}><summary>[{source.number}] {source.document_name} · {source.page ? `PDF page ${source.page}` : "Text excerpt"}{!documents.some((doc) => doc.id === source.document_id) ? " (deleted; saved excerpt)" : ""}</summary><blockquote>{source.content}</blockquote>{documents.some((doc) => doc.id === source.document_id) && <button onClick={() => void openDocument(workspaceId, source.document_id, source.document_name).catch((e) => setError(e.message))}>Download original</button>}</details>)}</div> : null}
-            </article>)}
-            {busy && <p role="status" className="muted">{busy}</p>}<div ref={end} />
-          </div>
-          <form className="learning-composer" onSubmit={send}><label htmlFor="question">Ask about your materials</label><div><textarea id="question" value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={4000} placeholder="What does the course say about...?" rows={2} disabled={!workspaceId || Boolean(busy)} /><button className="btn btn-primary" disabled={!workspaceId || Boolean(busy) || !question.trim()}>Send</button></div><p className="muted">When the materials are insufficient, Asteria will say so. Check source passages for accuracy.</p></form>
-        </section>
-      </div>
-    </div>
-  );
+  void load();return()=>{cancelled=true;};
+ },[workspaceId,requestedSession,draftType,refresh,router]);
+ useLayoutEffect(()=>{const el=scroller.current;if(!el||scrollMode.current===null)return;if(scrollMode.current==="bottom")el.scrollTop=el.scrollHeight;else el.scrollTop=el.scrollHeight-scrollMode.current;scrollMode.current=null;},[messages,loading,busy]);
+ useLayoutEffect(()=>{const el=textarea.current;if(el){el.style.height="auto";el.style.height=`${Math.min(el.scrollHeight,160)}px`;}},[question,loading]);
+ function updateQuestion(value:string){setQuestion(value);if(storage.current)sessionStorage.setItem(storage.current,value);}
+ async function send(){
+  if(learningState?.status==="finished"||sending.current||!space||(!session&&!type)||!question.trim())return;
+  sending.current=true;scrollMode.current=atBottom?"bottom":null;setBusy(true);setError("");
+  const turn=pendingTurn??{id:crypto.randomUUID(),question:question.trim(),workspace:space.id,session:session?.id??"",type,uiLocale:getLocale()};
+  setPendingTurn(turn);sessionStorage.setItem(storage.current+'.pending',JSON.stringify(turn));sessionStorage.setItem(storage.current,turn.question);
+  const controller=new AbortController();request.current=controller;const timeout=window.setTimeout(()=>controller.abort(),80000);
+  try{
+   const answer=await api<Answer>("/chat",{method:"POST",signal:controller.signal,body:JSON.stringify({message:turn.question,ui_locale:turn.uiLocale??null,workspace_id:turn.workspace,session_id:turn.session||null,session_type:turn.type,request_id:turn.id,answer_mode:"smart",learning_mode:"direct"})});
+   if(!mounted.current)return;
+   sessionStorage.removeItem(storage.current+'.pending');sessionStorage.removeItem(storage.current);setPendingTurn(null);setQuestion("");
+   if(!session){router.replace(conversationUrl(space.id,answer.session_id));return;}
+   scrollMode.current=atBottom?"bottom":null;
+   const history=await api<ChatMessage[]>(`/chat/sessions/${encodeURIComponent(answer.session_id)}/messages?limit=${Math.min(200,Math.max(pageSize,messages.length+2))}`).catch(()=>null);
+   if(!mounted.current)return;
+   if(history&&messages.length<=198){setMessages(history);setMoreHistory(history.length===Math.min(200,Math.max(pageSize,messages.length+2)));}
+   else setMessages(old=>[...old,{role:"user",content:turn.question},{role:"assistant",content:answer.answer,sources:answer.sources,answer_basis:answer.answer_basis}]);
+   const refreshed=await api<ChatSession[]>(`/chat/sessions?workspace_id=${encodeURIComponent(space.id)}&limit=${Math.max(pageSize,Math.min(sessions.length,100))}`).catch(()=>null);
+   if(mounted.current&&refreshed)setSessions(refreshed);
+   if(learning)try{const state=await api<LearningState>(learningPath(answer.session_id));if(mounted.current)setLearningState(state);}catch{setError("Your response is saved, but learning notes could not be refreshed. Reload to see the latest notes.");}
+   textarea.current?.focus({preventScroll:true});
+  }catch(e){if(mounted.current){if(e instanceof Error && /was not saved|no answer was saved|Configure.*Settings|LLM settings.*invalid|Question cannot be blank/i.test(e.message)){setPendingTurn(null);sessionStorage.removeItem(storage.current+'.pending');}setError(controller.signal.aborted?"Stopped waiting. Your response may still be saved. Retry to recover it; your message is kept.":chatError(e));}}
+  finally{window.clearTimeout(timeout);request.current=null;sending.current=false;if(mounted.current)setBusy(false);}
+ }
+ async function older(){
+  if(!session||paging)return;setPaging(true);setError("");
+  try{const rows=await api<ChatMessage[]>(`/chat/sessions/${encodeURIComponent(session.id)}/messages?offset=${messages.length}&limit=${pageSize}`);if(!mounted.current)return;scrollMode.current=(scroller.current?.scrollHeight??0)-(scroller.current?.scrollTop??0);setMessages(old=>[...rows,...old]);setMoreHistory(rows.length===pageSize);}catch{setError("Couldn't load earlier messages. Your current conversation is still here.");}finally{if(mounted.current)setPaging(false);}
+ }
+ async function loadSessions(){setPaging(true);try{const rows=await api<ChatSession[]>(`/chat/sessions?workspace_id=${encodeURIComponent(workspaceId)}&offset=${sessions.length}&limit=${pageSize}`);if(mounted.current){setSessions(old=>[...old,...rows.filter(row=>!old.some(s=>s.id===row.id))]);setMoreSessions(rows.length===pageSize);}}catch{setError("Couldn't load more sessions. Please try again.");}finally{if(mounted.current)setPaging(false);}}
+ function openSources(sources:Source[],initial=0){setSelection({sources,initial});setPanel("sources");}
+ function closePanel(){setPanel(null);}
+ function changeLearning(data:LearningState){setLearningState(data);setSession(old=>old?{...old,learning_goal:data.goal,learning_status:data.status}:old);setSessions(old=>old.map(s=>s.id===data.session_id?{...s,learning_goal:data.goal,learning_status:data.status}:s));}
+ const learningProps=learningState?{data:learningState,change:changeLearning,close:closePanel,draftKey:draftKey+".learning"}:null;
+ if(loading)return <div className="chat-load" role="status">{t("Opening your conversation…")}</div>;
+ if(loadError||!space)return <div className="chat-load"><h1>{t("Conversation unavailable")}</h1><p role="alert">{uiError(loadError)}</p><div><button className="d1-button secondary" onClick={()=>{setLoading(true);setRefresh(v=>v+1);}}>{t("Try again")}</button><Link className="d1-text-button" href={workspaceId?`/dashboard/workspaces/${encodeURIComponent(workspaceId)}`:"/dashboard/workspaces"}>{t("Back to Workspaces")}</Link></div></div>;
+ return <div className={`chat-workbench ${panel?'chat-with-'+panel:''}`}>
+ {panel==="sessions"&&<ChatPanel title={t("Sessions")} side="left" close={closePanel}><div className="chat-session-heading"><p>{space.name}</p><NewChatButton workspaceId={space.id} workspaceName={space.name} className="d1-button secondary" disabled={busy}/></div><nav className="chat-panel-scroll" aria-label={t("Workspace sessions")}>{!sessions.length&&<p className="chat-caption">{t("Your conversations will appear here after your first message.")}</p>}{sessions.map(s=><Link key={s.id} href={conversationUrl(space.id,s.id)} className={`chat-session ${s.session_type==="learning"?'is-learning':''}`} aria-current={s.id===session?.id?"page":undefined} onClick={()=>setPanel(null)}><span><Icon name={s.session_type==="learning"?'cap':'chat'}/></span><div><strong>{s.title}</strong><small>{s.session_type==="learning" ? t(s.learning_status==='finished'?"Learning · Finished":"Learning · Active") : s.session_type==="questioning" ? t("Questioning") : t("Conversation")}</small></div></Link>)}{moreSessions&&<button className="d1-text-button" disabled={paging} onClick={()=>void loadSessions()}>{paging ? t("Loading…") : t("Load more sessions")}</button>}</nav></ChatPanel>}
+ <section className="chat-center" aria-label={t("{type} chat",{type:t(label)})}>
+ <header className="chat-context"><button className="d1-text-button" aria-expanded={panel==="sessions"} onClick={()=>setPanel(panel==="sessions"?null:"sessions")}><Icon name="file" size={20}/><span>{t("Sessions")}</span></button><div className="chat-breadcrumb"><Link href={`/dashboard/workspaces/${encodeURIComponent(space.id)}`}>{space.name}</Link><span>/</span><h1 title={title}>{title}</h1></div><div className="chat-context-actions">{lastSources.length>0&&<button className="d1-text-button" aria-expanded={panel==="sources"} onClick={()=>panel==="sources"?setPanel(null):openSources(lastSources)}><Icon name="book" size={20}/><span>{t("Sources")}</span></button>}<NewChatButton workspaceId={space.id} workspaceName={space.name} className="d1-text-button" disabled={busy}/>{learningState&&<LearningActions data={learningState} open={setPanel} disabled={busy||Boolean(pendingTurn)}/>}</div></header>
+ {learningState&&<LearningGoal data={learningState} open={()=>setPanel(panel==="notes"?null:"notes")}/>}
+ <div className="chat-scroll" ref={scroller} onScroll={e=>{const el=e.currentTarget;setAtBottom(el.scrollHeight-el.scrollTop-el.clientHeight<100);}}>
+ <div className="chat-reading">{moreHistory&&<button className="d1-text-button chat-earlier" disabled={paging} onClick={()=>void older()}>{paging ? t("Loading…") : t("Load earlier messages")}</button>}
+ {!messages.length&&!busy&&<div className="chat-empty"><span className={`chat-empty-symbol ${learning?'is-learning':''}`}><Icon name={learning?'cap':'chat'} size={30}/></span><h2>{learning ? t("What would you like to learn?") : t("What are you curious about?")}</h2><p>{learning ? t("Start with a topic or a question. We’ll explore it together.") : t("Ask a question, explore an idea, or bring your materials into the conversation.")}</p><Link href={`/dashboard/workspaces/${encodeURIComponent(space.id)}/materials`} className="d1-text-button">{t("View workspace materials")}<Icon name="arrow" size={18}/></Link></div>}
+ {messages.map((message,index)=><article className={`chat-message ${message.role}`} key={message.id??`saved-${index}`} aria-label={message.role==="user" ? t("Your message") : t("Asteria response")}>{message.role==="assistant"&&<span className="chat-ai-symbol" aria-hidden="true">✧</span>}<div className="chat-message-body"><ReactMarkdown remarkPlugins={[remarkGfm]} components={{img:({alt})=><span>{alt ? `[Image: ${alt}]` : '[Image]'}</span>,a:({href,children})=><a href={href} target="_blank" rel="noopener noreferrer">{children}</a>}}>{readingText(message)}</ReactMarkdown>{message.sources?.length?<div className="chat-citations">{message.sources.map((s,i)=><button key={`${s.number}-${s.chunk_id}`} onClick={()=>openSources(message.sources!,i)}><Icon name="file" size={16}/>{s.document_name}{s.page ? t(" · p.{page}",{page:s.page}) : ''}</button>)}</div>:null}{message.role==="assistant"&&<button className="chat-copy" aria-label={t("Copy response {number}",{number:Math.floor(index/2)+1})} onClick={()=>void navigator.clipboard.writeText(message.content).then(()=>setCopied(index)).catch(()=>setError("Couldn't copy this response. Select the text to copy it."))}>{copied===index ? t("Copied") : t("Copy")}</button>}</div></article>)}
+ {busy&&<><article className="chat-message user"><div className="chat-message-body"><p>{pendingTurn?.question ?? question}</p></div></article><p className="chat-working" role="status"><span className="chat-ai-symbol">✧</span>{t("Asteria is thinking…")}<button onClick={()=>request.current?.abort()} className="d1-text-button">{t("Stop waiting")}</button></p></>}
+ </div></div>
+ <div className="chat-composer-wrap">{!atBottom&&<button className="chat-jump" onClick={()=>{scroller.current?.scrollTo({top:scroller.current.scrollHeight,behavior:'smooth'});}}>{t("↓ Latest messages")}</button>}
+ {error&&<div className="chat-inline-error" role="alert"><p>{uiError(error)}</p><div>{question.trim()&&<button className="d1-text-button" disabled={busy} onClick={()=>void send()}>{t("Retry response")}</button>}<Link className="d1-text-button" href="/dashboard/settings">{t("Open Settings")}</Link></div></div>}
+ {learningState?.status==="finished"?<FinishedComposer data={learningState} change={changeLearning}/>:<><form className="chat-composer" onSubmit={e=>{e.preventDefault();void send();}}><label className="chat-sr-only" htmlFor="chat-input">{learning ? t("Your learning message") : t("Your message")}</label><textarea ref={textarea} id="chat-input" rows={1} maxLength={4000} placeholder={learning ? (messages.length ? t("Share your thoughts…") : t("What would you like to learn?")) : t("Ask anything…")} value={question} readOnly={busy||Boolean(pendingTurn)} disabled={!type&&!session} onChange={e=>updateQuestion(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.nativeEvent.keyCode!==229){e.preventDefault();void send();}}}/><div className="chat-composer-bottom"><span className={learning?'is-learning':''}><Icon name={learning?'cap':'chat'} size={18}/>{t(label)}</span><button className="chat-send" aria-label={busy ? t("Sending message") : pendingTurn ? t("Retry response") : t("Send message")} disabled={busy||!question.trim()||(!session&&!type)}><span aria-hidden="true">↑</span></button></div></form><p className="chat-keyboard-hint">{t("Enter to send · Shift + Enter for a new line")}{pendingTurn&&!busy ? t(" · Your pending message is kept for recovery.") : ''}</p></>}
+ </div></section>
+ {panel==="sources"&&selection&&<SourcePanel key={`${selection.sources[0]?.chunk_id}-${selection.initial}`} workspaceId={space.id} sources={selection.sources} initial={selection.initial} onClose={closePanel}/>}
+ {learningProps&&panel==="notes"&&<LearningNotes {...learningProps}/>}
+ {learningProps&&panel==="recaps"&&<RecapHistory {...learningProps}/>}
+ {learningProps&&panel==="finish"&&<RecapFlow {...learningProps}/>}
+ {!requestedSession&&!type&&<NewChatDialog workspaceId={space.id} workspaceName={space.name} onChoose={()=>{}} close={()=>router.replace(`/dashboard/workspaces/${encodeURIComponent(space.id)}`)}/>}
+ </div>;
 }
+function ChatRoute(){
+ useI18n();const query=useSearchParams();const workspace=query.get('workspace')??'';const session=query.get('session')??'';const type=query.get('type')??'';return <Chat key={`${workspace}:${session}:${type}`} workspaceId={workspace} requestedSession={session} draftType={type}/>;}
+export default function Page(){
+ useI18n();return <Suspense fallback={<p role="status">{t("Opening chat…")}</p>}><ChatRoute/></Suspense>;}

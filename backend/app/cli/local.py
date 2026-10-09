@@ -7,14 +7,14 @@ import sys
 from pathlib import Path
 from dotenv import dotenv_values
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=["configure", "init", "prepare", "serve"])
-    parser.add_argument("--env-file", default=".env.local-mvp")
+    parser.add_argument("--env-file", default=".env")
     parser.add_argument(
         "--test-ai", action="store_true", help="Explicit simulated embeddings and LLM"
     )
@@ -30,7 +30,6 @@ def main():
 
         values = {
             "APP_NAME": "Asteria Local",
-            "APP_HOST": "127.0.0.1",
             "APP_PORT": "18001",
             "FRONTEND_URL": "http://localhost:3001",
             "DATABASE_URL": "postgresql+psycopg://asteria:local-development-only@127.0.0.1:55432/asteria_local",
@@ -40,10 +39,10 @@ def main():
             "ENCRYPTION_KEY": Fernet.generate_key().decode(),
             "LOCAL_DATA_DIR": "../data/local-mvp",
             "EMBEDDING_BACKEND": "test" if args.test_ai else "fastembed",
-            "EMBEDDING_MODEL": "BAAI/bge-small-en-v1.5",
+            "EMBEDDING_MODEL": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
             "LLM_BACKEND": "test" if args.test_ai else "provider",
             "LLM_ALLOWED_BASE_URLS": "https://integrate.api.nvidia.com/v1",
-            "RETRIEVAL_MIN_SCORE": "0.15" if args.test_ai else "0.45",
+            "RETRIEVAL_MIN_SCORE": "0.15" if args.test_ai else "0.35",
         }
         path.write_text(
             "\n".join(f"{key}={value}" for key, value in values.items()) + "\n",

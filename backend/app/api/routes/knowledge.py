@@ -68,6 +68,7 @@ def learning_config(user_id=Depends(get_current_user_id)):
         "embedding_backend": settings.EMBEDDING_BACKEND,
         "embedding_model": settings.EMBEDDING_MODEL,
         "llm_backend": settings.LLM_BACKEND,
+        "provider_is_simulated": settings.PROVIDER_IS_SIMULATED,
         "max_upload_bytes": settings.MAX_UPLOAD_BYTES,
     }
 
@@ -81,6 +82,15 @@ def workspaces(user_id=Depends(get_current_user_id), db: Session = Depends(get_d
         .limit(100)
         .all()
     )
+
+
+@router.get("/workspaces/{workspace_id}", response_model=WorkspaceRead)
+def workspace_detail(
+    workspace_id: str,
+    user_id=Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    return owned_workspace(db, workspace_id, user_id)
 
 
 @router.post("/workspaces", response_model=WorkspaceRead)

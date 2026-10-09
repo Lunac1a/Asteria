@@ -42,7 +42,3 @@ def make_pdf(path):
     path.parent.mkdir(parents=True, exist_ok=True)
     writer.write(path)
     return path
-
-
-if __name__ == "__main__":
-    print(make_pdf("../data/mvp-test/independent-course.pdf").resolve())

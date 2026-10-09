@@ -1,4 +1,6 @@
 "use client";
+import { useI18n, t, uiError } from "../../../lib/i18n";
+
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,6 +10,7 @@ import "../auth.css";
 const API_BASE_URL = "";
 
 export default function LoginPage() {
+ useI18n();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -75,18 +78,16 @@ export default function LoginPage() {
       <div className="auth-card">
         <div className="auth-back">
           <Link href="/" className="back-link">
-            ← Back
-          </Link>
+            {t("← Back")}</Link>
         </div>
-        <h1 className="auth-title">Welcome back</h1>
+        <h1 className="auth-title">{t("Welcome back")}</h1>
         <p className="auth-subtitle">
-          Sign in to continue learning with Asteria.
-        </p>
+          {t("Sign in to continue learning with Asteria.")}</p>
 
         <form onSubmit={handleLogin} className="form-stack">
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t("Email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -95,7 +96,7 @@ export default function LoginPage() {
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t("Password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -103,17 +104,16 @@ export default function LoginPage() {
           />
 
           <button type="submit" disabled={loading} className="btn btn-primary">
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t("Logging in...") : t("Login")}
           </button>
         </form>
 
-        {error && <p className="error-text">{error}</p>}
+        {error && <p className="error-text">{uiError(error)}</p>}
 
         <p className="helper-text">
-          Don&apos;t have an account?{" "}
+          {t("Don&apos;t have an account?")}{" "}
           <Link href="/auth/register" className="text-link">
-            Register
-          </Link>
+            {t("Register")}</Link>
         </p>
       </div>
     </main>

@@ -1,5 +1,4 @@
 import json
-import math
 import os
 import subprocess
 import sys
@@ -9,6 +8,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.knowledge import Workspace, Chunk, Document
+from app.services.retrieval_scoring import rank_candidates
 
 worker_slot = threading.BoundedSemaphore(1)
 
@@ -96,23 +96,25 @@ def retrieve(db, workspace_id, question):
         .all()
     )
     if not rows:
+        if db.query(Document).filter_by(workspace_id=workspace_id).first():
+            raise HTTPException(
+                409,
+                "Materials are not ready for search. Open Manage materials and reindex failed or outdated documents.",
+            )
         return []
     vector = run_worker({"texts": [question]}, settings.QUERY_TIMEOUT_SECONDS)[
         "vectors"
     ][0]
-    scored = []
-    for chunk, document in rows:
-        if len(vector) != len(chunk.vector):
-            continue
-        dot = sum(a * b for a, b in zip(vector, chunk.vector))
-        norm = (
-            math.sqrt(sum(a * a for a in vector) * sum(b * b for b in chunk.vector))
-            or 1
-        )
-        score = dot / norm
-        if score >= settings.RETRIEVAL_MIN_SCORE:
-            scored.append((score, chunk, document))
-    scored.sort(key=lambda item: (-item[0], item[1].id))
+    by_id = {chunk.id: (chunk, document) for chunk, document in rows}
+    scored = rank_candidates(
+        vector,
+        [{"id": chunk.id, "content": chunk.content, "vector": chunk.vector} for chunk, _ in rows],
+        question,
+        {document.name for _, document in rows},
+        settings.RETRIEVAL_MIN_SCORE,
+        lexical_rescue=settings.RETRIEVAL_LEXICAL_RESCUE,
+    )
+    selected = [by_id[row["id"]] for row in scored if row["accepted"]][:5]
     return [
         {
             "number": i + 1,
@@ -122,5 +124,5 @@ def retrieve(db, workspace_id, question):
             "page": chunk.page,
             "content": chunk.content,
         }
-        for i, (_, chunk, document) in enumerate(scored[:5])
+        for i, (chunk, document) in enumerate(selected)
     ]

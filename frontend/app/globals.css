@@ -2,17 +2,27 @@
   --bg: #f7f9fc;
   --surface: #ffffff;
   --surface-soft: #f3f6fb;
-  --text: #111827;
-  --text-muted: #4b5563;
-  --border: #dbe2ea;
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-soft: #dbeafe;
+  --text: #24334a;
+  --text-muted: #637186;
+  --border: #dce4f0;
+  --brand: #5777bc;
+  --primary: #526fb0;
+  --primary-hover: #435f9d;
+  --primary-soft: #eef2fc;
+  --violet: #8270ca;
+  --violet-text: #6955ad;
+  --violet-soft: #f1edfb;
+  --success: #28734d;
+  --success-soft: #edf7f0;
+  --warning: #895b12;
+  --warning-soft: #fff6e7;
+  --danger: #b33c40;
+  --danger-soft: #fceeef;
   --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --radius-lg: 18px;
+  --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 10px;
-  --container: 1100px;
+  --container: 1120px;
 }
 
 * {
@@ -28,7 +38,7 @@ body {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
 }
 
 a {
@@ -48,6 +58,20 @@ input {
   padding-left: 24px;
   padding-right: 24px;
 }
+
+.brand-mark,
+.asteria-mark {
+  background: var(--brand);
+  mask: url('/asteria-logo.svg') center/contain no-repeat;
+}
+
+html[lang="zh-CN"] body {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  line-break: strict;
+}
+html[lang="zh-CN"] :is(button, .d1-button, .btn) { letter-spacing: 0; }
+.settings-card + .settings-card { margin-top: 24px; }
+.settings-card select { max-width: 100%; }
 
 .brand-mark {
   display: block;

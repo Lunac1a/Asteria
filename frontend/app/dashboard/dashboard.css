@@ -1,73 +1,109 @@
-.app-shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* D0 v2: shared shell and Dashboard. Independent of legacy Chat selectors. */
+.asteria-shell { min-height:100dvh; font-size:16px; line-height:1.6875; }
+.asteria-shell button,.asteria-shell input { font:inherit; }
+.asteria-shell svg { flex-shrink:0; }
+.asteria-shell :focus-visible { outline:3px solid var(--primary); outline-offset:4px; }
+.asteria-topbar { height:64px; padding:0 40px; display:flex; align-items:center; gap:80px; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:30; }
+.asteria-brand { display:flex; align-items:center; gap:12px; font-size:22px; font-weight:600; line-height:1; }
+.asteria-mark { width:28px; height:28px; }
+.asteria-nav { align-self:stretch; display:flex; gap:32px; }
+.asteria-nav a { display:flex; align-items:center; position:relative; font-size:16px; }
+.asteria-nav a[aria-current] { color:var(--primary); }
+.asteria-nav a[aria-current]::after { content:""; position:absolute; bottom:0; height:2px; background:var(--primary); left:-8px; right:-8px; }
+.asteria-actions { margin-left:auto; display:flex; align-items:center; gap:32px; }
+.account-control { position:relative; }
+.account-trigger { border:0; background:none; color:var(--text); display:flex; gap:12px; align-items:center; padding:0; cursor:pointer; min-height:44px; }
+.account-trigger span { background:var(--primary-soft); width:40px; height:40px; border-radius:50%; display:grid; place-items:center; }
+.account-popover { position:absolute; top:52px; right:0; width:208px; padding:8px; background:white; border:1px solid var(--border); border-radius:12px; box-shadow:0 8px 28px #24334a12; }
+.account-popover p { margin:8px 12px; font-size:14px; color:var(--text-muted); }
+.account-popover a,.account-popover button { width:100%; display:flex; align-items:center; min-height:44px; padding:8px 12px; border:0; background:none; text-align:left; cursor:pointer; color:var(--text); border-radius:8px; }
+.account-popover a:hover,.account-popover button:hover { background:var(--primary-soft); }
+.asteria-content { max-width:1120px; margin:0 auto; padding:48px 0 64px; }
+.asteria-content-wide { max-width:1520px; padding:24px 32px; }
+.skip-link { position:fixed; top:-100px; left:16px; z-index:100; padding:12px; background:white; }
+.skip-link:focus { top:8px; }
+.mobile-nav-trigger { display:none; }
+.mobile-navigation,.create-dialog { border:1px solid var(--border); border-radius:16px; color:var(--text); padding:0; background:white; }
+dialog::backdrop { background:#24334a50; }
+.d1-dashboard h1 { font-size:32px; line-height:40px; font-weight:600; margin:0; letter-spacing:-.7px; }
+.d1-dashboard h2 { font-size:20px; line-height:28px; font-weight:600; margin:0; }
+.d1-dashboard h3 { font-size:16px; line-height:24px; font-weight:600; margin:0; overflow-wrap:anywhere; }
+.dashboard-heading { margin-bottom:32px; }
+.dashboard-heading p { margin:8px 0 0; color:var(--text-muted); font-size:18px; }
+.dashboard-heading .d1-button { margin-top:24px; }
+.d1-button { display:inline-flex; align-items:center; justify-content:center; gap:12px; min-height:44px; padding:10px 20px; border-radius:10px; border:1px solid transparent; color:white; background:var(--primary); font-weight:500; cursor:pointer; text-decoration:none; line-height:24px; }
+.d1-button:hover { background:var(--primary-hover); }
+.d1-button:disabled { opacity:.55; cursor:not-allowed; }
+.d1-button.secondary { color:var(--text); background:white; border-color:var(--border); }
+.d1-text-button { border:0; background:none; padding:8px 0; color:var(--primary); display:inline-flex; gap:8px; align-items:center; min-height:44px; cursor:pointer; }
+.d1-icon-button { border:0; background:transparent; color:var(--text-muted); min-width:44px; height:44px; display:grid; place-items:center; cursor:pointer; }
+.continue-card { border:1px solid #d4dff4; background:var(--primary-soft); padding:24px 28px; border-radius:12px; }
+.eyebrow { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--primary); margin-bottom:12px; }
+.continue-card h2 { font-size:28px; line-height:36px; overflow-wrap:anywhere; }
+.continue-card > p { margin:4px 0 0; color:var(--text-muted); }
+.continue-bottom { margin-top:16px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.continue-bottom > span { font-size:14px; color:var(--text-muted); }
+.dashboard-section { margin-top:32px; }
+.section-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px; }
+.section-heading > div { display:flex; align-items:center; gap:24px; margin-block:-8px; }
+.section-heading a { display:flex; gap:12px; align-items:center; color:var(--primary); min-height:44px; font-size:14px; }
+.section-heading button { font-size:14px; }
+.workspace-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.workspace-card { display:flex; align-items:center; gap:20px; padding:24px; min-height:104px; background:white; border:1px solid var(--border); border-radius:12px; }
+.workspace-card > div { flex:1; min-width:0; }
+.workspace-icon,.conversation-icon { color:var(--brand); display:flex; }
+.workspace-card > svg { color:var(--text-muted); }
+.workspace-card p,.conversation-row p { margin:4px 0 0; font-size:14px; line-height:20px; color:var(--text-muted); }
+.workspace-card:hover,.conversation-row:hover { background:#fafbff; border-color:var(--brand); }
+.conversation-list { background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.conversation-row { display:flex; align-items:center; gap:24px; padding:16px 24px; min-height:80px; }
+.conversation-row + .conversation-row { border-top:1px solid var(--border); }
+.conversation-row > div { flex:1; min-width:0; }
+.conversation-row time { font-size:14px; color:var(--text-muted); margin-right:24px; white-space:nowrap; }
+.conversation-row > svg { color:var(--text-muted); }
+.continue-card h2,.workspace-card h3,.conversation-row h3 { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; white-space:normal; word-break:normal; overflow-wrap:anywhere; }
+.recent-empty { display:flex; align-items:center; gap:16px; padding:20px 24px; border:1px solid var(--border); border-radius:12px; color:var(--text-muted); background:white; }
+.recent-empty p { margin:0; font-size:14px; }
+.first-use { text-align:center; background:white; border:1px solid var(--border); border-radius:16px; padding:64px 32px; max-width:880px; margin:96px auto 0; }
+.empty-icon { display:grid; place-items:center; width:64px; height:64px; background:var(--violet-soft); color:var(--violet-text); border-radius:16px; margin:0 auto 24px; }
+.first-use p { color:var(--text-muted); margin:16px 0 24px; }
+.first-use small { display:block; margin-top:24px; color:var(--text-muted); font-size:14px; }
+.create-dialog { width:min(480px,calc(100vw - 32px)); }
+.create-dialog form { padding:24px; }
+.dialog-heading { display:flex; align-items:center; justify-content:space-between; }
+.create-dialog p { color:var(--text-muted); margin:8px 0 24px; }
+.create-dialog label { display:block; margin-bottom:8px; font-size:14px; font-weight:600; }
+.create-dialog .input { border-radius:12px; }
+.dialog-actions { margin-top:24px; display:flex; justify-content:flex-end; gap:12px; }
+.create-dialog .d1-error { color:var(--danger); margin-top:16px; }
+.d1-feedback,.dashboard-loading { padding:48px 0; }
+.dashboard-loading div { height:100px; border-radius:12px; background:var(--primary-soft); margin-top:24px; }
+.auth-check { padding:48px; display:grid; gap:24px; justify-items:start; }
+@media(max-width:1200px) { .asteria-content { margin:0 32px; } .asteria-content-wide { margin:0; } .workspace-card { padding:20px; gap:16px; } }
+@media(max-width:900px) { .workspace-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .asteria-topbar { gap:48px; padding:0 24px; } .continue-bottom { align-items:flex-start; } }
+@media(max-width:640px) {
+ .asteria-topbar { height:56px; padding:0 16px; gap:16px; }
+ .asteria-brand { font-size:20px; } .asteria-mark { width:26px; height:26px; }
+ .asteria-nav,.account-control { display:none; }
+ .mobile-nav-trigger { display:grid; place-items:center; width:44px; height:44px; border:0; background:none; color:var(--text); }
+ .mobile-navigation { margin:0 0 0 auto; height:100dvh; max-height:none; width:min(320px,90vw); border-radius:0; }
+ .mobile-navigation > div { padding:16px; }
+ .mobile-navigation .d1-icon-button { margin-left:auto; }
+ .mobile-navigation nav { display:grid; gap:8px; padding-top:24px; }
+ .mobile-navigation a,.mobile-navigation nav button { padding:12px 16px; border:0; text-align:left; background:none; color:var(--text); border-radius:10px; }
+ .mobile-navigation [aria-current] { color:var(--primary); background:var(--primary-soft); }
+ .asteria-content { margin:0 20px; padding:32px 0 40px; } .asteria-content-wide { padding:16px 0; }
+ .d1-dashboard h1 { font-size:28px; line-height:36px; }
+ .dashboard-heading p { font-size:16px; }
+ .continue-card { padding:24px; } .continue-card h2 { font-size:24px; line-height:32px; }
+ .continue-bottom { flex-direction:column; gap:20px; } .continue-bottom .d1-button { width:100%; }
+ .workspace-grid { grid-template-columns:1fr; }
+ .section-heading { flex-wrap:wrap; gap:4px; }
+ .section-heading > div { width:100%; justify-content:space-between; margin-block:0; }
+ .conversation-row { padding:20px 16px; gap:16px; } .conversation-row time { display:none; }
+ .first-use { margin-top:24px; padding:40px 20px; }
+ .first-use h1 { font-size:26px; line-height:34px; } .desktop-break { display:none; }
+ .first-use .d1-button { padding:10px 12px; font-size:14px; }
+ .dialog-actions .d1-button { padding:10px 14px; }
 }
-
-.app-topbar {
-  height: 64px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  backdrop-filter: blur(8px);
-}
-
-.app-topbar .app-container {
-  max-width: none;
-}
-
-.topbar-inner {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 18px;
-}
-
-.topbar-center {
-  display: flex;
-  gap: 20px;
-}
-
-.topbar-link {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.topbar-link:hover {
-  color: var(--text);
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.app-main {
-  flex: 1;
-  padding-top: 24px;
-}
-
-.app-container {
-  width: 100%;
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 100%;
-  align-items: center;
-}
+@media(prefers-reduced-motion:reduce) { .asteria-shell * { scroll-behavior:auto; transition:none; } }

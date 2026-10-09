@@ -23,17 +23,26 @@ def upsert_llm_settings(
     setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
 
     if setting:
+        if (
+            setting.base_url != payload.base_url or setting.provider != payload.provider
+        ) and not payload.api_key:
+            raise HTTPException(
+                status_code=400, detail="Enter an API key when changing provider or URL"
+            )
         if payload.api_key:
             setting.encrypted_api_key = encrypt_text(payload.api_key)
         setting.model_name = payload.model_name
         setting.base_url = payload.base_url
+        setting.provider = payload.provider
     else:
         if not payload.api_key:
-            raise HTTPException(status_code=400, detail="API key required for initial setup")
+            raise HTTPException(
+                status_code=400, detail="API key required for initial setup"
+            )
         setting = UserLLMSetting(
             id=str(uuid.uuid4()),
             user_id=user_id,
-            provider="nvidia",
+            provider=payload.provider,
             encrypted_api_key=encrypt_text(payload.api_key),
             model_name=payload.model_name,
             base_url=payload.base_url,
