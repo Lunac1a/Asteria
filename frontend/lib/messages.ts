@@ -1,5 +1,10 @@
 // English source keys double as the English catalogue. UI content only.
 export const zhCN: Record<string, string> = {
+  'Delete workspace':'删除学习空间','Delete conversation':'删除对话',
+  'This permanently deletes this workspace, its materials, conversations, learning notes and recaps.':'此操作会永久删除这个学习空间，以及其中的资料、对话、学习笔记和回顾。',
+  'This permanently deletes this conversation, its messages, learning notes and recaps. Workspace materials will remain.':'此操作会永久删除这个对话，以及其中的消息、学习笔记和回顾。学习空间中的资料会保留。',
+  'Wait for the current answer to finish':'请等待当前回答完成后再删除。','Wait for document processing to finish':'请等待资料处理完成后再删除。',
+  'Conversation not found':'找不到此对话','Invalid material storage path':'资料存储位置异常，暂时无法删除。','Workspace contains an inconsistent conversation binding':'对话归属异常，暂时无法删除学习空间。','Delete {name}':'删除{name}',
   'Connect an OpenAI-compatible API.':'连接兼容 OpenAI 的 API。','The saved key is not shown again. Enter a new key when changing the URL.':'已保存的密钥不会再次显示。更改接口地址时，请输入新密钥。',
   'Configure a model in Settings before creating a recap.':'生成回顾前，请先在设置中连接模型。','Please check your model settings. Your learning records are safe.':'请检查模型设置，学习记录均已保留。',"Couldn't create your recap. Your conversation and learning notes are safe. Try again or keep learning.":'无法生成回顾，对话和学习笔记均已保留。可以重试或继续学习。','The model timed out. Your saved records are safe. Please retry.':'模型响应超时，已保存记录仍在，请重试。','The model provider is unavailable. Your saved records are safe. Check Settings and retry.':'模型服务暂时不可用，已保存记录仍在。请检查设置后重试。','The model returned an invalid answer format or citation. Retry; this turn was not saved.':'模型返回的回答格式或引用无效，本轮尚未保存，请重试。',
   'Original document page {page}':'原文第 {page} 页',

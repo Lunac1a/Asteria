@@ -123,6 +123,8 @@ class SmartAPITests(unittest.TestCase):
             )
             db.commit()
         self.enterContext(patch.object(settings, "LLM_BACKEND", "provider"))
+        self.enterContext(patch("app.services.learning_knowledge.provider_completion",
+            return_value='{"task":"explanation","document_ids":[],"use_documents":false,"query":""}'))
         self.classifier = self.enterContext(
             patch(
                 "app.services.smart_routing.provider_completion",

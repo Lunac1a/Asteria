@@ -9,6 +9,7 @@ import { uploadMaterial } from "../lib/material-upload";
 import { chatPath, dateText, dateValue, fileRecovery, sessionLabel, sortMaterials, workspacePath, type Material, type Conversation } from "../lib/workspace-model";
 import Icon from "./icon";
 import WorkspaceDialog from "./workspace-dialog";
+import DeleteResource from "./delete-resource";
 import NewChatButton from "./new-chat";
 import "./workspace.css";
 const MaterialPreview = dynamic(()=>import("./material-preview"));
@@ -19,9 +20,9 @@ function Empty({kind,action}:{kind:"materials"|"conversations";action:React.Reac
  useI18n();
   return <div className="ws-empty"><span><Icon name={kind === "materials" ? "folder" : "chat"} size={28}/></span><h3>{kind === "materials" ? t("Your materials belong here.") : t("A conversation starts with curiosity.")}</h3><p>{kind === "materials" ? t("Add a reading, your notes, or a document to explore together.") : t("Ask a question or explore an idea. No materials required.")}</p>{action}</div>;
 }
-function ConversationRow({chat,workspaceId}:{chat:Conversation;workspaceId:string}) {
+function ConversationRow({chat,workspaceId,onDeleted}:{chat:Conversation;workspaceId:string;onDeleted:()=>void}) {
  useI18n();
-  return <Link className="ws-conversation" href={chatPath(workspaceId,chat.id)}><span className={`ws-chat-icon ${chat.session_type === "learning" ? "violet" : ""}`}><Icon name={chat.session_type === "learning" ? "cap" : "chat"}/></span><div><h3>{chat.title}</h3><p>{t(sessionLabel(chat))}</p></div><time dateTime={chat.updated_at}>{dateText(chat.updated_at, getLocale())}</time><Icon name="chevron" size={18}/></Link>;
+  return <div className="ws-conversation-row"><Link className="ws-conversation" href={chatPath(workspaceId,chat.id)}><span className={`ws-chat-icon ${chat.session_type === "learning" ? "violet" : ""}`}><Icon name={chat.session_type === "learning" ? "cap" : "chat"}/></span><div><h3>{chat.title}</h3><p>{t(sessionLabel(chat))}</p></div><time dateTime={chat.updated_at}>{dateText(chat.updated_at, getLocale())}</time><Icon name="chevron" size={18}/></Link><DeleteResource kind="conversation" id={chat.id} name={chat.title} onDeleted={onDeleted}/></div>;
 }
 export default function WorkspacePage({workspaceId,view}:{workspaceId:string;view:"overview"|"materials"|"conversations"}) {
  useI18n();
@@ -144,7 +145,7 @@ export default function WorkspacePage({workspaceId,view}:{workspaceId:string;vie
   if(loadError || !space)return <div className="ws-page ws-load-error"><h1>{t("Couldn’t open this workspace")}</h1><p role="alert">{loadError ? uiError(loadError) : t("This workspace is unavailable.")}</p><div><button className="d1-button" onClick={()=>{setLoading(true);setRefresh(v=>v+1);}}>{t("Try again")}</button><Link className="d1-text-button" href="/dashboard/workspaces">{t("Back to Workspaces")}</Link></div></div>;
   return <div className="ws-page">
     <nav className="ws-breadcrumb" aria-label={t("Breadcrumb")}><Link href="/dashboard/workspaces">{t("Workspaces")}</Link><span>/</span><span>{space.name}</span></nav>
-    <header className="ws-heading"><div><h1>{space.name}</h1><p>{t("A space for questions, ideas, and deeper understanding.")}</p></div>{newChat}</header>
+    <header className="ws-heading"><div><h1>{space.name}</h1><p>{t("A space for questions, ideas, and deeper understanding.")}</p></div><div className="ws-resource-actions"><DeleteResource kind="workspace" id={space.id} name={space.name} destination="/dashboard/workspaces" disabled={Boolean(busy)||Boolean(upload)}/>{newChat}</div></header>
     <nav className="ws-tabs" aria-label={t("Workspace views")}>{([['overview','Overview'],['materials','Materials'],['conversations','Conversations']] as const).map(([key,label])=><Link key={key} href={key==='overview'?root:`${root}/${key}`} aria-current={view===key?'page':undefined}>{t(label)}</Link>)}</nav>
     <input ref={fileInput} className="ws-hidden-input" type="file" accept=".pdf,.md,.txt" aria-label={t("Upload material")} onChange={e=>{void addFile(e.target.files?.[0]);e.target.value="";}}/>
     {error && !deleting && <div role="alert" className="ws-error"><p>{uiError(error)}</p><button className="d1-text-button" onClick={()=>{setError("");if(view==='conversations')void loadChats(chatSort);else void refreshDocuments().catch(e=>setError(e.message));}}>{t("Refresh")}</button></div>}
@@ -156,7 +157,7 @@ export default function WorkspacePage({workspaceId,view}:{workspaceId:string;vie
       {view==='materials' && <p className="ws-footnote">{t("You can start a conversation while your materials are being prepared. Same-name uploads are kept as separate files.")}</p>}
     </section>}
     {view!=='materials' && <section className="ws-section"><div className="ws-section-heading"><h2>{t("Conversations")}</h2>{view==='overview'?<Link className="d1-text-button" href={`${root}/conversations`}>{t("View all conversations")}<Icon name="arrow" size={18}/></Link>:<label className="ws-sort">{t("Sort by")}<select aria-label={t("Sort conversations")} value={chatSort} disabled={chatBusy} onChange={e=>void loadChats(e.target.value)}><option value="recent">{t("Last active")}</option><option value="oldest">{t("Oldest activity")}</option><option value="title">{t("Title A–Z")}</option></select></label>}</div>
-      {chatBusy && <p role="status">{t("Loading conversations…")}</p>}{!conversations.length?<Empty kind="conversations" action={newChat}/>:<div className="ws-conversations">{conversations.slice(0,view==='overview'?3:undefined).map(chat=><ConversationRow key={chat.id} chat={chat} workspaceId={workspaceId}/>)}</div>}
+      {chatBusy && <p role="status">{t("Loading conversations…")}</p>}{!conversations.length?<Empty kind="conversations" action={newChat}/>:<div className="ws-conversations">{conversations.slice(0,view==='overview'?3:undefined).map(chat=><ConversationRow key={chat.id} chat={chat} workspaceId={workspaceId} onDeleted={()=>{chatVersion.current++;setConversations(rows=>rows.filter(row=>row.id!==chat.id));}}/>)}</div>}
       {view==='conversations' && more && <button className="d1-button secondary ws-load-more" disabled={chatBusy} onClick={()=>void loadChats(chatSort,true)}>{chatBusy ? t("Loading…") : t("Load more conversations")}</button>}
     </section>}
     {preview && <MaterialPreview material={preview} workspaceId={workspaceId} close={()=>setPreview(null)}/>}

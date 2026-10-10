@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../lib/api";
+import DeleteResource from "./delete-resource";
 import Icon from "./icon";
 
 type Workspace = { id: string; name: string; material_count: number; conversation_count: number };
@@ -21,9 +22,9 @@ function dateLabel(value: string) {
   const date = new Date(value.endsWith("Z") || /[+-]\d\d:\d\d$/.test(value) ? value : value + "Z");
   return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString(getLocale(), { month: "short", day: "numeric" });
 }
-function WorkspaceCard({ space }: { space: Workspace }) {
+function WorkspaceCard({ space, onDeleted }: { space: Workspace; onDeleted:()=>void }) {
  useI18n();
-  return <Link className="workspace-card" href={destination(space.id)}><span className="workspace-icon"><Icon name="folder" size={30} /></span><div><h3>{space.name}</h3><p>{count(space.material_count, "material")} · {count(space.conversation_count, "conversation")}</p></div><Icon name="chevron" size={18} /></Link>;
+  return <div className="ws-workspace-card"><Link className="workspace-card" href={destination(space.id)}><span className="workspace-icon"><Icon name="folder" size={30} /></span><div><h3>{space.name}</h3><p>{count(space.material_count, "material")} · {count(space.conversation_count, "conversation")}</p></div><Icon name="chevron" size={18} /></Link><DeleteResource kind="workspace" id={space.id} name={space.name} onDeleted={onDeleted}/></div>;
 }
 export default function Dashboard({ listOnly = false }: { listOnly?: boolean }) {
  useI18n();
@@ -67,7 +68,7 @@ export default function Dashboard({ listOnly = false }: { listOnly?: boolean }) 
       <div className="dashboard-heading"><h1>{listOnly ? t("Your Workspaces") : t("Welcome back.")}</h1><p>{listOnly ? t("A space for everything you’re learning.") : t("Pick up where you left off.")}</p>{listOnly && <button className="d1-button" onClick={openCreate}><Icon name="plus" size={18} />{t("Create workspace")}</button>}</div>
       {!listOnly && <section className="continue-card" aria-labelledby="continue-heading"><div className="eyebrow"><Icon name={hero ? "chat" : "book"} />{hero ? (activeLearning ? t("Continue Learning") : hero.learning_status==="finished" ? t("Review conversation") : t("Continue conversation")) : t("Start a conversation")}</div><h2 id="continue-heading">{hero?.title || t("What would you like to explore?")}</h2><p>{hero?.workspace_name || t("Bring a question to your learning space.")}</p><div className="continue-bottom"><span>{hero ? (activeLearning&&hero.focus ? hero.focus : t("Your conversation is ready when you are.")) : t("Your materials and conversations stay together.")}</span><Link className="d1-button" href={hero ? destination(hero.workspace_id, hero.id) : destination(data.workspaces[0].id)}>{hero ? (activeLearning ? t("Continue Learning") : hero.learning_status==="finished" ? t("Review conversation") : t("Continue conversation")) : t("Open workspace")}<Icon name="arrow" /></Link></div></section>}
       <section className="dashboard-section" aria-label={t("Your workspaces")}>{!listOnly && <div className="section-heading"><h2>{t("Your Workspaces")}</h2><div><button className="d1-text-button" onClick={openCreate}><Icon name="plus" size={18} />{t("Create workspace")}</button><Link href="/dashboard/workspaces">{t("View all")}<Icon name="arrow" size={18} /></Link></div></div>}
-        <div className="workspace-grid">{(listOnly ? data.workspaces : data.workspaces.slice(0, 3)).map(space => <WorkspaceCard key={space.id} space={space} />)}</div>
+        <div className="workspace-grid">{(listOnly ? data.workspaces : data.workspaces.slice(0, 3)).map(space => <WorkspaceCard key={space.id} space={space} onDeleted={()=>setRetry(value=>value+1)} />)}</div>
       </section>
       {!listOnly && <section className="dashboard-section"><div className="section-heading"><h2>{t("Recent Conversations")}</h2></div>{recent.length ? <div className="conversation-list">{recent.map(chat => <Link className="conversation-row" key={chat.id} href={destination(chat.workspace_id, chat.id)}><span className="conversation-icon"><Icon name="chat" size={26} /></span><div><h3>{chat.title}</h3><p>{chat.workspace_name}</p></div><time dateTime={chat.updated_at}>{dateLabel(chat.updated_at)}</time><Icon name="chevron" size={18} /></Link>)}</div> : <div className="recent-empty"><Icon name="chat" /><p>{hero ? t("Your latest conversation is just above. New conversations will appear here.") : t("Your conversations will appear here once you start exploring.")}</p></div>}</section>}
     </>}

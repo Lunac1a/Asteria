@@ -1,5 +1,6 @@
 import uuid
 import threading
+import logging
 from functools import wraps
 from pathlib import Path
 from datetime import datetime, timezone
@@ -11,6 +12,9 @@ from app.core.config import settings
 from app.core.deps import get_current_user_id
 from app.db.session import get_db
 from app.models.knowledge import Workspace, Document, Chunk
+from app.models.knowledge import SessionWorkspace
+from app.models.chat_sessions import ChatSession
+from app.services.deletion_service import delete_sessions
 from app.services.knowledge_service import (
     data_root,
     model_id,
@@ -20,6 +24,64 @@ from app.services.knowledge_service import (
 
 router = APIRouter()
 document_slot = threading.BoundedSemaphore(1)
+
+
+@router.delete("/workspaces/{workspace_id}", status_code=204)
+def delete_workspace(workspace_id: str, user_id=Depends(get_current_user_id), db: Session = Depends(get_db)):
+    # Acquire both local mutation gates before inspecting state or deleting anything.
+    from app.api.routes.chat import chat_slot
+    owned_workspace(db, workspace_id, user_id)
+    if not document_slot.acquire(blocking=False):
+        raise HTTPException(409, "Wait for document processing to finish")
+    staged = []
+    acquired_chat = False
+    committed = False
+    try:
+        acquired_chat = chat_slot.acquire(blocking=False)
+        if not acquired_chat:
+            raise HTTPException(409, "Wait for the current answer to finish")
+        documents = db.query(Document).filter_by(workspace_id=workspace_id).all()
+        for document in documents:
+            age = (datetime.now(timezone.utc) - document.created_at.replace(tzinfo=timezone.utc)).total_seconds()
+            if document.status == "processing" and age < settings.INDEX_TIMEOUT_SECONDS + 15:
+                raise HTTPException(409, "Wait for document processing to finish")
+        sessions = db.query(ChatSession).join(SessionWorkspace, SessionWorkspace.session_id == ChatSession.id).filter(SessionWorkspace.workspace_id == workspace_id).all()
+        if any(session.user_id != user_id for session in sessions):
+            raise HTTPException(409, "Workspace contains an inconsistent conversation binding")
+        root = data_root().resolve()
+        paths = [(root / doc.storage_key).resolve() for doc in documents]
+        uploads = (root / "uploads").resolve()
+        if any(not path.is_relative_to(uploads) or path == uploads or (path.exists() and not path.is_file()) for path in paths):
+            raise HTTPException(409, "Invalid material storage path")
+        for path in dict.fromkeys(paths):
+            if path.exists():
+                trash = root / "deleted-files" / (str(uuid.uuid4()) + ".deleted")
+                trash.parent.mkdir(parents=True, exist_ok=True)
+                path.replace(trash)
+                staged.append((path, trash))
+        delete_sessions(db, [session.id for session in sessions])
+        ids = [doc.id for doc in documents]
+        db.query(Chunk).filter(Chunk.document_id.in_(ids)).delete(synchronize_session=False)
+        db.query(Document).filter(Document.id.in_(ids)).delete(synchronize_session=False)
+        db.query(Workspace).filter_by(id=workspace_id, user_id=user_id).delete(synchronize_session=False)
+        db.commit()
+        committed = True
+    finally:
+        try:
+            if not committed:
+                db.rollback()
+                for path, trash in reversed(staged):
+                    trash.replace(path)
+            else:
+                for _, trash in staged:
+                    try:
+                        trash.unlink(missing_ok=True)
+                    except OSError:
+                        logging.getLogger(__name__).exception("Deleted material cleanup deferred in deleted-files")
+        finally:
+            if acquired_chat:
+                chat_slot.release()
+            document_slot.release()
 
 
 def document_operation(function):

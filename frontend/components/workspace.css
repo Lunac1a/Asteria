@@ -114,3 +114,9 @@
  .ws-load-error > div { flex-wrap:wrap; gap:12px; }
 }
 @media(prefers-reduced-motion:reduce) { .ws-spinner { animation:none; } }
+
+.ws-resource-actions,.ws-conversation-row{display:flex;align-items:center;gap:16px}.ws-conversation-row .ws-conversation{flex:1;min-width:0}.ws-delete-resource{color:#a43d4c;white-space:nowrap}.ws-workspace-card{min-width:0}.ws-workspace-card>.ws-resource-menu{margin:8px 16px 16px}.ws-resource-actions{flex-wrap:wrap}@media(max-width:600px){.ws-conversation-row{flex-wrap:wrap;gap:4px}.ws-conversation-row>.ws-resource-menu{margin-left:16px;margin-bottom:12px}}
+
+.ws-conversation-row+.ws-conversation-row{border-top:1px solid var(--border)}.ws-conversation-row>.ws-resource-menu{margin-right:16px}
+
+.ws-resource-menu{position:relative;flex-shrink:0}.ws-resource-dropdown{position:absolute;right:0;top:calc(100% + 6px);z-index:40;min-width:180px;padding:6px;background:white;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px #23304a20}.ws-resource-dropdown>button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:6px;white-space:nowrap;font:inherit;cursor:pointer}.ws-resource-dropdown>button:hover,.ws-resource-dropdown>button:focus-visible{background:var(--primary-soft)}.ws-workspace-card>.ws-resource-menu{width:fit-content;margin-left:auto}

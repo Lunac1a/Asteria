@@ -13,10 +13,11 @@ from app.core.config import settings
 from app.services.citation_service import check_mapping, checked_verdict
 from app.services.generation_protocol import GenerationError, failure
 from app.services.rag_service import grounded_answer
-from app.models.knowledge import Workspace, Document, MessageEvidence
+from app.models.knowledge import Workspace, Document, Chunk, MessageEvidence
 from app.models.messages import Message
 from app.models.chat_sessions import ChatSession
 from app.models.learning import LearningContext
+from app.services.knowledge_service import model_id
 
 DATA = json.loads(
     (Path(__file__).resolve().parent / "fixtures/citation_cases.json").read_text(
@@ -211,7 +212,81 @@ class CitationTests(unittest.TestCase):
         ):
             answer, sources, basis = self.call(case)
         self.assertNotIn("50 percent", answer)
+        self.assertEqual((sources, basis), ([case["sources"][1]], "grounded"))
+        self.assertIn(case["answer"], answer)
+
+    def test_partial_verdict_retains_verified_paragraph_and_teaching_advice(self):
+        case = copy.deepcopy(DATA[1])
+        bad = "The exam is on Friday. [2]"
+        raw = json.loads(generated(case))
+        raw.update(answer=case["answer"] + "\n\n" + bad, basis="hybrid",
+                   model_knowledge="建议先画一个搜索树，再比较算法的选择顺序。")
+        raw["claims"].append(dict(text=bad, citations=[2], quotes=copy.deepcopy(raw["claims"][0]["quotes"])))
+        audit = json.loads(verdict(case))
+        audit["claims"].append(dict(index=1, support="none", relevant_citations=[], reason="missing_detail"))
+        diagnostics = {}
+        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), json.dumps(audit)]):
+            answer, sources, basis = self.call(case, citation_diagnostics=diagnostics)
+        self.assertEqual(basis, "hybrid")
+        self.assertIn(case["answer"], answer)
+        self.assertIn("建议先画", answer)
+        self.assertNotIn("Friday", answer)
+        self.assertEqual(sources, [case["sources"][1]])
+        self.assertEqual(diagnostics["outcome"], "partial_retained")
+        self.assertNotIn("已省略", answer)
+        self.assertNotIn("were omitted", answer)
+
+    def test_one_bad_quote_does_not_discard_an_independent_verified_paragraph(self):
+        case = copy.deepcopy(DATA[1])
+        raw = json.loads(generated(case))
+        bad = "The exam is on Friday. [2]"
+        raw["answer"] += "\n\n" + bad
+        raw["claims"].append(dict(text=bad, citations=[2], quotes=[dict(citation=2, text="invented quote")]))
+        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), verdict(case)]) as call:
+            answer, sources, basis = self.call(case)
+        self.assertEqual(basis, "grounded")
+        self.assertIn(case["answer"], answer)
+        self.assertNotIn("Friday", answer)
+        self.assertEqual(sources, [case["sources"][1]])
+        self.assertEqual(call.call_count, 2)
+
+    def test_unreliable_document_section_can_leave_safe_teaching_only(self):
+        case = DATA[1]
+        raw = json.loads(generated(case))
+        raw.update(basis="hybrid", model_knowledge="Try sketching a search tree to compare strategies.")
+        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), verdict(case, "partial")]):
+            answer, sources, basis = self.call(case)
+        self.assertEqual((sources, basis), ([], "general"))
+        self.assertNotIn(case["answer"], answer)
+        self.assertIn("sketching", answer)
+
+    def test_bad_material_quotes_do_not_cancel_independent_teaching(self):
+        case = copy.deepcopy(DATA[1])
+        raw = json.loads(generated(case))
+        raw.update(basis="hybrid", model_knowledge="先理解基本概念，再用一个小例子逐步练习。")
+        raw["claims"][0]["quotes"][0]["text"] = "A paraphrase, not an exact source quote."
+        safe = json.dumps(dict(claims=[], model_knowledge_safe=True))
+        learning_update = {}
+        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), safe]) as provider:
+            answer, sources, basis = self.call(case, knowledge_context={"task": "planning"}, learning_update=learning_update)
+        self.assertEqual((sources, basis), ([], "general"))
+        self.assertIn("逐步练习", answer)
+        self.assertNotIn(case["answer"], answer)
+        self.assertNotIn("无法确认", answer)
+        self.assertEqual(answer, raw["model_knowledge"])
+        self.assertEqual(json.loads(provider.call_args.args[3])["claims"], [])
+        self.assertEqual(learning_update["value"], raw["learning"])
+
+    def test_bad_material_mapping_cannot_sneak_document_facts_into_teaching(self):
+        case = copy.deepcopy(DATA[1])
+        raw = json.loads(generated(case))
+        raw.update(basis="hybrid", model_knowledge="These materials say the exam is Friday.")
+        raw["claims"][0]["quotes"][0]["text"] = "invented quote"
+        unsafe = json.dumps(dict(claims=[], model_knowledge_safe=False))
+        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), unsafe]):
+            answer, sources, basis = self.call(case, knowledge_context={"task": "planning"})
         self.assertEqual((sources, basis), ([], "insufficient"))
+        self.assertNotIn("Friday", answer)
 
 
 class CitationAPITests(unittest.TestCase):
@@ -226,8 +301,9 @@ class CitationAPITests(unittest.TestCase):
             )
         )
         self.case = copy.deepcopy(DATA[1])
-        for source in self.case["sources"]:
+        for index, source in enumerate(self.case["sources"]):
             source["document_id"] = "doc"
+            source["chunk_id"] = f"chunk-{index}"
         with self.factory() as db:
             db.add(
                 Workspace(
@@ -243,13 +319,20 @@ class CitationAPITests(unittest.TestCase):
                     storage_key="unused",
                     size_bytes=1,
                     status="ready",
-                    embedding_model="unused",
+                    embedding_model=model_id(),
+                    chunk_count=2,
                 )
             )
+            db.flush()
+            for index, source in enumerate(self.case["sources"]):
+                db.add(Chunk(id=source["chunk_id"], document_id="doc", ordinal=index,
+                    page=source["page"], content=source["content"], vector=[1., 0.]))
             db.commit()
         self.enterContext(
             patch("app.api.routes.chat.retrieve", return_value=self.case["sources"])
         )
+        self.enterContext(patch("app.services.learning_knowledge.provider_completion",
+            return_value=json.dumps(dict(task="document_qa", document_ids=["doc"], use_documents=True, query="Explicit source fact"))))
         self.provider = self.enterContext(
             patch("app.services.rag_service.provider_completion")
         )

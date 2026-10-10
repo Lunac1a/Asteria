@@ -16,6 +16,7 @@ from app.models.chat_turn import ChatTurn
 from app.models.session_profile import SessionProfile
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.models.learning import LearningContext
+from app.services.deletion_service import delete_sessions
 from app.services.learning_service import ensure_context, context_data, apply_observation
 from app.services.knowledge_service import owned_workspace, retrieve
 from app.services.rag_service import grounded_answer
@@ -136,7 +137,10 @@ def chat(
             history.insert(0, {"role": "user", "content": anchor.content})
         started = time.perf_counter()
         try:
-            decision = decide(db, user_id, question, history, previous, payload.answer_mode)
+            # Learning selects the teaching task before deciding whether evidence is needed.
+            # Questioning retains its existing evidence-first routing policy.
+            decision = ({"action": "direct", "reason": "learning_task", "origin": "model"} if is_learning
+                        else decide(db, user_id, question, history, previous, payload.answer_mode))
         except HTTPException as exc:
             logging.getLogger(__name__).warning("Smart routing failed: request=%s status=%s category=%s", payload.request_id, exc.status_code,
                 "format" if "format" in str(exc.detail) else "provider")
@@ -148,16 +152,28 @@ def chat(
             search_question = anchor.content[:1000] + " " + question
         started = time.perf_counter()
         sources = []
+        knowledge_context = None
         if decision["action"] == "retrieve":
             try:
-                sources = retrieve(db, payload.workspace_id, search_question)
+                sources = retrieve(db, payload.workspace_id, search_question,
+                    **({"document_ids": previous["documents"]} if is_learning and previous.get("documents") else {}))
             except HTTPException as exc:
                 from app.services.runtime_metrics import record_error
                 record_error("retrieval_failure")
                 logging.getLogger(__name__).warning("Smart retrieval failed: request=%s status=%s", payload.request_id, exc.status_code)
-                if exc.status_code in {429, 409}:
+                if exc.status_code == 409 and is_learning:
+                    logging.getLogger(__name__).warning("Learning search: index_not_ready request=%s", payload.request_id)
+                elif exc.status_code in {429, 409}:
                     raise
-                raise HTTPException(503, "Material search failed or timed out. Check the document index and retry; no answer was saved.")
+                else:
+                    raise HTTPException(503, "Material search failed or timed out. Check the document index and retry; no answer was saved.")
+        if is_learning:
+            from app.services.learning_knowledge import acquire
+            sources, knowledge_context = acquire(
+                db, user_id, payload.workspace_id, question, history, learning_data,
+                previous, sources, retrieve, evidence_deadline, payload.answer_mode)
+            decision = dict(decision, action="retrieve" if knowledge_context.get("use_documents") else "direct",
+                            reason="learning_" + knowledge_context["task"])
         retrieval_ms = round((time.perf_counter() - started) * 1000, 2)
         logging.getLogger(__name__).warning(
             "Smart decision: request=%s version=%s route=%s reason=%s origin=%s candidates=%s route_ms=%s retrieval_ms=%s",
@@ -176,7 +192,8 @@ def chat(
                 payload.learning_mode,
                 evidence_requested=decision["action"] == "retrieve",
                 language_policy=language_policy,
-                **({"evidence_deadline": evidence_deadline, "citation_diagnostics": citation_diagnostics} if settings.CITATION_AUDIT_ENABLED else {}),
+                **({"knowledge_context": knowledge_context} if is_learning else {}),
+                **({"evidence_deadline": evidence_deadline, "citation_diagnostics": citation_diagnostics} if settings.CITATION_AUDIT_ENABLED or is_learning else {}),
                 **({"learning_context": learning_data, "learning_update": learning_update} if is_learning else {}),
             )
         except HTTPException as exc:
@@ -187,6 +204,17 @@ def chat(
             "Smart completed: request=%s version=%s route=%s reason=%s origin=%s candidates=%s basis=%s route_ms=%s retrieval_ms=%s generation_ms=%s",
             payload.request_id, VERSION, decision["action"], decision["reason"], decision["origin"], len(sources), basis,
             route_ms, retrieval_ms, round((time.perf_counter() - generation_started) * 1000, 2))
+        if knowledge_context:
+            if knowledge_context.get("retrieval_status") == "failed":
+                answer += "\n\n" + ("本轮资料搜索暂不可用；讲解先使用通用知识和已读取的资料片段。" if language_policy["language"] == "zh-CN" else "Material search is temporarily unavailable; teaching uses general knowledge and any available excerpts.")
+            pending = [d for d in knowledge_context["documents"] if d["id"] in knowledge_context.get("scope", []) and not d["searchable"]]
+            if pending:
+                labels = {"processing": "正在建立索引", "failed": "索引失败"}
+                if language_policy["language"] == "zh-CN":
+                    notice = "资料已存在但暂不可检索：" + "；".join(f'{d["name"]}（{labels.get(d["status"], "需要重新索引")}）' for d in pending)
+                else:
+                    notice = "Materials exist but are not searchable yet: " + "; ".join(f'{d["name"]} ({d["status"] if d["status"] != "ready" else "reindex required"})' for d in pending)
+                answer += "\n\n" + notice
         if not session:
             session = ChatSession(
                 id=str(uuid.uuid4()), user_id=user_id, title=question[:60]
@@ -236,7 +264,7 @@ def chat(
             MessageEvidence(
                 message_id=assistant.id,
                 sources=selected,
-                ai_mode=f"{mode()};basis={basis};answer={payload.answer_mode};learning={payload.learning_mode};policy={VERSION};route={decision['action']};reason={decision['reason']};origin={decision['origin']};citation_check={citation_diagnostics.get('outcome', 'not_required')};anchor={anchor.id if inherited else user_message.id}",
+                ai_mode=f"{mode()};basis={basis};answer={payload.answer_mode};learning={payload.learning_mode};policy={VERSION};route={decision['action']};reason={decision['reason']};origin={decision['origin']};citation_check={citation_diagnostics.get('outcome', 'not_required')};citation_binding={citation_diagnostics.get('binding_outcome', 'unchanged')};anchor={anchor.id if inherited else user_message.id};documents={','.join((knowledge_context or {}).get('scope', []) or previous.get('documents', []))};document_order={','.join((knowledge_context or {}).get('document_order', previous.get('document_order', [])))}",
             )
         )
         if is_learning:
@@ -369,3 +397,20 @@ def messages(
         }
         for row in reversed(rows)
     ]
+
+
+@router.delete("/chat/sessions/{session_id}", status_code=204)
+def delete_session(session_id: str, user_id=Depends(get_current_user_id), db: Session = Depends(get_db)):
+    session = db.query(ChatSession).filter_by(id=session_id, user_id=user_id).first()
+    if not session:
+        raise HTTPException(404, "Conversation not found")
+    binding = db.get(SessionWorkspace, session_id)
+    if binding:
+        owned_workspace(db, binding.workspace_id, user_id)
+    if not chat_slot.acquire(blocking=False):
+        raise HTTPException(409, "Wait for the current answer to finish")
+    try:
+        delete_sessions(db, [session_id])
+        db.commit()
+    finally:
+        chat_slot.release()

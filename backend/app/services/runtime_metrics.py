@@ -83,7 +83,7 @@ def provider_call(function):
             )
             call = {
                 "phase": name
-                if name in {"routing", "generation", "citation_audit", "recap"}
+                if name in {"routing", "knowledge_selection", "generation", "citation_audit", "recap"}
                 else "generation",
                 "elapsed_ms": round((time.perf_counter() - started) * 1000, 2),
                 "error_type": error

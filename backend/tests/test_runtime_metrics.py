@@ -41,6 +41,8 @@ class RuntimeMetricsTests(unittest.TestCase):
         def endpoint(private_id: str):
             with provider_phase("routing"):
                 call()
+            with provider_phase("knowledge_selection"):
+                call()
             with provider_phase("citation_audit"):
                 call()
             return {"private": "PRIVATE ANSWER"}
@@ -52,9 +54,9 @@ class RuntimeMetricsTests(unittest.TestCase):
         )
         event = self.events[-1]
         self.assertEqual(result.status_code, 200)
-        self.assertEqual(event["total_tokens"], 24)
+        self.assertEqual(event["total_tokens"], 36)
         self.assertEqual(
-            [x["phase"] for x in event["provider_calls"]], ["routing", "citation_audit"]
+            [x["phase"] for x in event["provider_calls"]], ["routing", "knowledge_selection", "citation_audit"]
         )
         self.assertTrue(event["usage_complete"])
         self.assertTrue(event["response_completed"])

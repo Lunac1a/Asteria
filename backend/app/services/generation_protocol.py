@@ -64,7 +64,7 @@ def object_schema(properties):
     return {"type": "object", "properties": properties, "required": list(properties), "additionalProperties": False}
 
 
-def chat_schema(learning=False, initialize_goal=False):
+def chat_schema(learning=False, initialize_goal=False, structured_teaching=False):
     fields = {
         "answer": {"type": "string"},
         "citations": {"type": "array", "items": {"type": "integer"}},
@@ -77,6 +77,16 @@ def chat_schema(learning=False, initialize_goal=False):
         fields["learning"] = {"anyOf": [{"type": "null"}, object_schema({
             "focus": {"type": "string"}, "next_step": {"type": "string"},
             "evidence": {"anyOf": [{"type": "null"}, evidence]}})]}
+        if structured_teaching:
+            # One authored lesson supplies both the visible answer and its saved action.
+            fields.pop("model_knowledge")
+            fields["lesson"] = {"anyOf": [{"type": "null"}, object_schema({
+                "mode": {"type": "string", "enum": ["continue", "answer_only", "pause", "simplify", "none"]},
+                "explanation": {"type": "string"},
+                "next_action": {"type": ["string", "null"]}})]}
+            record = fields["learning"]["anyOf"][1]
+            record["properties"].pop("next_step")
+            record["required"].remove("next_step")
         if initialize_goal:
             record = fields["learning"]["anyOf"][1]
             record["properties"]["initial_goal"] = {"type": "string"}

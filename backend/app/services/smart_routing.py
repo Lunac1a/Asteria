@@ -79,4 +79,6 @@ def decide(db, user_id, question, history, previous=None, answer_mode="smart"):
 
 def previous_decision(mode):
     parts = dict(item.split("=", 1) for item in (mode or "").split(";") if "=" in item)
-    return {"action": parts.get("route"), "anchor": parts.get("anchor")}
+    return {"action": parts.get("route"), "anchor": parts.get("anchor"),
+            "document_order": parts.get("document_order", parts.get("documents", "")).split(",") if parts.get("document_order", parts.get("documents")) else [],
+            "documents": parts.get("documents", "").split(",") if parts.get("documents") else []}

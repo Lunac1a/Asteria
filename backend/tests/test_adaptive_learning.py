@@ -22,6 +22,8 @@ CONTENT = dict(
 class AdaptiveTests(unittest.TestCase):
     def setUp(self):
         test_dashboard.DashboardTests.setUp(self)
+        self.enterContext(patch("app.services.learning_knowledge.provider_completion",
+            return_value='{"task":"explanation","document_ids":[],"use_documents":false,"query":""}'))
         self.enterContext(
             patch(
                 "app.services.smart_routing.provider_completion",

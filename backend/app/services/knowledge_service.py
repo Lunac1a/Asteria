@@ -83,7 +83,7 @@ def run_worker(payload, timeout):
         worker_slot.release()
 
 
-def retrieve(db, workspace_id, question):
+def retrieve(db, workspace_id, question, document_ids=None, timeout_seconds=None):
     rows = (
         db.query(Chunk, Document)
         .join(Document, Chunk.document_id == Document.id)
@@ -91,18 +91,22 @@ def retrieve(db, workspace_id, question):
             Document.workspace_id == workspace_id,
             Document.status == "ready",
             Document.embedding_model == model_id(),
+            *([Document.id.in_(document_ids)] if document_ids is not None else []),
         )
         .limit(settings.MAX_WORKSPACE_CHUNKS)
         .all()
     )
     if not rows:
-        if db.query(Document).filter_by(workspace_id=workspace_id).first():
+        documents = db.query(Document).filter_by(workspace_id=workspace_id)
+        if document_ids is not None:
+            documents = documents.filter(Document.id.in_(document_ids))
+        if documents.first():
             raise HTTPException(
                 409,
                 "Materials are not ready for search. Open Manage materials and reindex failed or outdated documents.",
             )
         return []
-    vector = run_worker({"texts": [question]}, settings.QUERY_TIMEOUT_SECONDS)[
+    vector = run_worker({"texts": [question]}, min(settings.QUERY_TIMEOUT_SECONDS, timeout_seconds) if timeout_seconds is not None else settings.QUERY_TIMEOUT_SECONDS)[
         "vectors"
     ][0]
     by_id = {chunk.id: (chunk, document) for chunk, document in rows}

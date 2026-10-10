@@ -1,4 +1,19 @@
 .chat-with-notes,.chat-with-recaps{grid-template-columns:minmax(0,1fr) 380px}
+.learning-progress{background:var(--surface);font-size:14px;line-height:1.65;min-width:0}
+.learning-progress-desktop{width:300px;flex:0 0 300px;border-left:1px solid var(--border);display:flex;flex-direction:column;height:100%}
+.learning-progress>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.learning-progress h2{font-size:16px;margin:0}.learning-progress h3{font-size:13px;color:var(--text-muted);font-weight:500;margin:0 0 8px}
+.learning-progress .d1-text-button{font-size:12px;white-space:nowrap}.learning-progress-content{padding:20px;min-height:0;overflow:auto;overscroll-behavior:contain}
+.learning-progress section{margin-bottom:24px}.learning-progress p{margin:0}.learning-progress-next{padding:14px;background:var(--violet-soft);border:1px solid #e2daf7;border-radius:10px}.learning-progress-next h3{color:var(--violet-text)}
+.learning-progress-record{border-top:1px solid var(--border);padding-top:16px}.learning-progress-record summary{cursor:pointer;color:var(--text-muted)}.learning-progress-record p{margin-top:12px}
+.learning-progress-compact{display:none}
+.chat-with-notes>.learning-progress-desktop,.chat-with-recaps>.learning-progress-desktop,.chat-with-sources>.learning-progress-desktop{display:none}
+@media(max-width:1100px){
+ .learning-progress-desktop{display:none}.learning-progress-compact{display:block;flex-shrink:0;margin:4px 24px 8px;border:1px solid var(--border);border-radius:10px;max-height:min(28dvh,220px);overflow:auto}
+ .learning-progress-compact>header{padding:8px 12px;border-bottom:0}.learning-progress-compact h2{font-size:13px}.learning-progress-compact .learning-progress-content{padding:0 12px 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;overflow:visible}
+ .learning-progress-compact section{margin:0}.learning-progress-compact .learning-progress-next{grid-column:1/-1;padding:10px}.learning-progress-compact h3{font-size:11px;margin-bottom:4px}.learning-progress-compact p{font-size:12px;line-height:1.5}.learning-progress-personal{max-height:72px;overflow:auto}
+}
+@media(max-width:640px){.learning-progress-compact{margin:0 16px 8px;max-height:min(28dvh,200px)}}
 .learning-actions{display:flex;align-items:center;gap:4px}.learning-actions .d1-button{white-space:nowrap;font-size:13px;min-height:40px}
 .learning-more{position:relative}.learning-more summary{list-style:none;cursor:pointer;min-width:40px;min-height:40px;display:grid;place-items:center;font-weight:600}.learning-more summary::-webkit-details-marker{display:none}.learning-more>div{position:absolute;right:0;top:44px;z-index:20;background:var(--surface);box-shadow:0 8px 24px #24334a1a;border:1px solid var(--border);border-radius:12px;padding:6px;width:190px}.learning-more button{border:0;background:transparent;color:var(--text);font:inherit;cursor:pointer;display:block;width:100%;text-align:left;padding:12px;font-size:14px;border-radius:8px}.learning-more button:hover{background:var(--bg)}
 .learning-goal{display:flex;align-items:center;width:100%;gap:10px;padding:12px 16px;text-align:left;color:var(--violet-text,#6955AD);font-size:13px}.learning-goal>span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.learning-goal small{white-space:nowrap}.learning-focus{font-size:12px;color:var(--text-muted);margin:8px 4px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.learning-goal-wrap{padding-bottom:8px}
