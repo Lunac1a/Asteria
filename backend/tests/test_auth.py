@@ -43,6 +43,8 @@ with patch.dict("os.environ", {
     "QUERY_TIMEOUT_SECONDS": "30",
     "MAX_UPLOAD_BYTES": "10485760",
     "MAX_WORKSPACE_CHUNKS": "2000",
+    "RECOVERY_ADMIN_USER_IDS": "[]",
+    "RECOVERY_SINGLE_PROCESS_CONFIRMED": "false",
     "ENCRYPTION_KEY": Fernet.generate_key().decode(),
 }):
     from app.api.routes.auth import router

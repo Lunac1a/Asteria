@@ -221,10 +221,23 @@ def index_document(db, document):
     try:
         path = str(data_root() / document.storage_key)
         db.commit()  # Release the read transaction while the bounded worker runs.
-        output = run_worker(
-            {"path": path},
-            settings.INDEX_TIMEOUT_SECONDS,
-        )
+        try:
+            output = run_worker(
+                {"path": path},
+                settings.INDEX_TIMEOUT_SECONDS,
+            )
+        except HTTPException:
+            raise  # Preserve the existing handled worker failure path below.
+        except Exception:
+            db.rollback()
+            document.status, document.error, document.chunk_count = (
+                "failed",
+                "Indexing failed unexpectedly. Please try again.",
+                0,
+            )
+            db.query(Chunk).filter_by(document_id=document.id).delete()
+            db.commit()
+            raise
         db.query(Chunk).filter_by(document_id=document.id).delete()
         for ordinal, chunk in enumerate(output["chunks"]):
             db.add(Chunk(document_id=document.id, ordinal=ordinal, **chunk))

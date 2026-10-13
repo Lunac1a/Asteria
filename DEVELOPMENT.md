@@ -1,5 +1,17 @@
 # 开发与验证
 
+## 人工恢复遗留索引
+
+Recovery 默认禁止执行：管理员白名单 `RECOVERY_ADMIN_USER_IDS=[]`，单进程确认 `RECOVERY_SINGLE_PROCESS_CONFIRMED=false`。白名单填写已有用户的 UUID JSON 数组，不授予普通用户恢复权限。
+
+操作者必须先确认旧 API 已退出、当前仅有一个 API 进程（单 worker），且所有索引入口都遵守 `document_slot`。无法确认时保持写入口关闭。`RECOVERY_SINGLE_PROCESS_CONFIRMED=true` 是人工运维确认，不是自动进程探测；不要用于多实例、滚动重启或多 worker 部署。
+
+管理员使用现有登录 Bearer token，POST `/api/admin/document-recovery/preview`，请求体 `{"document_ids":["目标文档ID"]}`（最多 20 个），查看状态和实际 Chunk 数量。预览不修改数据库，返回有效期五分钟、绑定管理员和当前进程的 `preview_token`。
+
+核对目标后 POST `/api/admin/document-recovery/execute`，请求体 `{"preview_token":"预览凭证","confirm":true}`。服务在持有文档操作锁期间开启新的读事务并重新查询，仅把仍为 `processing` 的文档改为 `failed`，保留 Chunk、核对计数；`ready`、已失败或不存在的文档跳过。正常索引运行期间拒绝恢复。进程重启或凭证过期后必须重新预览。
+
+恢复提交失败时回滚并释放锁；数据库恢复后重新预览，不盲目假定提交失败。恢复后用户通过已有重新索引接口重试。本机制不负责终止卡住的任务、发现孤儿子进程或扫描所有遗留文档，也不能证明跨进程互斥。测试：在 `backend` 运行 `.venv/Scripts/python.exe -B -m unittest discover -s tests -p test_document_recovery.py -v`。
+
 ## 仓库结构
 
 | 路径 | 职责 |

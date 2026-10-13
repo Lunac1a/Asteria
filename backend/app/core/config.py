@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     RETRIEVAL_LEXICAL_RESCUE: bool = True
     MAX_UPLOAD_BYTES: int = Field(default=10 * 1024 * 1024, ge=1, le=10 * 1024 * 1024)
     MAX_WORKSPACE_CHUNKS: int = Field(default=2000, ge=400, le=2000)
+    RECOVERY_ADMIN_USER_IDS: list[str] = Field(default_factory=list)
+    RECOVERY_SINGLE_PROCESS_CONFIRMED: bool = False
 
     class Config:
         env_file = ".env"
