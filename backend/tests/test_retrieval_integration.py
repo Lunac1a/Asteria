@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from app.db.base import Base
 from app.models.knowledge import Workspace, Document, Chunk
-from app.services.knowledge_service import retrieve, model_id
+from app.services.knowledge.retrieval import retrieve, model_id
 from app.core.config import settings
 
 
@@ -63,7 +63,7 @@ class RetrievalIntegrationTests(unittest.TestCase):
             db.commit()
             with (
                 patch(
-                    "app.services.knowledge_service.run_worker",
+                    "app.services.knowledge.retrieval.run_worker",
                     return_value={"vectors": [[1, 0]]},
                 ),
                 patch.object(settings, "RETRIEVAL_MIN_SCORE", 0.35),

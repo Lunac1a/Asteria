@@ -12,18 +12,18 @@ import httpx
 from openai import APITimeoutError
 import test_auth  # noqa: F401 - initialize isolated test settings before app imports
 from app.core.config import settings
-from app.services.generation_protocol import (
+from app.services.llm.protocol import (
     GenerationError,
     response_format,
     chat_schema,
 )
-from app.services.nvidia_nim_api_service import (
+from app.services.llm.provider import (
     decode_response,
     generate_response,
     request_provider,
 )
-from app.services.rag_service import grounded_answer
-from app.services.learning_service import generate_recap
+from app.services.chat.answers import grounded_answer
+from app.services.learning.state import generate_recap
 
 CASES = json.loads(
     (Path(__file__).resolve().parent / "fixtures/generation_cases.json").read_text()
@@ -37,7 +37,7 @@ class GenerationContracts(unittest.TestCase):
                 if case["transport"] == "timeout":
                     effect = subprocess.TimeoutExpired("worker", 45)
                     with patch(
-                        "app.services.nvidia_nim_api_service.subprocess.run",
+                        "app.services.llm.provider.subprocess.run",
                         side_effect=effect,
                     ):
                         generate_response(
@@ -52,7 +52,7 @@ class GenerationContracts(unittest.TestCase):
                         "category": case["expected"],
                     }
                     with patch(
-                        "app.services.nvidia_nim_api_service.subprocess.run",
+                        "app.services.llm.provider.subprocess.run",
                         return_value=NS(stdout=json.dumps(envelope), returncode=0),
                     ):
                         generate_response(
@@ -81,7 +81,7 @@ class GenerationContracts(unittest.TestCase):
                 with (
                     patch.object(settings, "LLM_BACKEND", "provider"),
                     patch(
-                        "app.services.rag_service.provider_completion",
+                        "app.services.chat.answers.provider_completion",
                         return_value=text,
                     ),
                 ):
@@ -126,7 +126,7 @@ class GenerationContracts(unittest.TestCase):
             raise httpx.ReadTimeout("Synthetic", request=request)
 
         with patch(
-            "app.services.nvidia_nim_api_service.Client",
+            "app.services.llm.provider.Client",
             return_value=httpx.Client(transport=httpx.MockTransport(handler)),
         ):
             with self.assertRaises(APITimeoutError):
@@ -138,7 +138,7 @@ class GenerationContracts(unittest.TestCase):
             with (
                 self.subTest(code=code),
                 patch(
-                    "app.services.nvidia_nim_api_service.subprocess.run",
+                    "app.services.llm.provider.subprocess.run",
                     return_value=NS(stdout=output, returncode=code),
                 ),
             ):
@@ -185,7 +185,7 @@ class GenerationContracts(unittest.TestCase):
             )
 
         with patch(
-            "app.services.nvidia_nim_api_service.Client",
+            "app.services.llm.provider.Client",
             return_value=httpx.Client(transport=httpx.MockTransport(handler)),
         ):
             answer = request_provider(
@@ -216,14 +216,14 @@ class GenerationContracts(unittest.TestCase):
         with (
             patch.object(settings, "LLM_BACKEND", "provider"),
             patch(
-                "app.services.learning_service.decrypt_text", return_value="synthetic"
+                "app.services.learning.state.decrypt_text", return_value="synthetic"
             ),
         ):
             for raw, expected in samples:
                 with (
                     self.subTest(expected=expected),
                     patch(
-                        "app.services.learning_service.generate_response",
+                        "app.services.learning.state.generate_response",
                         **(
                             {"side_effect": raw}
                             if isinstance(raw, Exception)
@@ -237,10 +237,10 @@ class GenerationContracts(unittest.TestCase):
                     self.assertEqual(call.call_count, 1)
 
     def test_production_logs_do_not_contain_raw_answer(self):
-        from app.services.generation_protocol import failure
+        from app.services.llm.protocol import failure
 
         with self.assertLogs(
-            "app.services.generation_protocol", level="WARNING"
+            "app.services.llm.protocol", level="WARNING"
         ) as logs:
             failure(GenerationError("json_parse", "PRIVATE RESPONSE SENTINEL"))
         self.assertNotIn("PRIVATE RESPONSE", str(logs.output))

@@ -12,13 +12,13 @@ from app.models.knowledge import SessionWorkspace
 from app.models.messages import Message
 from app.models.learning import LearningContext, LearningRecap, RecapDraft, now
 from app.schemas.learning import NotesEdit, GenerateRecap, Finish, Revision, RecapEdit
-from app.services.learning_service import (
+from app.services.learning.state import (
     ensure_context,
     context_data,
     snapshot,
     generate_recap,
 )
-from app.services.knowledge_service import owned_workspace
+from app.services.knowledge.retrieval import owned_workspace
 from app.api.routes.chat import chat_slot
 
 router = APIRouter(prefix="/chat/sessions/{session_id}/learning")

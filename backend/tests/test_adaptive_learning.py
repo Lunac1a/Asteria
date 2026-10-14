@@ -22,11 +22,11 @@ CONTENT = dict(
 class AdaptiveTests(unittest.TestCase):
     def setUp(self):
         test_dashboard.DashboardTests.setUp(self)
-        self.enterContext(patch("app.services.learning_knowledge.provider_completion",
+        self.enterContext(patch("app.services.learning.materials.provider_completion",
             return_value='{"task":"explanation","document_ids":[],"use_documents":false,"query":""}'))
         self.enterContext(
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"general"}',
             )
         )
@@ -286,8 +286,8 @@ class AdaptiveTests(unittest.TestCase):
 
     def test_generation_categories_do_not_mutate_learning_or_recap_drafts(self):
         self.enterContext(patch.object(settings, "LLM_BACKEND", "provider"))
-        from app.services.generation_protocol import GenerationError, failure
-        from app.services.rag_service import grounded_answer
+        from app.services.llm.protocol import GenerationError, failure
+        from app.services.chat.answers import grounded_answer
 
         draft = self.draft().json()
         before = self.get()
@@ -305,7 +305,7 @@ class AdaptiveTests(unittest.TestCase):
             with (
                 self.subTest(category=category),
                 patch(
-                    "app.services.rag_service.provider_completion",
+                    "app.services.chat.answers.provider_completion",
                     side_effect=failure(GenerationError(category)),
                 ),
             ):

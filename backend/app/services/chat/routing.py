@@ -3,7 +3,8 @@ import json
 import re
 from fastapi import HTTPException
 from app.core.config import settings
-from app.services.rag_service import document_fact, provider_completion
+from app.services.chat.answers import document_fact
+from app.services.llm.completion import provider_completion
 
 VERSION = "smart-v2-cnc"
 EXPLICIT = re.compile(r"\.pdf\b|\b(uploaded|cite|my notes|my (?:course|assignment|profile|resume)|our course)\b|\b(the|this|my|your|our|provided)\s+(document|materials|pdf|notes|syllabus)\b|according to|with (?:a )?(?:citation|source)|根据.*(?:资料|文档|课程)|(?:资料|文档)(?:中|里)|上传|请.*引用|引用.*资料|课件|讲义|我的(?:课程|作业|简历|资料)|课程规则", re.I)

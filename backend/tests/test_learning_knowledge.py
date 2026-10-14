@@ -15,10 +15,10 @@ import test_dashboard  # imports synthetic settings before app modules
 from fastapi import HTTPException
 from app.core.config import settings
 from app.models.knowledge import Chunk, Document, MessageEvidence, Workspace
-from app.services.knowledge_service import model_id, retrieve
-from app.services.learning_knowledge import acquire
-from app.services.rag_service import grounded_answer
-from app.services.smart_routing import previous_decision
+from app.services.knowledge.retrieval import model_id, retrieve
+from app.services.learning.materials import acquire
+from app.services.chat.answers import grounded_answer
+from app.services.chat.routing import previous_decision
 
 
 class KnowledgeTests(unittest.TestCase):
@@ -72,7 +72,7 @@ class KnowledgeTests(unittest.TestCase):
         )
         self.planner = self.enterContext(
             patch(
-                "app.services.learning_knowledge.provider_completion",
+                "app.services.learning.materials.provider_completion",
                 side_effect=lambda *a, **k: json.dumps(self.plan),
             )
         )
@@ -147,7 +147,7 @@ class KnowledgeTests(unittest.TestCase):
         sources, context = self.acquisition()
         self.assertEqual(sources, [])
         with patch(
-            "app.services.rag_service.provider_completion",
+            "app.services.chat.answers.provider_completion",
             return_value=json.dumps(
                 dict(
                     answer="An index is a lookup structure.",
@@ -231,7 +231,7 @@ class KnowledgeTests(unittest.TestCase):
         with (
             self.factory() as db,
             patch(
-                "app.services.knowledge_service.run_worker",
+                "app.services.knowledge.retrieval.run_worker",
                 return_value={"vectors": [[1.0, 0.0]]},
             ),
         ):
@@ -318,12 +318,12 @@ class KnowledgeTests(unittest.TestCase):
     def test_chat_learning_plan_and_saved_scope_end_to_end(self):
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             ),
             patch("app.api.routes.chat.retrieve", return_value=[]),
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 side_effect=self.generated,
             ),
         ):
@@ -350,12 +350,12 @@ class KnowledgeTests(unittest.TestCase):
         )
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             ),
             patch("app.api.routes.chat.retrieve", return_value=[source]),
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 return_value=json.dumps(
                     dict(
                         answer="Invented document finding",
@@ -373,12 +373,12 @@ class KnowledgeTests(unittest.TestCase):
     def test_learning_plan_then_step_by_step_request_keeps_teaching_and_scope(self):
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             ),
             patch("app.api.routes.chat.retrieve", return_value=[]) as search,
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 side_effect=self.generated,
             ),
         ):
@@ -449,7 +449,7 @@ class KnowledgeTests(unittest.TestCase):
             db.commit()
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             ),
             patch(
@@ -457,7 +457,7 @@ class KnowledgeTests(unittest.TestCase):
                 side_effect=HTTPException(409, "Index pending"),
             ),
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 side_effect=self.generated,
             ),
         ):
@@ -472,7 +472,7 @@ class KnowledgeTests(unittest.TestCase):
         self.plan.update(task="document_qa", query="SQL basics")
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"general"}',
             ),
             patch(
@@ -499,12 +499,12 @@ class KnowledgeTests(unittest.TestCase):
         )
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             ),
             patch("app.api.routes.chat.retrieve", return_value=[source]) as search,
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 side_effect=self.generated,
             ),
         ):
@@ -522,11 +522,11 @@ class KnowledgeTests(unittest.TestCase):
         )
         with (
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             ),
             patch("app.api.routes.chat.retrieve", return_value=[]),
-            patch("app.services.rag_service.provider_completion") as model,
+            patch("app.services.chat.answers.provider_completion") as model,
         ):
             response = self.send("第二份文档规定的缺失细节是什么？")
         self.assertEqual(response.status_code, 200, response.text)
@@ -544,7 +544,7 @@ class KnowledgeTests(unittest.TestCase):
                 side_effect=HTTPException(503, "Broken index"),
             ) as search,
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 side_effect=self.generated,
             ),
             patch("app.api.routes.chat.decide") as old_router,
@@ -563,7 +563,7 @@ class KnowledgeTests(unittest.TestCase):
                 side_effect=HTTPException(408, "Timed out"),
             ),
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 side_effect=self.generated,
             ),
         ):
@@ -580,7 +580,7 @@ class KnowledgeTests(unittest.TestCase):
         with self.factory() as db:
             db.add(Workspace(id="empty", name="Empty", user_id=self.owner))
             db.commit()
-        with patch("app.services.rag_service.provider_completion") as model:
+        with patch("app.services.chat.answers.provider_completion") as model:
             response = self.client.post(
                 "/api/chat",
                 headers=self.headers,

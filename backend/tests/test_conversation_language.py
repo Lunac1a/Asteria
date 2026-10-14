@@ -5,9 +5,9 @@ import json
 import unittest
 import uuid
 from unittest.mock import patch
-from app.services.conversation_language import resolve, explicit, instructions
-from app.services.generation_protocol import chat_schema
-from app.services.rag_service import grounded_answer
+from app.services.chat.language import resolve, explicit, instructions
+from app.services.llm.protocol import chat_schema
+from app.services.chat.answers import grounded_answer
 
 
 class LanguageTests(unittest.TestCase):
@@ -73,7 +73,7 @@ class LanguageTests(unittest.TestCase):
         self.assertNotIn("learning", chat_schema(False)["properties"])
         self.assertFalse(chat_schema(True)["additionalProperties"])
 
-    @patch("app.services.rag_service.settings.LLM_BACKEND", "provider")
+    @patch("app.services.chat.answers.settings.LLM_BACKEND", "provider")
     def test_generation_uses_policy_and_validates_initial_goal(self):
         raw = {
             "answer": "A heuristic estimates cost.",
@@ -88,7 +88,7 @@ class LanguageTests(unittest.TestCase):
             },
         }
         with patch(
-            "app.services.rag_service.provider_completion", return_value=json.dumps(raw)
+            "app.services.chat.answers.provider_completion", return_value=json.dumps(raw)
         ) as provider:
             update = {}
             answer, _, _ = grounded_answer(
@@ -128,7 +128,7 @@ class LanguagePersistenceTests(unittest.TestCase):
         from app.models.messages import Message
         from app.models.learning import LearningContext
         from app.models.session_profile import SessionProfile
-        from app.services.learning_service import snapshot
+        from app.services.learning.state import snapshot
 
         test_dashboard.DashboardTests.setUp(self)
         headers = self.users[0][1]

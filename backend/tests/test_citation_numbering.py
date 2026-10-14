@@ -5,7 +5,7 @@ import json
 import unittest
 from unittest.mock import patch
 
-from app.services.citation_service import check_mapping, reconcile_numbers
+from app.services.chat.citations import check_mapping, reconcile_numbers
 import test_citation_faithfulness as contracts
 
 generated = contracts.generated
@@ -129,7 +129,7 @@ class NumberingPipelineTests(unittest.TestCase):
             with (
                 self.subTest(support=support),
                 patch(
-                    "app.services.rag_service.provider_completion",
+                    "app.services.chat.answers.provider_completion",
                     side_effect=[generated(sample), verdict(corrected, support)],
                 ) as provider,
             ):
@@ -155,7 +155,7 @@ class NumberingPipelineTests(unittest.TestCase):
         sample["answer"] = "Page 1 says A reads 100 and then 150. [1]"
         sample["claims"][0]["text"] = sample["answer"]
         with patch(
-            "app.services.rag_service.provider_completion",
+            "app.services.chat.answers.provider_completion",
             side_effect=[
                 generated(sample),
                 verdict({**sample, "citations": [2]}, "none"),

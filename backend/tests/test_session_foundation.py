@@ -14,7 +14,7 @@ from app.models.knowledge import Workspace, SessionWorkspace
 class SessionFoundationTests(unittest.TestCase):
     def setUp(self):
         test_dashboard.DashboardTests.setUp(self)
-        self.enterContext(patch("app.services.smart_routing.provider_completion", return_value='{"intent":"general"}'))
+        self.enterContext(patch("app.services.chat.routing.provider_completion", return_value='{"intent":"general"}'))
         self.headers = self.users[0][1]
         with self.factory() as db:
             db.add_all([Workspace(id="owned", name="Session tests", user_id=self.users[0][0]),

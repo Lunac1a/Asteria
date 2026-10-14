@@ -1,7 +1,7 @@
 """Evidence checks, isolated from retrieval/routing. Never infer support from an ID alone."""
 import copy
 import re
-from app.services.generation_protocol import GenerationError, object_schema, parse_object
+from app.services.llm.protocol import GenerationError, object_schema, parse_object
 
 CLAIM_SCHEMA = object_schema({
     "text": {"type": "string"},

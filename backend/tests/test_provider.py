@@ -7,7 +7,7 @@ from unittest.mock import patch
 import httpx
 from openai import APIStatusError, RateLimitError
 from test_auth import Base  # noqa: F401 (synthetic settings before application imports)
-from app.services.nvidia_nim_api_service import generate_response, request_provider
+from app.services.llm.provider import generate_response, request_provider
 
 
 class ProviderContractTests(unittest.TestCase):
@@ -16,7 +16,7 @@ class ProviderContractTests(unittest.TestCase):
             transport=httpx.MockTransport(handler), follow_redirects=False
         )
         with patch(
-            "app.services.nvidia_nim_api_service.Client", return_value=client
+            "app.services.llm.provider.Client", return_value=client
         ):
             return request_provider(
                 [{"role": "user", "content": "Independent test"}],
@@ -83,7 +83,7 @@ class ProviderContractTests(unittest.TestCase):
 
     def test_total_deadline_does_not_put_credentials_in_argv(self):
         with patch(
-            "app.services.nvidia_nim_api_service.subprocess.run",
+            "app.services.llm.provider.subprocess.run",
             side_effect=subprocess.TimeoutExpired("worker", 45),
         ) as run:
             with self.assertRaisesRegex(RuntimeError, "45-second"):

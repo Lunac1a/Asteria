@@ -10,8 +10,8 @@ import test_dashboard
 from app.core.config import settings
 from app.models.knowledge import Workspace, MessageEvidence
 from app.models.messages import Message
-from app.services.smart_routing import decide, explicit_evidence
-from app.services.rag_service import grounded_answer
+from app.services.chat.routing import decide, explicit_evidence
+from app.services.chat.answers import grounded_answer
 
 
 class RoutingTests(unittest.TestCase):
@@ -26,7 +26,7 @@ class RoutingTests(unittest.TestCase):
                 with (
                     self.subTest(case=row["id"]),
                     patch(
-                        "app.services.smart_routing.provider_completion",
+                        "app.services.chat.routing.provider_completion",
                         return_value=json.dumps({"intent": row["intent"]}),
                     ),
                 ):
@@ -45,7 +45,7 @@ class RoutingTests(unittest.TestCase):
             ]:
                 with (
                     patch(
-                        "app.services.smart_routing.provider_completion",
+                        "app.services.chat.routing.provider_completion",
                         return_value=value,
                     ),
                     self.assertRaises(HTTPException) as error,
@@ -64,7 +64,7 @@ class RoutingTests(unittest.TestCase):
         with (
             patch.object(settings, "LLM_BACKEND", "provider"),
             patch(
-                "app.services.rag_service.provider_completion",
+                "app.services.chat.answers.provider_completion",
                 return_value=json.dumps(result),
             ),
         ):
@@ -96,7 +96,7 @@ class RoutingTests(unittest.TestCase):
             with (
                 patch.object(settings, "LLM_BACKEND", "provider"),
                 patch(
-                    "app.services.rag_service.provider_completion",
+                    "app.services.chat.answers.provider_completion",
                     return_value=json.dumps(result),
                 ),
                 self.assertRaises(HTTPException) as error,
@@ -123,11 +123,11 @@ class SmartAPITests(unittest.TestCase):
             )
             db.commit()
         self.enterContext(patch.object(settings, "LLM_BACKEND", "provider"))
-        self.enterContext(patch("app.services.learning_knowledge.provider_completion",
+        self.enterContext(patch("app.services.learning.materials.provider_completion",
             return_value='{"task":"explanation","document_ids":[],"use_documents":false,"query":""}'))
         self.classifier = self.enterContext(
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"general"}',
             )
         )
@@ -248,7 +248,7 @@ class CrossLanguageRoutingTests(unittest.TestCase):
                 with (
                     self.subTest(case=row["id"]),
                     patch(
-                        "app.services.smart_routing.provider_completion",
+                        "app.services.chat.routing.provider_completion",
                         return_value='{"intent":"general"}',
                     ) as classifier,
                 ):

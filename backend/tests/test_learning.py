@@ -21,8 +21,8 @@ from app.core.security import create_access_token, decrypt_text
 from app.models.knowledge import Chunk, Document
 from app.models.messages import Message
 from app.models.user_llm_settings import UserLLMSetting
-from app.services.rag_service import grounded_answer
-from app.services.knowledge_service import run_worker
+from app.services.chat.answers import grounded_answer
+from app.services.knowledge.retrieval import run_worker
 
 from make_test_pdf import make_pdf  # noqa: E402
 
@@ -33,7 +33,7 @@ class LearningAPITests(unittest.TestCase):
         temp_root.mkdir(parents=True, exist_ok=True)
         self.enterContext(
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"general"}',
             )
         )
@@ -289,7 +289,7 @@ class LearningAPITests(unittest.TestCase):
             user_id = db.query(UserLLMSetting).one().user_id
             for result in bad_results:
                 with patch(
-                    "app.services.rag_service.generate_response", return_value=result
+                    "app.services.llm.completion.generate_response", return_value=result
                 ):
                     if '"supported":false' in result:
                         self.assertEqual(
@@ -397,7 +397,7 @@ class LearningAPITests(unittest.TestCase):
         import subprocess
 
         with patch(
-            "app.services.knowledge_service.subprocess.run",
+            "app.services.knowledge.retrieval.subprocess.run",
             side_effect=subprocess.TimeoutExpired("worker", 1),
         ):
             doc = self.upload()
@@ -410,7 +410,7 @@ class LearningAPITests(unittest.TestCase):
         self.assertEqual(result.json()["status"], "ready")
 
     def test_worker_busy_does_not_spawn_unbounded_processes(self):
-        from app.services.knowledge_service import worker_slot
+        from app.services.knowledge.retrieval import worker_slot
 
         worker_slot.acquire()
         try:
@@ -517,7 +517,7 @@ class LearningAPITests(unittest.TestCase):
                     else "Sunlight [1]"
                 )
                 with patch(
-                    "app.services.rag_service.generate_response",
+                    "app.services.llm.completion.generate_response",
                     return_value=__import__("json").dumps(
                         {
                             "answer": text,
@@ -587,11 +587,11 @@ class LearningAPITests(unittest.TestCase):
                 (RuntimeError("45-second time limit"), 504),
             ]:
                 with patch(
-                    "app.services.rag_service.generate_response", side_effect=failure
+                    "app.services.llm.completion.generate_response", side_effect=failure
                 ):
                     self.assertEqual(self.ask().status_code, code)
             with patch(
-                "app.services.rag_service.generate_response", return_value="not json"
+                "app.services.llm.completion.generate_response", return_value="not json"
             ):
                 self.assertEqual(self.ask().status_code, 502)
         with self.factory() as db:
@@ -645,7 +645,7 @@ class LearningAPITests(unittest.TestCase):
                 self.subTest(result=result),
                 patch.object(settings, "LLM_BACKEND", "provider"),
                 patch(
-                    "app.services.rag_service.generate_response", return_value=result
+                    "app.services.llm.completion.generate_response", return_value=result
                 ),
             ):
                 response = self.ask("Explain photosynthesis")
@@ -667,7 +667,7 @@ class LearningAPITests(unittest.TestCase):
         with (
             patch.object(settings, "LLM_BACKEND", "provider"),
             patch(
-                "app.services.rag_service.generate_response",
+                "app.services.llm.completion.generate_response",
                 return_value='{"answer":"Guessed deadline", "citations":[], "basis":"general"}',
             ),
         ):
@@ -677,7 +677,7 @@ class LearningAPITests(unittest.TestCase):
         )  # Unsupported general fallback is invalid.
         with (
             patch("app.api.routes.chat.retrieve", return_value=[]),
-            patch("app.services.rag_service.generate_response") as generate,
+            patch("app.services.llm.completion.generate_response") as generate,
         ):
             response = self.ask("需要做几分钟的展示？")
         self.assertEqual(response.json()["answer_basis"], "insufficient")

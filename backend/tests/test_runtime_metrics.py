@@ -8,7 +8,7 @@ import test_dashboard
 from app.main import create_app
 from app.core.config import settings
 from app.services.runtime_metrics import provider_call, provider_phase
-from app.services.generation_protocol import GenerationText, GenerationError, failure
+from app.services.llm.protocol import GenerationText, GenerationError, failure
 
 
 class RuntimeMetricsTests(unittest.TestCase):

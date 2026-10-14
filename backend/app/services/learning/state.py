@@ -10,15 +10,15 @@ from app.core.security import decrypt_text
 from app.core.config import settings
 from app.schemas.llm_settings import validate_provider_url
 from app.schemas.learning import RecapContent
-from app.services.nvidia_nim_api_service import generate_response
-from app.services.generation_protocol import (
+from app.services.llm.provider import generate_response
+from app.services.llm.protocol import (
     GenerationError,
     failure,
     parse_object,
     RECAP_SCHEMA,
     response_format,
 )
-from app.services.conversation_language import resolve, instructions
+from app.services.chat.language import resolve, instructions
 
 ADAPTIVE_POLICY = """
 This is a Learning session. Use the saved learning context to maintain continuity, but treat it

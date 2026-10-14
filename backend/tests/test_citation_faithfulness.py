@@ -10,14 +10,14 @@ from unittest.mock import patch
 from fastapi import HTTPException
 import test_dashboard
 from app.core.config import settings
-from app.services.citation_service import check_mapping, checked_verdict
-from app.services.generation_protocol import GenerationError, failure
-from app.services.rag_service import grounded_answer
+from app.services.chat.citations import check_mapping, checked_verdict
+from app.services.llm.protocol import GenerationError, failure
+from app.services.chat.answers import grounded_answer
 from app.models.knowledge import Workspace, Document, Chunk, MessageEvidence
 from app.models.messages import Message
 from app.models.chat_sessions import ChatSession
 from app.models.learning import LearningContext
-from app.services.knowledge_service import model_id
+from app.services.knowledge.retrieval import model_id
 
 DATA = json.loads(
     (Path(__file__).resolve().parent / "fixtures/citation_cases.json").read_text(
@@ -86,7 +86,7 @@ class CitationTests(unittest.TestCase):
             )
         )
         with patch(
-            "app.services.rag_service.provider_completion",
+            "app.services.chat.answers.provider_completion",
             side_effect=[generated(case), verdict(case, "partial")],
         ) as call:
             answer, sources, basis = self.call(case)
@@ -101,7 +101,7 @@ class CitationTests(unittest.TestCase):
     def test_verified_answer_keeps_original_citations_and_source_content(self):
         case = DATA[1]
         with patch(
-            "app.services.rag_service.provider_completion",
+            "app.services.chat.answers.provider_completion",
             side_effect=[generated(case), verdict(case)],
         ):
             answer, sources, basis = self.call(case)
@@ -119,7 +119,7 @@ class CitationTests(unittest.TestCase):
             with (
                 self.subTest(name=name),
                 patch(
-                    "app.services.rag_service.provider_completion",
+                    "app.services.chat.answers.provider_completion",
                     return_value=generated(case),
                 ) as call,
             ):
@@ -129,7 +129,7 @@ class CitationTests(unittest.TestCase):
     def test_general_has_no_mapping_prompt_or_extra_call(self):
         raw = '{"answer":"A general explanation.","citations":[],"basis":"general"}'
         with patch(
-            "app.services.rag_service.provider_completion", return_value=raw
+            "app.services.chat.answers.provider_completion", return_value=raw
         ) as call:
             answer, sources, basis = grounded_answer(
                 None, "synthetic", "General concept", [], [], answer_mode="hybrid"
@@ -144,7 +144,7 @@ class CitationTests(unittest.TestCase):
         raw = json.loads(generated(case))
         raw.update(basis="hybrid", model_knowledge=99)
         with patch(
-            "app.services.rag_service.provider_completion", return_value=json.dumps(raw)
+            "app.services.chat.answers.provider_completion", return_value=json.dumps(raw)
         ) as call:
             with self.assertRaises(HTTPException):
                 self.call(case)
@@ -154,7 +154,7 @@ class CitationTests(unittest.TestCase):
         case = DATA[1]
         diagnostics = {}
         with patch(
-            "app.services.rag_service.provider_completion", return_value=generated(case)
+            "app.services.chat.answers.provider_completion", return_value=generated(case)
         ) as call:
             self.assertEqual(
                 self.call(
@@ -177,7 +177,7 @@ class CitationTests(unittest.TestCase):
             with (
                 self.subTest(second=second),
                 patch(
-                    "app.services.rag_service.provider_completion",
+                    "app.services.chat.answers.provider_completion",
                     side_effect=[generated(case), second],
                 ) as call,
             ):
@@ -207,7 +207,7 @@ class CitationTests(unittest.TestCase):
         audit = json.loads(verdict(case))
         audit["model_knowledge_safe"] = False
         with patch(
-            "app.services.rag_service.provider_completion",
+            "app.services.chat.answers.provider_completion",
             side_effect=[json.dumps(raw), json.dumps(audit)],
         ):
             answer, sources, basis = self.call(case)
@@ -225,7 +225,7 @@ class CitationTests(unittest.TestCase):
         audit = json.loads(verdict(case))
         audit["claims"].append(dict(index=1, support="none", relevant_citations=[], reason="missing_detail"))
         diagnostics = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), json.dumps(audit)]):
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), json.dumps(audit)]):
             answer, sources, basis = self.call(case, citation_diagnostics=diagnostics)
         self.assertEqual(basis, "hybrid")
         self.assertIn(case["answer"], answer)
@@ -242,7 +242,7 @@ class CitationTests(unittest.TestCase):
         bad = "The exam is on Friday. [2]"
         raw["answer"] += "\n\n" + bad
         raw["claims"].append(dict(text=bad, citations=[2], quotes=[dict(citation=2, text="invented quote")]))
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), verdict(case)]) as call:
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), verdict(case)]) as call:
             answer, sources, basis = self.call(case)
         self.assertEqual(basis, "grounded")
         self.assertIn(case["answer"], answer)
@@ -254,7 +254,7 @@ class CitationTests(unittest.TestCase):
         case = DATA[1]
         raw = json.loads(generated(case))
         raw.update(basis="hybrid", model_knowledge="Try sketching a search tree to compare strategies.")
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), verdict(case, "partial")]):
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), verdict(case, "partial")]):
             answer, sources, basis = self.call(case)
         self.assertEqual((sources, basis), ([], "general"))
         self.assertNotIn(case["answer"], answer)
@@ -267,7 +267,7 @@ class CitationTests(unittest.TestCase):
         raw["claims"][0]["quotes"][0]["text"] = "A paraphrase, not an exact source quote."
         safe = json.dumps(dict(claims=[], model_knowledge_safe=True))
         learning_update = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), safe]) as provider:
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), safe]) as provider:
             answer, sources, basis = self.call(case, knowledge_context={"task": "planning"}, learning_update=learning_update)
         self.assertEqual((sources, basis), ([], "general"))
         self.assertIn("逐步练习", answer)
@@ -283,7 +283,7 @@ class CitationTests(unittest.TestCase):
         raw.update(basis="hybrid", model_knowledge="These materials say the exam is Friday.")
         raw["claims"][0]["quotes"][0]["text"] = "invented quote"
         unsafe = json.dumps(dict(claims=[], model_knowledge_safe=False))
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), unsafe]):
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), unsafe]):
             answer, sources, basis = self.call(case, knowledge_context={"task": "planning"})
         self.assertEqual((sources, basis), ([], "insufficient"))
         self.assertNotIn("Friday", answer)
@@ -296,7 +296,7 @@ class CitationAPITests(unittest.TestCase):
         self.enterContext(patch.object(settings, "CITATION_AUDIT_ENABLED", True))
         self.enterContext(
             patch(
-                "app.services.smart_routing.provider_completion",
+                "app.services.chat.routing.provider_completion",
                 return_value='{"intent":"workspace"}',
             )
         )
@@ -331,10 +331,10 @@ class CitationAPITests(unittest.TestCase):
         self.enterContext(
             patch("app.api.routes.chat.retrieve", return_value=self.case["sources"])
         )
-        self.enterContext(patch("app.services.learning_knowledge.provider_completion",
+        self.enterContext(patch("app.services.learning.materials.provider_completion",
             return_value=json.dumps(dict(task="document_qa", document_ids=["doc"], use_documents=True, query="Explicit source fact"))))
         self.provider = self.enterContext(
-            patch("app.services.rag_service.provider_completion")
+            patch("app.services.chat.answers.provider_completion")
         )
         self.request_id = str(uuid.uuid4())
 

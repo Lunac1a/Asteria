@@ -1,16 +1,12 @@
+"""Generate and validate chat answers, with optional document evidence."""
 import json
 import re
 import time
 import logging
-from cryptography.fernet import InvalidToken
-from fastapi import HTTPException
 from app.core.config import settings
-from app.core.security import decrypt_text
-from app.models.user_llm_settings import UserLLMSetting
-from app.schemas.llm_settings import validate_provider_url
-from app.services.nvidia_nim_api_service import generate_response
-from app.services.generation_protocol import GenerationError, failure, parse_object, chat_schema, response_format
-from app.services.conversation_language import resolve, instructions
+from app.services.llm.protocol import GenerationError, failure, parse_object, chat_schema
+from app.services.llm.completion import provider_completion
+from app.services.chat.language import resolve, instructions
 
 ABSTAIN = "当前 Workspace 的资料不足以支持回答。请补充相关资料，或提出更具体的问题。"
 
@@ -24,50 +20,6 @@ def document_fact(question):
             re.I,
         )
     )
-
-
-def provider_completion(db, user_id, system, context, schema=None, timeout_seconds=None, metric_phase="generation"):
-    from app.services.runtime_metrics import provider_phase
-    with provider_phase(metric_phase):
-        return _provider_completion(db, user_id, system, context, schema, timeout_seconds)
-
-
-def _provider_completion(db, user_id, system, context, schema=None, timeout_seconds=None):
-    setting = db.query(UserLLMSetting).filter_by(user_id=user_id).first()
-    if not setting:
-        raise HTTPException(400, "Configure your LLM provider in Settings first")
-    try:
-        url = validate_provider_url(setting.base_url)
-        key = decrypt_text(setting.encrypted_api_key)
-    except (InvalidToken, ValueError):
-        raise HTTPException(
-            400, "LLM settings are invalid. Please save your provider settings again."
-        )
-    model_name = setting.model_name
-    db.rollback()
-    try:
-        return generate_response(
-            [
-                {"role": "system", "content": system},
-                {"role": "user", "content": context},
-            ],
-            key,
-            url,
-            model_name,
-            **({"timeout_seconds": timeout_seconds} if timeout_seconds is not None else {}),
-            **({"response_format": fmt} if (fmt := response_format(url, model_name, schema, settings.GENERATION_JSON_SCHEMA_PROFILES)) else {}),
-        )
-    except GenerationError as exc:
-        raise failure(exc) from None
-    except RuntimeError as exc:
-        if "time limit" in str(exc) or "timeout" in str(exc).lower():
-            raise HTTPException(
-                504, "The model timed out. Your question was not saved; retry shortly."
-            )
-        raise HTTPException(
-            502,
-            "The model provider is unavailable. Check Settings and retry; this turn was not saved.",
-        )
 
 
 def grounded_answer(
@@ -166,7 +118,7 @@ def grounded_answer(
             "Do not choose insufficient merely because teaching suggestions lack document citations. "
         )
     if learning_context is not None:
-        from app.services.learning_service import ADAPTIVE_INSTRUCTIONS, ADAPTIVE_POLICY
+        from app.services.learning.state import ADAPTIVE_INSTRUCTIONS, ADAPTIVE_POLICY
         system += ADAPTIVE_POLICY if structured_teaching else ADAPTIVE_INSTRUCTIONS
     elif learning_mode == "socratic":
         system += (
@@ -178,7 +130,7 @@ def grounded_answer(
     else:
         system += "Answer directly with a clear explanation. "
     if structured_teaching:
-        from app.services.teaching_response import INSTRUCTIONS
+        from app.services.learning.response import INSTRUCTIONS
         system += INSTRUCTIONS
     system += instructions(language_policy)
     initialize_goal = bool(learning_context and learning_context.get("initialize_goal"))
@@ -192,7 +144,7 @@ def grounded_answer(
         structured_teaching=structured_teaching)
     audit_enabled = settings.CITATION_AUDIT_ENABLED and bool(sources)
     if audit_enabled:
-        from app.services.citation_service import CLAIM_SCHEMA, CLAIM_INSTRUCTIONS
+        from app.services.chat.citations import CLAIM_SCHEMA, CLAIM_INSTRUCTIONS
         system += CLAIM_INSTRUCTIONS
         schema["properties"]["claims"] = {"type": "array", "items": CLAIM_SCHEMA}
         schema["required"].append("claims")
@@ -205,7 +157,7 @@ def grounded_answer(
         **({"timeout_seconds": generation_budget} if knowledge_context is not None else {}))
     try:
         parsed = parse_object(result)
-        from app.services.teaching_response import compose_lesson, visible_observation
+        from app.services.learning.response import compose_lesson, visible_observation
         if structured_teaching:
             primary, action, lesson_mode = compose_lesson(parsed)
             record = parsed.get("learning")
@@ -243,7 +195,7 @@ def grounded_answer(
         if not isinstance(answer, str) or not answer.strip() or len(answer) > 12000:
             raise ValueError()
         if audit_enabled and basis in {"grounded", "hybrid"}:
-            from app.services.citation_service import reconcile_numbers
+            from app.services.chat.citations import reconcile_numbers
             rebound, rebound_ids, rebound_claims = reconcile_numbers(
                 answer, numbers, parsed.get("claims"), sources)
             if rebound != answer or rebound_ids != numbers:
@@ -318,7 +270,7 @@ def grounded_answer(
                 answer = f"### {label}\n{answer}"
         general_audit = structured_teaching and basis == "general"
         if audit_enabled and (basis in {"grounded", "hybrid"} or general_audit):
-            from app.services.citation_service import check_mapping, valid_mapped_claims, verifier_input, checked_verdict, supported, uncertainty, VERIFIER_INSTRUCTIONS, VERDICT_SCHEMA
+            from app.services.chat.citations import check_mapping, valid_mapped_claims, verifier_input, checked_verdict, supported, uncertainty, VERIFIER_INSTRUCTIONS, VERDICT_SCHEMA
             claims = [] if general_audit else parsed.get("claims")
             problem = None if general_audit else check_mapping(parsed["answer"], numbers, claims, sources)
             mapping_loss = False
@@ -359,7 +311,7 @@ def grounded_answer(
                 if learning_update is not None:
                     learning_update["value"] = None
                 if verdict is not None:
-                    from app.services.citation_service import retain_verified
+                    from app.services.chat.citations import retain_verified
                     retained, retained_ids, safe_knowledge = retain_verified(verdict, claims, parsed.get("model_knowledge"))
                     if retained or (safe_knowledge and answer_mode != "document"):
                         if retained and safe_knowledge and answer_mode != "document":

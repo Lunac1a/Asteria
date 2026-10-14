@@ -17,7 +17,7 @@ Recovery 默认禁止执行：管理员白名单 `RECOVERY_ADMIN_USER_IDS=[]`，
 | 路径 | 职责 |
 | --- | --- |
 | `backend/app/api` | 接口、认证与请求边界 |
-| `backend/app/services` | 检索、生成、引用校验与学习状态 |
+| `backend/app/services` | 按 chat、knowledge、learning、llm 归组的业务逻辑，详见 [职责说明](backend/app/services/README.md) |
 | `backend/app/models` / `schemas` | 数据模型与接口协议 |
 | `backend/app/cli` | 本地运行、状态检查和独立真实模型验收 |
 | `backend/tests` | Mock 模型、独立数据库的自动回归 |

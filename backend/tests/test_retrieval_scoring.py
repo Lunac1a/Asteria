@@ -3,7 +3,7 @@
 import math
 import unittest
 
-from app.services.retrieval_scoring import lexical_terms, rank_candidates
+from app.services.knowledge.scoring import lexical_terms, rank_candidates
 
 
 def candidate(key, score, content):

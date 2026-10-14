@@ -9,8 +9,8 @@ from test_citation_faithfulness import DATA, generated, verdict
 from app.core.config import settings
 from app.models.learning import LearningContext
 from app.models.knowledge import Workspace
-from app.services.learning_service import apply_observation
-from app.services.rag_service import grounded_answer
+from app.services.learning.state import apply_observation
+from app.services.chat.answers import grounded_answer
 
 
 class GuidanceTests(unittest.TestCase):
@@ -27,7 +27,7 @@ class GuidanceTests(unittest.TestCase):
                     learning=dict(focus="事务", evidence=None))
 
     def call(self, raw, sources=None, **kwargs):
-        with patch("app.services.rag_service.provider_completion", return_value=json.dumps(raw)) as provider:
+        with patch("app.services.chat.answers.provider_completion", return_value=json.dumps(raw)) as provider:
             result = grounded_answer(None, "synthetic", "解释一下事务", [], sources or [],
                 answer_mode="smart", learning_context={"focus":"事务"},
                 knowledge_context={"task":"explanation"}, **kwargs)
@@ -83,7 +83,7 @@ class GuidanceTests(unittest.TestCase):
     def test_questioning_chat_does_not_get_metadata_appended(self):
         raw = self.raw()
         raw["answer"] = "事务将一组操作作为整体提交或回滚。"
-        with patch("app.services.rag_service.provider_completion", return_value=json.dumps(raw)):
+        with patch("app.services.chat.answers.provider_completion", return_value=json.dumps(raw)):
             answer, _, _ = grounded_answer(None, "synthetic", "解释事务", [], [], answer_mode="smart",
                 knowledge_context={"task":"explanation"})
         self.assertNotIn(self.action, answer)
@@ -94,7 +94,7 @@ class GuidanceTests(unittest.TestCase):
         raw.update(basis="hybrid", lesson=dict(mode="continue",
             explanation="先用一个小例子比较搜索策略。", next_action=self.action))
         update = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), verdict(case)]) as provider:
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), verdict(case)]) as provider:
             answer, sources, basis = grounded_answer(None, "synthetic", case["question"], [], case["sources"],
                 answer_mode="smart", learning_context={"focus":"Search"},
                 knowledge_context={"task":"explanation"}, learning_update=update)
@@ -115,7 +115,7 @@ class GuidanceTests(unittest.TestCase):
         audit = json.loads(verdict(case))
         audit["model_knowledge_safe"] = False
         update = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), json.dumps(audit)]):
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), json.dumps(audit)]):
             answer, _, basis = grounded_answer(None, "synthetic", case["question"], [], case["sources"],
                 answer_mode="smart", learning_context={}, knowledge_context={"task":"explanation"}, learning_update=update)
         self.assertNotIn("Friday", answer)
@@ -160,7 +160,7 @@ class GuidanceTests(unittest.TestCase):
         raw.update(basis="hybrid", lesson=dict(mode="continue",
             explanation="用一般知识比较搜索策略。", next_action=self.action))
         update = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw), verdict(case, support="none", ids=[])]):
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw), verdict(case, support="none", ids=[])]):
             answer, sources, basis = grounded_answer(None, "synthetic", case["question"], [], case["sources"],
                 answer_mode="smart", learning_context={}, knowledge_context={"task":"explanation"}, learning_update=update)
         self.assertEqual(basis, "general")
@@ -172,7 +172,7 @@ class GuidanceTests(unittest.TestCase):
         raw = self.raw()
         raw["lesson"]["explanation"] = "The uploaded manual says the exam is on Friday."
         update = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw),
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw),
                 json.dumps(dict(claims=[], model_knowledge_safe=False))]) as provider:
             answer, sources, basis = grounded_answer(None, "synthetic", "继续学习", [], DATA[1]["sources"],
                 answer_mode="smart", learning_context={}, knowledge_context={"task":"explanation"}, learning_update=update)
@@ -188,7 +188,7 @@ class GuidanceTests(unittest.TestCase):
     def test_general_lesson_with_material_context_can_pass_safety_and_sync(self):
         raw = self.raw()
         update = {}
-        with patch("app.services.rag_service.provider_completion", side_effect=[json.dumps(raw),
+        with patch("app.services.chat.answers.provider_completion", side_effect=[json.dumps(raw),
                 json.dumps(dict(claims=[], model_knowledge_safe=True))]):
             answer, sources, basis = grounded_answer(None, "synthetic", "解释事务", [], DATA[1]["sources"],
                 answer_mode="smart", learning_context={}, knowledge_context={"task":"explanation"}, learning_update=update)
@@ -201,7 +201,7 @@ class GuidanceAPITests(unittest.TestCase):
     def test_answer_notes_and_opt_out_share_one_action(self):
         test_dashboard.DashboardTests.setUp(self)
         self.enterContext(patch.object(settings, "LLM_BACKEND", "provider"))
-        self.enterContext(patch("app.services.learning_knowledge.provider_completion", return_value=json.dumps(
+        self.enterContext(patch("app.services.learning.materials.provider_completion", return_value=json.dumps(
             dict(task="explanation", document_ids=[], use_documents=False, query=""))))
         owner, headers = self.users[0]
         with self.factory() as db:
@@ -214,7 +214,7 @@ class GuidanceAPITests(unittest.TestCase):
         def send(question, sid=None):
             return self.client.post("/api/chat", headers=headers, json=dict(message=question, workspace_id="guidance",
                 session_type="learning" if sid is None else None, session_id=sid, request_id=str(uuid.uuid4())))
-        with patch("app.services.rag_service.provider_completion", return_value=json.dumps(raw)):
+        with patch("app.services.chat.answers.provider_completion", return_value=json.dumps(raw)):
             response = send("Explain transactions")
         self.assertEqual(response.status_code, 200, response.text)
         body = response.json()
@@ -224,7 +224,7 @@ class GuidanceAPITests(unittest.TestCase):
         self.assertEqual(state["next_step"], action)
         raw["lesson"]["mode"] = "answer_only"
         raw["lesson"]["next_action"] = None
-        with patch("app.services.rag_service.provider_completion", return_value=json.dumps(raw)):
+        with patch("app.services.chat.answers.provider_completion", return_value=json.dumps(raw)):
             response = send("Only explain; no practice question please", sid)
         self.assertEqual(response.status_code, 200, response.text)
         self.assertNotIn(action, response.json()["answer"])

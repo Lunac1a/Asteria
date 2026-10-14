@@ -17,11 +17,11 @@ from app.models.session_profile import SessionProfile
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.models.learning import LearningContext
 from app.services.deletion_service import delete_sessions
-from app.services.learning_service import ensure_context, context_data, apply_observation
-from app.services.knowledge_service import owned_workspace, retrieve
-from app.services.rag_service import grounded_answer
-from app.services.smart_routing import decide, previous_decision, explicit_evidence, VERSION
-from app.services.conversation_language import resolve
+from app.services.learning.state import ensure_context, context_data, apply_observation
+from app.services.knowledge.retrieval import owned_workspace, retrieve
+from app.services.chat.answers import grounded_answer
+from app.services.chat.routing import decide, previous_decision, explicit_evidence, VERSION
+from app.services.chat.language import resolve
 
 router = APIRouter()
 chat_slot = threading.BoundedSemaphore(1)
@@ -168,7 +168,7 @@ def chat(
                 else:
                     raise HTTPException(503, "Material search failed or timed out. Check the document index and retry; no answer was saved.")
         if is_learning:
-            from app.services.learning_knowledge import acquire
+            from app.services.learning.materials import acquire
             sources, knowledge_context = acquire(
                 db, user_id, payload.workspace_id, question, history, learning_data,
                 previous, sources, retrieve, evidence_deadline, payload.answer_mode)

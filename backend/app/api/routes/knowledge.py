@@ -15,7 +15,7 @@ from app.models.knowledge import Workspace, Document, Chunk
 from app.models.knowledge import SessionWorkspace
 from app.models.chat_sessions import ChatSession
 from app.services.deletion_service import delete_sessions
-from app.services.knowledge_service import (
+from app.services.knowledge.retrieval import (
     data_root,
     model_id,
     owned_workspace,

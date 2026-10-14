@@ -7,8 +7,8 @@ import sys
 import time
 import logging
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from app.services.generation_protocol import GenerationError, GenerationText
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+from app.services.llm.protocol import GenerationError, GenerationText
 from httpx import Client
 from openai import OpenAI, APIConnectionError, APIStatusError, RateLimitError, APITimeoutError
 from app.services.runtime_metrics import provider_call
@@ -118,7 +118,7 @@ def decode_response(response, started):
 
 if __name__ == "__main__":
     try:
-        from index_worker import limit_memory
+        from app.services.knowledge.index_worker import limit_memory
 
         limit_memory()
         answer = request_provider(**json.loads(sys.stdin.read()))

@@ -22,7 +22,7 @@ from app.db.session import SessionLocal
 from app.models.users import User
 from app.models.user_llm_settings import UserLLMSetting
 from app.models.knowledge import Workspace, Document, MessageEvidence
-from app.services.knowledge_service import data_root
+from app.services.knowledge.retrieval import data_root
 from app.models.chat_sessions import ChatSession
 from app.models.messages import Message
 from app.core.security import hash_password, create_access_token
@@ -163,7 +163,7 @@ def main():
                 if args.capture:
                     from unittest.mock import patch
                     from fastapi.testclient import TestClient
-                    from app.services.rag_service import provider_completion
+                    from app.services.chat.answers import provider_completion
 
                     def capture(*values, **kwargs):
                         assert str(values[1]) == str(uid)
@@ -184,11 +184,11 @@ def main():
 
                     with (
                         patch(
-                            "app.services.rag_service.provider_completion",
+                            "app.services.chat.answers.provider_completion",
                             side_effect=capture,
                         ),
                         patch(
-                            "app.services.learning_knowledge.provider_completion",
+                            "app.services.learning.materials.provider_completion",
                             side_effect=capture,
                         ),
                         TestClient(create_app()) as observed,

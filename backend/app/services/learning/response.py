@@ -2,7 +2,7 @@
 import logging
 import re
 
-from app.services.generation_protocol import GenerationError
+from app.services.llm.protocol import GenerationError
 
 INSTRUCTIONS = """
 For this teaching response use the lesson contract instead of model_knowledge or learning.next_step.

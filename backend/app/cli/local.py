@@ -74,7 +74,7 @@ def main():
     if args.command == "init":
         run_module("app.db.init_local", run_name="__main__")
     elif args.command == "prepare":
-        run_module("app.services.prepare_embeddings", run_name="__main__")
+        run_module("app.cli.prepare_embeddings", run_name="__main__")
     else:
         import uvicorn
 

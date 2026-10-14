@@ -12,14 +12,14 @@ from sqlalchemy.orm import load_only
 
 from app.core.config import settings
 from app.models.knowledge import Chunk, Document
-from app.services.generation_protocol import (
+from app.services.llm.protocol import (
     GenerationError,
     failure,
     object_schema,
     parse_object,
 )
-from app.services.knowledge_service import model_id, owned_workspace
-from app.services.rag_service import provider_completion
+from app.services.knowledge.retrieval import model_id, owned_workspace
+from app.services.llm.completion import provider_completion
 
 PLAN_SCHEMA = object_schema(
     {

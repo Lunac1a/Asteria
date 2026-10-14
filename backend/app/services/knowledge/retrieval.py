@@ -8,7 +8,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.knowledge import Workspace, Chunk, Document
-from app.services.retrieval_scoring import rank_candidates
+from app.services.knowledge.scoring import rank_candidates
 
 worker_slot = threading.BoundedSemaphore(1)
 
