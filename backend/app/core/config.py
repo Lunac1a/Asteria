@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     MAX_WORKSPACE_CHUNKS: int = Field(default=2000, ge=400, le=2000)
     RECOVERY_ADMIN_USER_IDS: list[str] = Field(default_factory=list)
     RECOVERY_SINGLE_PROCESS_CONFIRMED: bool = False
+    WORKSPACE_DELETE_MAINTENANCE_MODE: bool = False
+    STARTUP_RECOVERY_ENABLED: bool = False
 
     class Config:
         env_file = ".env"

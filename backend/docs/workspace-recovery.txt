@@ -1,0 +1,86 @@
+Asteria Workspace deletion recovery -- controlled single-instance operation
+
+Enablement (all default false)
+  STARTUP_RECOVERY_ENABLED=true
+  WORKSPACE_DELETE_MAINTENANCE_MODE=true
+  RECOVERY_SINGLE_PROCESS_CONFIRMED=true
+
+The last setting is an operator attestation, NOT process discovery. Before setting
+it, stop and verify termination of all previous API/CLI writers and their PostgreSQL
+sessions/transactions. If uncertain, leave it false: startup will remain Not Ready
+without file recovery. Use exactly one Uvicorn worker, without --reload, on a local
+filesystem. Never run legacy/disabled-mode APIs or another host against this data.
+All cooperating enabled APIs must use the same canonical LOCAL_DATA_DIR.
+
+Provision the existing additive schema explicitly with python -m app.db.init_local
+(backend working directory, operator-selected database). Startup validates mapped
+tables/columns; it never creates/migrates missing schema. Ensure LOCAL_DATA_DIR
+already exists with the proper access permissions. No provider calls are needed.
+
+Lifecycle
+Before lifespan completes, requests cannot enter business routes. The local OS
+lease .asteria-process.lock is held through the entire API lifetime, including
+failed recovery. Do not delete/replace that file: doing so could bypass the lease.
+Process death releases the kernel lock automatically; file existence is not a lock.
+This is a same-host exclusion mechanism, NOT a distributed lock or multi-instance
+deployment scheme. It cannot detect legacy/external writers that ignore the lease.
+
+Startup validates PostgreSQL/schema, enumerates pending operations and uses the
+existing row-locked recover_operation, then checks for remaining pending operations.
+Only success opens the startup gate. Existing document_slot/chat_slot ownership
+remains inside recover_operation; startup does not reacquire those gates.
+PREPARED restores and becomes RESTORED; COMMITTED cleans and becomes CLEANED.
+Terminal operations are not selected. Normal request handling never initiates
+recovery, so a live DELETE's PREPARED state is not misclassified as a crash.
+
+GET /api/health is liveness only. GET /api/ready returns 200 only after startup and
+with a reachable metadata table containing no pending operations; otherwise 503.
+The response also indicates maintenance. Ready in maintenance mode does NOT permit
+ordinary resource APIs. Maintenance remains mandatory for deletion/recovery. No
+evidence here authorizes removing it, running multiple workers, or enabling ordinary
+deployment. With STARTUP_RECOVERY_ENABLED=false the previous manual protocol remains;
+there is no automatic recovery, and the existing pending-operation gate still applies.
+
+Failure and manual fallback
+A startup error logs its diagnostic and retains Not Ready. Only /api/health and
+/api/ready are accessible through the startup gate; auth, admin document recovery,
+db-health, OpenAPI and resource routes cannot bypass it. HTTP diagnostics deliberately
+omit file paths, manifest content, credentials and exception details. Detailed errors
+are available to the trusted host operator in server logs and operation.last_error
+when the existing service can persist it. No Workspace recovery HTTP endpoint exists.
+
+1. Inspect logs and read-only metadata using an authorized local PostgreSQL client:
+   SELECT id,workspace_id,state,root,manifest,manifest_sha256,last_error
+   FROM workspace_delete_operations ORDER BY created_at,id;
+   Retain logs, snapshots and both conflicting files. Do not rewrite the manifest,
+   force a state transition, overwrite files, or remove metadata to open the gate.
+2. Stop the protected API and verify all writers and old DB transactions have ended.
+   Correct only independently understood infrastructure/configuration problems.
+   File conflicts/hash mismatches require investigation and evidence preservation;
+   this procedure does not authorize blind repair or bypass integrity checks.
+3. After explicit operator confirmation, use a trusted local Python session from
+   backend with the same selected database/root and the two maintenance attestations:
+
+   import os
+   from pathlib import Path
+   from app.main import create_app  # registers all existing models
+   from app.core.config import settings
+   from app.db.session import engine
+   from app.services.startup_recovery import storage_lease, recover_startup, pending
+   root = Path(os.path.abspath(settings.LOCAL_DATA_DIR))
+   with storage_lease(root):
+       recover_startup(engine, root)
+       assert pending(engine) == []
+
+   This calls the same protocol and safety checks as startup. A held lease, unknown
+   transaction, missing DB/schema, bad path or conflicting content stops the command.
+   Ordinary HTTP users have no access to this host-administrator-only capability.
+4. Restart the single enabled API. Do not manually toggle app.state or disable the
+   gate. Only a fresh successful lifespan plus readiness recheck can reopen it.
+
+Limits
+Kernel process-crash recovery is not a power-loss durability guarantee. This phase
+does not cover hostile filesystem writers, cluster failover, distributed deployment,
+live configuration changes, metadata garbage collection or legacy orphan-file sweeps.
+Existing per-operation row-lock timeout remains the transaction-outcome safeguard;
+database/network availability may delay startup, during which traffic stays closed.

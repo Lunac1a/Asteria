@@ -9,6 +9,7 @@
 - 想看“学习时为什么选这些资料”：`learning/materials.py`，入口 `acquire`。
 - 想看“学习笔记怎样更新”：`learning/state.py`，入口 `apply_observation`。
 - 想看“怎样请求用户配置的模型”：`llm/completion.py`，入口 `provider_completion`。
+- 想看“空间删除怎样从崩溃中恢复”：`workspace_delete_recovery.py`；启动编排在 `startup_recovery.py`，操作限制见 [恢复说明](../../docs/workspace-recovery.txt)。
 
 完整请求入口仍在 `app/api/routes/chat.py`；文档上传、入库和失败恢复的编排在 `app/api/routes/knowledge.py`。目录归组没有把这些流程改成异步队列或新 Agent 框架。
 
@@ -31,6 +32,8 @@
 | `llm/protocol.py` | 定义 JSON 格式、模型输出解析与错误类型 |
 | `runtime_metrics.py` | 记录耗时、调用阶段与错误类别，不记录对话正文和密钥 |
 | `deletion_service.py` | 清理对话相关数据库记录，被对话和空间删除共同使用 |
+| `workspace_delete_recovery.py` | 持久化删除清单、暂存文件、协调提交结果，以及幂等恢复与清理 |
+| `startup_recovery.py` | 本机生命周期锁、启动前数据库检查与未完成操作恢复；复用现有协议 |
 
 各目录的 `__init__.py` 只声明包，不执行业务操作，也不批量导入其他服务。
 
@@ -40,7 +43,7 @@
 
 检索找到相关片段，不代表回答得到支持，所以引用校验独立。模型调用处理网络、凭据与协议，回答生成处理内容，两者也独立。学习笔记是已保存状态，教学正文是生成内容，通过 `learning/response.py` 对齐，不各自生成下一步。
 
-`runtime_metrics.py` 和 `deletion_service.py` 被多个业务使用，留在顶层。无需为两个共享模块再增加一层目录。
+运行指标、共享删除逻辑和 Workspace 恢复服务留在顶层；启动恢复直接复用删除恢复协议，不另建 Worker 或恢复架构。
 
 ## 主要调用关系
 
@@ -54,7 +57,11 @@ api/routes/chat.py
   └─ learning/state.py       保存学习观察与笔记
 
 api/routes/knowledge.py
-  └─ knowledge/retrieval.py → knowledge/index_worker.py（等待子进程结果）
+  ├─ knowledge/retrieval.py → knowledge/index_worker.py（等待子进程结果）
+  └─ workspace_delete_recovery.py → deletion_service.py（受控空间删除）
+
+main.py（Lifespan）
+  └─ startup_recovery.py → workspace_delete_recovery.py（启用时阻塞恢复）
 ```
 
 这表示职责和依赖，不代表每个请求都会走所有分支。学习概念讲解可以不检索资料，文档问答仍要求证据。回顾生成由 `learning/state.py` 使用相同 `llm/provider.py`，保留独立的回顾格式。

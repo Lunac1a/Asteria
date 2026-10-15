@@ -5,6 +5,7 @@ from app.db.base import Base
 from app.db.session import engine
 from app.models import users, user_llm_settings, chat_sessions, messages, knowledge, chat_turn  # noqa: F401
 from app.models import session_profile, learning  # noqa: F401
+from app.models import workspace_delete_operation  # noqa: F401
 
 
 if __name__ == "__main__":

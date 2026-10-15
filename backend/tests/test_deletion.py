@@ -1,12 +1,14 @@
 """Deletion uses isolated accounts, strict foreign keys, and synthetic files."""
 import tempfile
 import unittest
+import uuid
 from pathlib import Path
 from unittest.mock import patch
 import test_dashboard
-from sqlalchemy import text
+from sqlalchemy import select, text
 from app.api.routes.chat import chat_slot
 from app.api.routes.knowledge import document_slot
+from app.core.config import settings
 from app.models.chat_sessions import ChatSession
 from app.models.messages import Message
 from app.models.knowledge import Workspace, Document, Chunk, SessionWorkspace, MessageEvidence
@@ -39,7 +41,23 @@ class DeletionTests(unittest.TestCase):
             db.commit()
 
     def delete(self, path, headers=None):
-        return self.client.delete("/api/" + path, headers=headers or self.headers)
+        with patch.object(settings, "WORKSPACE_DELETE_MAINTENANCE_MODE", path.startswith("workspaces/")), patch.object(settings, "RECOVERY_SINGLE_PROCESS_CONFIRMED", True):
+            return self.client.delete("/api/" + path, headers=headers or self.headers)
+
+    def persisted_state(self):
+        # A fresh Session reads committed column values, not cached ORM objects.
+        with self.factory() as db:
+            database = {
+                table.name: [dict(row) for row in db.execute(
+                    select(table).order_by(*table.primary_key.columns)
+                ).mappings()]
+                for table in test_dashboard.Base.metadata.sorted_tables
+            }
+        files = {
+            path.relative_to(self.root).as_posix(): path.read_bytes() if path.is_file() else None
+            for path in self.root.rglob("*")
+        }
+        return database, files
 
     def assert_chat_removed(self):
         with self.factory() as db:
@@ -56,7 +74,10 @@ class DeletionTests(unittest.TestCase):
         self.assertEqual(self.delete("chat/sessions/chat").status_code, 404)
 
     def test_workspace_cleanup_is_scoped(self):
-        self.assertEqual(self.delete("workspaces/space").status_code, 204)
+        before, _ = self.persisted_state()
+        response = self.delete("workspaces/space")
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.content, b"")
         self.assert_chat_removed()
         self.assertFalse(self.file.exists())
         with self.factory() as db:
@@ -64,6 +85,44 @@ class DeletionTests(unittest.TestCase):
             self.assertEqual(db.query(Document).count(), 0)
             self.assertIsNone(db.get(Workspace, "space"))
             self.assertIsNotNone(db.get(Workspace, "other"))
+        after, files = self.persisted_state()
+        self.assertEqual(after["workspaces"], [row for row in before["workspaces"] if row["id"] == "other"])
+        self.assertEqual(after["users"], before["users"])
+        # No original or staged document file remains after successful deletion.
+        self.assertTrue(all(content is None for content in files.values()))
+
+    def test_workspace_unauthorized_delete_preserves_all_state(self):
+        # Both tokens are obtained by the fixture's real registration/login flow.
+        for user_id, headers in self.users:
+            response = self.client.get("/api/me", headers=headers)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()["id"], str(user_id))
+        with self.factory() as db:
+            self.assertEqual(db.get(Workspace, "space").user_id, self.users[0][0])
+            self.assertEqual(db.get(Workspace, "other").user_id, self.users[1][0])
+            self.assertNotEqual(self.users[0][0], self.users[1][0])
+        before = self.persisted_state()
+        self.assertEqual(before[1]["uploads/reading.txt"], b"Synthetic reading")
+
+        response = self.delete("workspaces/space", self.users[1][1])
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {"detail": "Workspace not found"})
+        # Includes Workspace.user_id, Documents, Chunks, conversations, evidence,
+        # learning records and users, plus file bytes and directory entries.
+        self.assertEqual(self.persisted_state(), before)
+
+    def test_workspace_missing_delete_preserves_all_state(self):
+        missing_id = str(uuid.uuid4())
+        with self.factory() as db:
+            self.assertIsNone(db.get(Workspace, missing_id))
+        before = self.persisted_state()
+        for user_id, headers in self.users:
+            with self.subTest(user=str(user_id)):
+                response = self.delete(f"workspaces/{missing_id}", headers)
+                self.assertEqual(response.status_code, 404)
+                self.assertEqual(response.json(), {"detail": "Workspace not found"})
+                self.assertEqual(self.persisted_state(), before)
 
     def test_other_user_cannot_delete(self):
         for path in ("workspaces/space", "chat/sessions/chat"):
