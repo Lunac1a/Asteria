@@ -1,0 +1,36 @@
+{
+  "postgres_settings": [
+    {
+      "name": "fsync",
+      "setting": "on",
+      "unit": null
+    },
+    {
+      "name": "log_statement",
+      "setting": "all",
+      "unit": null
+    },
+    {
+      "name": "max_connections",
+      "setting": "100",
+      "unit": null
+    },
+    {
+      "name": "shared_buffers",
+      "setting": "16384",
+      "unit": "8kB"
+    },
+    {
+      "name": "synchronous_commit",
+      "setting": "on",
+      "unit": null
+    }
+  ],
+  "packages": {
+    "fastembed": "0.9.0",
+    "onnxruntime": "1.30.0",
+    "fastapi": "0.136.0",
+    "httpx": "0.28.1",
+    "psycopg": "3.3.3"
+  }
+}

@@ -1,0 +1,141 @@
+Asteria Phase 3 — Chat single-request performance baseline
+Date: 2026-10-17 Australia/Sydney
+HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b
+
+Environment and workload
+Production sources unchanged this turn. Existing uncommitted knowledge.py User
+row-lock fix and prior experiment files retained. Per-run source hashes saved.
+Python 3.12.10 on Windows 11, 32 logical CPUs; SQLAlchemy 2.0.49, Uvicorn 0.44.0.
+PostgreSQL 16.15 runs in a dedicated WSL Ubuntu cluster, READ COMMITTED.
+Default QueuePool: size 5, overflow 10, timeout 30s, recycle -1, pre_ping false,
+reset-on-return rollback. No pool/semaphore sizing changes. Test-only DB
+connect/statement/lock timeouts 5/8/4 seconds. One Uvicorn worker; sequential
+requests via one persistent loopback HTTP client; HTTP timeout 45 seconds.
+Runtime metrics and optional citation-audit calls disabled in synthetic settings.
+No maintenance or Startup Recovery. No developer DB or real user records.
+
+Each run: 5 warmups, then 50 measured requests. A second identical run was
+selected because the first run's ten-request batch means varied materially.
+The two runs use separate fresh databases, not parallel servers. No outliers
+are removed; warmups are saved but excluded from reported distributions.
+One synthetic user, workspace, document and one indexed chunk. Every request
+has a unique request_id and its own questioning Chat Session with the same
+two-message initial history; same question, configuration and retrieval corpus.
+Rows accumulate across requests but per-session context remains fixed.
+Question: According to the document, what does a database transaction guarantee?
+Document: A database transaction guarantees atomicity: either all changes commit,
+or none of the changes are applied.
+History: user is studying database transactions; assistant offers to examine
+their guarantees using the document. Exact payloads/history retained in JSON.
+
+Real paths and mock scope
+Real JWT validation/user lookup, history loading, language policy, routing,
+retrieval query, query embedding subprocess, scoring, prompt assembly, provider
+configuration/decryption, response parsing/citation checks and persistence.
+Real offline FastEmbed model: sentence-transformers/paraphrase-multilingual-
+MiniLM-L12-v2, local ONNX cache copied to isolated temporary storage; file hashes
+saved. Retrieval threshold 0.35, lexical rescue enabled. Both index preparation
+and every query use the real worker. No embedding mock or cached query vector.
+Only completion.generate_response is replaced with deterministic JSON text at
+the external-provider boundary. LLM_BACKEND=provider avoids the built-in test
+shortcut. No real provider HTTP call, paid call or provider transport measured.
+The fixed mock returns a grounded answer citing source 1; application validation
+is unchanged. Smart routing uses the normal explicit-evidence guard, not the
+intent-classifier LLM branch. No learning/adaptive-session path in this baseline.
+
+Timing definitions (monotonic perf_counter, test-only wrappers)
+HTTP: immediately before client.post through complete response receipt.
+Routing: real decide(). Retrieval: real retrieve(), including query embedding.
+Embedding worker (nested): real run_worker(), including subprocess creation,
+imports/model initialization, inference and IPC; not pure inference latency.
+Prompt preparation: grounded_answer entry to provider_completion invocation.
+Provider wrapper: real provider_completion, including config read/decryption,
+transaction rollback, mocked generation and return.
+LLM mock (nested): deterministic mock validation, serialization and return.
+Answer validation/composition: provider_completion return to grounded_answer
+return. Includes real parsing, citation checks and answer composition.
+Post-generation/persistence: grounded_answer return through final commit return;
+includes source revalidation, ORM writes/flushes, ChatResponse construction and
+ChatTurn commit. It is NOT a pure database-write metric.
+Commit (nested): final Session.commit() only; earlier flushes are outside it.
+Other HTTP: residual outside the non-overlapping stages. Includes authentication,
+history/language/context loading, middleware, transport and response serialization.
+Full context preparation and FastAPI response-model validation are NOT reliably
+isolated here; no standalone numbers are invented. Pool wait is not measured.
+Nested rows must not be added to their parents. Percentiles are nearest-rank;
+percentiles across stages do not add up to the HTTP percentile.
+
+Correctness verification
+Every request must return HTTP 200, exact expected answer, grounded basis and
+the expected source. Every request must execute retrieval and one mock call.
+Prompt hashes must be identical across all requests within each run. Distinct
+fixture IDs mean hashes need not match across fresh databases.
+Independent NullPool verification, outside HTTP timings, checks ChatTurn JSON
+equals the response, four messages exist (two initial plus two new), and stored
+MessageEvidence equals the returned sources. Unique request IDs prevent replay;
+real nonempty retrieval, grounded response and persisted policy rule out the
+empty-context, built-in test-LLM, idempotency and insufficient-evidence paths.
+
+Potential bottlenecks and limitations
+First-run measurements identify retrieval, specifically its nested embedding
+worker call, as the dominant measured component. Source retrieval.py:61 spawns
+a worker for each call; index_worker.py:123 constructs TextEmbedding locally.
+These code facts suggest process/model setup could contribute, but the timing
+does not isolate loading from inference/IPC, so their individual costs are not
+claimed. No optimization or causal performance fix is implemented.
+Only one small corpus and short history, deterministic immediate LLM, sequential
+requests, warmed database/model filesystem caches, and two local runs. Host
+load/CPU frequency and Windows/WSL scheduling are uncontrolled. No concurrency,
+throughput, cold-start benchmark, large-corpus behavior or real LLM latency.
+P99 from 50 samples is the maximum; even the combined 100-sample P99 is a sparse
+tail estimate, not a production SLO. Additional sampling is not a cure for an
+uncontrolled host; retain both run distributions and time-order batch means.
+
+Evidence and reproduction
+evidence/chat-baseline-50/result.json and chat-baseline-repeat-50/result.json:
+raw timestamps, per-request stages, hashes, responses, environment and summaries.
+Each directory also retains PostgreSQL SQL logs, setup logs and cleanup.json.
+Execution logs retain actual routing/generation policy and progress output.
+Combined statistics: evidence/chat-baseline-summary.json.
+Commands from repo root, each with a NEW output directory:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/run_single_worker.py --experiment chat_baseline.py --timeout 600 --output backend/tests/experiments/evidence/chat-NEW
+Repeat the same command with a different output directory if desired, then:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/summarize_chat_baseline.py PATH1/result.json PATH2/result.json --output SUMMARY.json
+Requires local model cache at data/mvp-test/models, WSL Ubuntu-24.04 and unused
+loopback port 55489. Wrapper provisions and cleans only its own test cluster.
+No automatic Git commit. Final measured distributions follow below.
+
+Final latency distributions (milliseconds)
+                    N       Mean        P50         P95         P99
+Run 1              50     1753.621    1745.385    2103.135    2126.413
+Run 2              50     1799.882    1816.552    2051.752    2132.280
+Combined          100     1776.751    1816.552    2083.326    2126.413
+Combined range: 1441.597 to 2132.280 ms. 10 warmups excluded, 100/100 measured
+requests returned 200 and passed all business/persistence checks. Warmups also
+passed. Run-2 mean was 2.64% higher; both runs still show time-order variation.
+This is sufficient for a first descriptive baseline; further sampling is not
+claimed to stabilize host noise or validate a production tail-latency SLO.
+
+Combined per-stage distribution (ms; nested rows are NOT additive)
+Stage                                  Mean       P50        P95        P99
+Routing                                0.023      0.023      0.051      0.100
+Retrieval                           1704.364   1743.701   2011.781   2054.162
+  Embedding worker (nested)          1702.803   1742.189   2009.766   2051.918
+Prompt preparation                     0.039      0.041      0.048      0.083
+Provider wrapper                       2.024      2.004      2.812      3.512
+  LLM mock (nested)                    0.070      0.071      0.099      0.206
+Answer validation/composition          0.040      0.042      0.058      0.066
+Post-generation/persistence           55.352     54.405     62.259     63.242
+  Final commit (nested)                8.727      6.023     14.775     15.572
+Other HTTP                            14.910     15.391     18.879     33.390
+Retrieval accounts for about 95.9% of mean HTTP duration. This is an observed
+dominant stage under immediate LLM mocking, not a real-provider bottleneck claim.
+Sub-millisecond values include instrumentation overhead and should not be used
+to rank tiny functions for optimization.
+
+Cleanup and checks
+Both API instances stopped normally; each dedicated database cluster was stopped
+and removed (cleanup returncode 0), SQL logs archived before shutdown. Temporary
+model copies/files were removed. Production source hashes match across runs.
+Ruff on the three experiment files and git diff --check passed. No production
+changes this turn, no broad regression suite needed for test-only measurement.

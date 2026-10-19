@@ -1,0 +1,786 @@
+{
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "executable": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+  "source_sha256": {
+    "backend\\app\\services\\llm\\provider.py": "36b014ed19e60c4e0284a1f2ff0cc82535f2e479ed1b3e2b12dcdc652300bc34",
+    "backend\\app\\services\\knowledge\\windows_job.py": "26070e5a4e2281693a5e98b851d2bf74c80b28f155d54992f626be87d2335fbb"
+  },
+  "containment": "Observer-held Job; killed only after native outcome observation or 20s watchdog",
+  "scenarios": [
+    {
+      "scenario": "normal",
+      "started": 286024.937,
+      "server_events": [
+        {
+          "event": "request_received",
+          "at": 286027.031,
+          "path": "/v1/chat/completions"
+        }
+      ],
+      "caller_pid": 41216,
+      "provider_launcher_pid": 22812,
+      "active_tree": [
+        {
+          "pid": 5756,
+          "ppid": 25724,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 286027.046,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 40388,
+          "ppid": 5756,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 286027.046,
+          "handles": 108,
+          "image": "C:\\Windows\\System32\\conhost.exe"
+        },
+        {
+          "pid": 41216,
+          "ppid": 5756,
+          "threads": 6,
+          "exe": "python.exe",
+          "at": 286027.046,
+          "handles": 187,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        },
+        {
+          "pid": 22812,
+          "ppid": 41216,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 286027.046,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 11624,
+          "ppid": 22812,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 286027.046,
+          "handles": 212,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        }
+      ],
+      "active_job": {
+        "total_processes": 5,
+        "active_processes": 5,
+        "terminated_processes": 0
+      },
+      "members_in_job": {
+        "5756": true,
+        "40388": true,
+        "22812": true,
+        "41216": true,
+        "11624": true
+      },
+      "result": {
+        "at": 286027.125,
+        "event": "result",
+        "elapsed": 1.297000000020489,
+        "outcome": {
+          "answer": "OK"
+        },
+        "resources": [
+          {
+            "pid": 41216,
+            "ppid": 5756,
+            "threads": 4,
+            "exe": "python.exe",
+            "at": 286027.125,
+            "handles": 178,
+            "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+          }
+        ],
+        "python_threads": [
+          "MainThread"
+        ]
+      },
+      "observed_at": 286027.125,
+      "native_exit_status": {
+        "5756": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "40388": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "22812": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "41216": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "11624": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        }
+      },
+      "remaining_tree": [
+        {
+          "pid": 5756,
+          "ppid": 25724,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 286027.14,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 40388,
+          "ppid": 5756,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 286027.14,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe"
+        },
+        {
+          "pid": 41216,
+          "ppid": 5756,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 286027.14,
+          "handles": 176,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        }
+      ],
+      "native_job": {
+        "total_processes": 5,
+        "active_processes": 3,
+        "terminated_processes": 0
+      },
+      "orderly_caller_exit": {
+        "wait_result": 0,
+        "exited": true,
+        "exit_code": 0
+      },
+      "orderly_tree_exit": {
+        "5756": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "40388": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "22812": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "41216": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "11624": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        }
+      },
+      "orderly_job": {
+        "total_processes": 5,
+        "active_processes": 0,
+        "terminated_processes": 0
+      },
+      "cleanup_started": 286027.187,
+      "cleanup_exit_status": {
+        "5756": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "40388": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "22812": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "41216": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "11624": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        }
+      },
+      "cleanup_job": {
+        "total_processes": 5,
+        "active_processes": 0,
+        "terminated_processes": 0
+      },
+      "watchdog_fired": false,
+      "pipe_reader_stopped": true,
+      "caller_events": [
+        {
+          "at": 286025.828,
+          "event": "caller_ready",
+          "pid": 41216,
+          "resources": [
+            {
+              "pid": 41216,
+              "ppid": 5756,
+              "threads": 4,
+              "exe": "python.exe",
+              "at": 286025.828,
+              "handles": 174,
+              "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+            }
+          ]
+        },
+        {
+          "at": 286025.843,
+          "event": "provider_launcher",
+          "pid": 22812
+        },
+        {
+          "at": 286027.125,
+          "event": "pipes_closed",
+          "stdin": true,
+          "stdout": true,
+          "stderr": true
+        },
+        {
+          "at": 286027.125,
+          "event": "result",
+          "elapsed": 1.297000000020489,
+          "outcome": {
+            "answer": "OK"
+          },
+          "resources": [
+            {
+              "pid": 41216,
+              "ppid": 5756,
+              "threads": 4,
+              "exe": "python.exe",
+              "at": 286027.125,
+              "handles": 178,
+              "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+            }
+          ],
+          "python_threads": [
+            "MainThread"
+          ]
+        }
+      ],
+      "cleanup_finished": 286027.546
+    },
+    {
+      "scenario": "timeout",
+      "started": 286027.546,
+      "server_events": [
+        {
+          "event": "request_received",
+          "at": 286029.687,
+          "path": "/v1/chat/completions"
+        },
+        {
+          "event": "peer_disconnected",
+          "at": 286034.515,
+          "error": "ConnectionResetError"
+        }
+      ],
+      "caller_pid": 33948,
+      "provider_launcher_pid": 10488,
+      "active_tree": [
+        {
+          "pid": 7232,
+          "ppid": 25724,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 286029.703,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 11860,
+          "ppid": 7232,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 286029.703,
+          "handles": 108,
+          "image": "C:\\Windows\\System32\\conhost.exe"
+        },
+        {
+          "pid": 33948,
+          "ppid": 7232,
+          "threads": 6,
+          "exe": "python.exe",
+          "at": 286029.703,
+          "handles": 187,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        },
+        {
+          "pid": 10488,
+          "ppid": 33948,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 286029.703,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 36072,
+          "ppid": 10488,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 286029.703,
+          "handles": 212,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        }
+      ],
+      "active_job": {
+        "total_processes": 5,
+        "active_processes": 5,
+        "terminated_processes": 0
+      },
+      "members_in_job": {
+        "7232": true,
+        "11860": true,
+        "10488": true,
+        "33948": true,
+        "36072": true
+      },
+      "fault_at": 286034.453,
+      "result": {
+        "at": 286034.453,
+        "event": "result",
+        "elapsed": 6.032000000006519,
+        "outcome": {
+          "error_type": "GenerationError",
+          "category": "provider_timeout"
+        },
+        "resources": [
+          {
+            "pid": 33948,
+            "ppid": 7232,
+            "threads": 4,
+            "exe": "python.exe",
+            "at": 286034.453,
+            "handles": 178,
+            "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+          }
+        ],
+        "python_threads": [
+          "MainThread"
+        ]
+      },
+      "observed_at": 286034.453,
+      "native_exit_status": {
+        "7232": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "11860": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "10488": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 1
+        },
+        "33948": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "36072": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        }
+      },
+      "remaining_tree": [
+        {
+          "pid": 7232,
+          "ppid": 25724,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 286034.468,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 11860,
+          "ppid": 7232,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 286034.468,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe"
+        },
+        {
+          "pid": 33948,
+          "ppid": 7232,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 286034.468,
+          "handles": 176,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        }
+      ],
+      "native_job": {
+        "total_processes": 5,
+        "active_processes": 3,
+        "terminated_processes": 0
+      },
+      "orderly_caller_exit": {
+        "wait_result": 0,
+        "exited": true,
+        "exit_code": 0
+      },
+      "orderly_tree_exit": {
+        "7232": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "11860": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "10488": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 1
+        },
+        "33948": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "36072": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        }
+      },
+      "orderly_job": {
+        "total_processes": 5,
+        "active_processes": 0,
+        "terminated_processes": 0
+      },
+      "cleanup_started": 286034.531,
+      "cleanup_exit_status": {
+        "7232": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "11860": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "10488": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 1
+        },
+        "33948": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        },
+        "36072": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 0
+        }
+      },
+      "cleanup_job": {
+        "total_processes": 5,
+        "active_processes": 0,
+        "terminated_processes": 0
+      },
+      "watchdog_fired": false,
+      "pipe_reader_stopped": true,
+      "caller_events": [
+        {
+          "at": 286028.421,
+          "event": "caller_ready",
+          "pid": 33948,
+          "resources": [
+            {
+              "pid": 33948,
+              "ppid": 7232,
+              "threads": 4,
+              "exe": "python.exe",
+              "at": 286028.421,
+              "handles": 174,
+              "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+            }
+          ]
+        },
+        {
+          "at": 286028.453,
+          "event": "provider_launcher",
+          "pid": 10488
+        },
+        {
+          "at": 286034.453,
+          "event": "subprocess_kill",
+          "pid": 10488
+        },
+        {
+          "at": 286034.453,
+          "event": "pipes_closed",
+          "stdin": true,
+          "stdout": true,
+          "stderr": true
+        },
+        {
+          "at": 286034.453,
+          "event": "result",
+          "elapsed": 6.032000000006519,
+          "outcome": {
+            "error_type": "GenerationError",
+            "category": "provider_timeout"
+          },
+          "resources": [
+            {
+              "pid": 33948,
+              "ppid": 7232,
+              "threads": 4,
+              "exe": "python.exe",
+              "at": 286034.453,
+              "handles": 178,
+              "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+            }
+          ],
+          "python_threads": [
+            "MainThread"
+          ]
+        }
+      ],
+      "cleanup_finished": 286034.734
+    },
+    {
+      "scenario": "parent_crash",
+      "started": 286034.734,
+      "server_events": [
+        {
+          "event": "request_received",
+          "at": 286036.968,
+          "path": "/v1/chat/completions"
+        }
+      ],
+      "caller_pid": 6084,
+      "provider_launcher_pid": 41564,
+      "active_tree": [
+        {
+          "pid": 24016,
+          "ppid": 25724,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 286036.968,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 16432,
+          "ppid": 24016,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 286036.968,
+          "handles": 108,
+          "image": "C:\\Windows\\System32\\conhost.exe"
+        },
+        {
+          "pid": 6084,
+          "ppid": 24016,
+          "threads": 6,
+          "exe": "python.exe",
+          "at": 286036.968,
+          "handles": 187,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        },
+        {
+          "pid": 41564,
+          "ppid": 6084,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 286036.968,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 40532,
+          "ppid": 41564,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 286036.968,
+          "handles": 212,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        }
+      ],
+      "active_job": {
+        "total_processes": 5,
+        "active_processes": 5,
+        "terminated_processes": 0
+      },
+      "members_in_job": {
+        "24016": true,
+        "16432": true,
+        "41564": true,
+        "6084": true,
+        "40532": true
+      },
+      "fault_at": 286036.968,
+      "caller_exit": {
+        "wait_result": 0,
+        "exited": true,
+        "exit_code": 93
+      },
+      "observed_at": 286044.984,
+      "native_exit_status": {
+        "24016": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 93
+        },
+        "16432": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "41564": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        },
+        "6084": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 93
+        },
+        "40532": {
+          "wait_result": 258,
+          "exited": false,
+          "exit_code": 259
+        }
+      },
+      "remaining_tree": [
+        {
+          "pid": 16432,
+          "ppid": 24016,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 286044.984,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe"
+        },
+        {
+          "pid": 41564,
+          "ppid": 6084,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 286044.984,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe"
+        },
+        {
+          "pid": 40532,
+          "ppid": 41564,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 286044.984,
+          "handles": 212,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+        }
+      ],
+      "native_job": {
+        "total_processes": 5,
+        "active_processes": 3,
+        "terminated_processes": 0
+      },
+      "cleanup_started": 286044.984,
+      "cleanup_exit_status": {
+        "24016": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 93
+        },
+        "16432": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 91
+        },
+        "41564": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 91
+        },
+        "6084": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 93
+        },
+        "40532": {
+          "wait_result": 0,
+          "exited": true,
+          "exit_code": 91
+        }
+      },
+      "cleanup_job": {
+        "total_processes": 5,
+        "active_processes": 0,
+        "terminated_processes": 0
+      },
+      "watchdog_fired": false,
+      "pipe_reader_stopped": true,
+      "caller_events": [
+        {
+          "at": 286035.625,
+          "event": "caller_ready",
+          "pid": 6084,
+          "resources": [
+            {
+              "pid": 6084,
+              "ppid": 24016,
+              "threads": 4,
+              "exe": "python.exe",
+              "at": 286035.625,
+              "handles": 174,
+              "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+            }
+          ]
+        },
+        {
+          "at": 286035.64,
+          "event": "provider_launcher",
+          "pid": 41564
+        }
+      ],
+      "cleanup_finished": 286045.046
+    }
+  ]
+}

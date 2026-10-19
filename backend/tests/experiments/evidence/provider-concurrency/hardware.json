@@ -1,0 +1,14 @@
+{
+  "system": {
+    "TotalPhysicalMemory": 33954312192
+  },
+  "cpu": {
+    "Name": "13th Gen Intel(R) Core(TM) i9-13980HX",
+    "NumberOfCores": 24,
+    "NumberOfLogicalProcessors": 32
+  },
+  "memory": {
+    "TotalVisibleMemorySize": 33158508,
+    "FreePhysicalMemory": 12313964
+  }
+}

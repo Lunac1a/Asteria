@@ -1,0 +1,304 @@
+{
+  "passed": true,
+  "platform": "Windows-11-10.0.26300-SP0",
+  "clock": "controlled monotonic",
+  "policy_tests": [
+    {
+      "name": "test_cooldown_autonomously_recovers_once_then_manual_after_three_cycles",
+      "passed": true,
+      "events": [
+        {
+          "clock": 1001.0,
+          "state": "COOLDOWN",
+          "restarts": 1,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 1,
+          "cooldown_until": 1011.0,
+          "retry_at": null,
+          "pid": 2970322318784,
+          "created": 2
+        },
+        {
+          "clock": 1012.0,
+          "state": "COOLDOWN",
+          "restarts": 2,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 2,
+          "cooldown_until": 1022.0,
+          "retry_at": null,
+          "pid": 2970254033744,
+          "created": 3
+        },
+        {
+          "clock": 1023.0,
+          "state": "MANUAL_REQUIRED",
+          "restarts": 3,
+          "exhausted": true,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 3,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322319600,
+          "created": 4
+        }
+      ],
+      "failures": []
+    },
+    {
+      "name": "test_slow_failed_initializers_cannot_evade_manual_limit",
+      "passed": true,
+      "events": [
+        {
+          "clock": 1012.0,
+          "state": "COOLDOWN",
+          "restarts": 1,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 0,
+          "failed_cycles": 1,
+          "cooldown_until": 1022.0,
+          "retry_at": null,
+          "pid": 2970320194496,
+          "created": 2
+        },
+        {
+          "clock": 1034.0,
+          "state": "COOLDOWN",
+          "restarts": 2,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 0,
+          "failed_cycles": 2,
+          "cooldown_until": 1044.0,
+          "retry_at": null,
+          "pid": 2970322318352,
+          "created": 3
+        },
+        {
+          "clock": 1056.0,
+          "state": "MANUAL_REQUIRED",
+          "restarts": 3,
+          "exhausted": true,
+          "inflight": false,
+          "window_restarts": 0,
+          "failed_cycles": 3,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322319600,
+          "created": 4
+        }
+      ],
+      "failures": []
+    },
+    {
+      "name": "test_sporadic_failures_do_not_permanently_exhaust_budget",
+      "passed": true,
+      "events": [
+        {
+          "clock": 1001.0,
+          "state": "READY",
+          "restarts": 1,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322318736,
+          "created": 2
+        },
+        {
+          "clock": 1013.0,
+          "state": "READY",
+          "restarts": 2,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322322016,
+          "created": 3
+        },
+        {
+          "clock": 1025.0,
+          "state": "READY",
+          "restarts": 3,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322322160,
+          "created": 4
+        },
+        {
+          "clock": 1037.0,
+          "state": "READY",
+          "restarts": 4,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322322304,
+          "created": 5
+        },
+        {
+          "clock": 1049.0,
+          "state": "READY",
+          "restarts": 5,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 1,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322322448,
+          "created": 6
+        }
+      ],
+      "failures": []
+    },
+    {
+      "name": "test_stable_full_window_resets_failed_cycles",
+      "passed": true,
+      "events": [
+        {
+          "clock": 1022.0,
+          "state": "READY",
+          "restarts": 2,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 0,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322323648,
+          "created": 3
+        }
+      ],
+      "failures": []
+    },
+    {
+      "name": "test_time_cannot_clear_degraded_ownership",
+      "passed": true,
+      "events": [
+        {
+          "clock": 11000.0,
+          "state": "DEGRADED",
+          "restarts": 0,
+          "exhausted": false,
+          "inflight": false,
+          "window_restarts": 0,
+          "failed_cycles": 0,
+          "cooldown_until": null,
+          "retry_at": null,
+          "pid": 2970322324752,
+          "created": 1
+        }
+      ],
+      "failures": []
+    }
+  ],
+  "database": "none",
+  "provider": "none",
+  "old_job_pids": [
+    4016,
+    36324,
+    33308
+  ],
+  "old_membership": [
+    true,
+    true,
+    true
+  ],
+  "cooldown": {
+    "state": "COOLDOWN",
+    "restarts": 1,
+    "exhausted": false,
+    "inflight": false,
+    "window_restarts": 1,
+    "failed_cycles": 1,
+    "cooldown_until": 1011.0,
+    "retry_at": null,
+    "pid": null
+  },
+  "replacement_exit_checks": [
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 93
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 93
+    }
+  ],
+  "real_recovery": {
+    "old_pid": 33308,
+    "new_pid": 2796,
+    "snapshot": {
+      "state": "READY",
+      "restarts": 2,
+      "exhausted": false,
+      "inflight": false,
+      "window_restarts": 1,
+      "failed_cycles": 1,
+      "cooldown_until": null,
+      "retry_at": null,
+      "pid": 2796
+    },
+    "max_abs_difference": 0.0,
+    "dimensions": 384,
+    "recovery_trigger": "background clock deadline, no embedding requests",
+    "initialization_injection": "one failure before process launch"
+  },
+  "exit_checks": [
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 93
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 93
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    }
+  ],
+  "supervisor_stopped": true,
+  "temporary_directory_removed": true
+}

@@ -1,0 +1,988 @@
+{
+  "passed": true,
+  "events": [
+    {
+      "t": 0.7179999999934807,
+      "request": "success_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.7179999999934807,
+      "request": "success_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.7179999999934807,
+      "request": "success_chat",
+      "event": "llm_enter",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.7339999999967404,
+      "request": "success_blocked_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.8279999999795109,
+      "request": "success_chat",
+      "event": "commit_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.8429999999934807,
+      "request": "success_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.9529999999795109,
+      "request": "commit_failure_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.9529999999795109,
+      "request": "commit_failure_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 0.9529999999795109,
+      "request": "commit_failure_chat",
+      "event": "llm_enter",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.0,
+      "request": "commit_failure_chat",
+      "event": "commit_failed",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.0,
+      "request": "commit_failure_chat",
+      "event": "before_rollback",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.0,
+      "request": "commit_failure_blocked_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.0150000000139698,
+      "request": "commit_failure_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.0459999999729916,
+      "request": "commit_failure_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.1400000000139698,
+      "request": "generation_failure_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.1400000000139698,
+      "request": "generation_failure_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.1400000000139698,
+      "request": "generation_failure_chat",
+      "event": "llm_enter",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.1400000000139698,
+      "request": "generation_failure_blocked_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.1560000000172295,
+      "request": "generation_failure_chat",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 1,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.1709999999729916,
+      "request": "generation_failure_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.2339999999967404,
+      "request": "delete_first_chat",
+      "event": "before_admission",
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.2339999999967404,
+      "request": "delete_first_delete",
+      "event": "rollback_returned",
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      }
+    },
+    {
+      "t": 1.2339999999967404,
+      "request": "delete_first_delete",
+      "event": "delete_exclusive_before_prepare",
+      "lifecycle": {
+        "active": 0,
+        "deleting": true,
+        "uncertain": false
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case": "success",
+      "before": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": []
+      },
+      "after": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "llm_calls": 1,
+      "manifest_session_ids": [
+        "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+      ]
+    },
+    {
+      "case": "commit_failure",
+      "before": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "after": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          },
+          {
+            "id": "b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb",
+            "workspace_id": "dc0ee72b-635a-4291-8772-5d6dbaae6c3f",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb/0.deleted",
+                  "existed": true,
+                  "original": "uploads/dc0ee72b-635a-4291-8772-5d6dbaae6c3f.txt",
+                  "document_id": "6982eaa2-d7fa-4dcc-9dc0-590d556fc23e"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "480d9620452abd5d5049c2244fa56e5583ace3fc01d5f551995a00bfea2d0172",
+            "created_at": "2026-10-19 23:57:19.073419+11:00",
+            "updated_at": "2026-10-19 23:57:19.100724+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "llm_calls": 1,
+      "manifest_session_ids": []
+    },
+    {
+      "case": "generation_failure",
+      "before": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          },
+          {
+            "id": "b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb",
+            "workspace_id": "dc0ee72b-635a-4291-8772-5d6dbaae6c3f",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb/0.deleted",
+                  "existed": true,
+                  "original": "uploads/dc0ee72b-635a-4291-8772-5d6dbaae6c3f.txt",
+                  "document_id": "6982eaa2-d7fa-4dcc-9dc0-590d556fc23e"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "480d9620452abd5d5049c2244fa56e5583ace3fc01d5f551995a00bfea2d0172",
+            "created_at": "2026-10-19 23:57:19.073419+11:00",
+            "updated_at": "2026-10-19 23:57:19.100724+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "after": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          },
+          {
+            "id": "b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb",
+            "workspace_id": "dc0ee72b-635a-4291-8772-5d6dbaae6c3f",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb/0.deleted",
+                  "existed": true,
+                  "original": "uploads/dc0ee72b-635a-4291-8772-5d6dbaae6c3f.txt",
+                  "document_id": "6982eaa2-d7fa-4dcc-9dc0-590d556fc23e"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "480d9620452abd5d5049c2244fa56e5583ace3fc01d5f551995a00bfea2d0172",
+            "created_at": "2026-10-19 23:57:19.073419+11:00",
+            "updated_at": "2026-10-19 23:57:19.100724+11:00",
+            "last_error": null
+          },
+          {
+            "id": "9e6190c8-72bd-457e-b114-942e1488399f",
+            "workspace_id": "a163de89-63d5-45b1-8c31-71e7ebd633f1",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/9e6190c8-72bd-457e-b114-942e1488399f/0.deleted",
+                  "existed": true,
+                  "original": "uploads/a163de89-63d5-45b1-8c31-71e7ebd633f1.txt",
+                  "document_id": "56d5ce98-a53d-4f79-8a49-132f7662678d"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "f10d21685056018239eb5f3a1b307e4c1d605af32be7a9d3a45ae15cf709a1b9",
+            "created_at": "2026-10-19 23:57:19.189491+11:00",
+            "updated_at": "2026-10-19 23:57:19.212852+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "llm_calls": 1,
+      "manifest_session_ids": []
+    },
+    {
+      "case": "delete_first",
+      "before": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          },
+          {
+            "id": "b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb",
+            "workspace_id": "dc0ee72b-635a-4291-8772-5d6dbaae6c3f",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb/0.deleted",
+                  "existed": true,
+                  "original": "uploads/dc0ee72b-635a-4291-8772-5d6dbaae6c3f.txt",
+                  "document_id": "6982eaa2-d7fa-4dcc-9dc0-590d556fc23e"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "480d9620452abd5d5049c2244fa56e5583ace3fc01d5f551995a00bfea2d0172",
+            "created_at": "2026-10-19 23:57:19.073419+11:00",
+            "updated_at": "2026-10-19 23:57:19.100724+11:00",
+            "last_error": null
+          },
+          {
+            "id": "9e6190c8-72bd-457e-b114-942e1488399f",
+            "workspace_id": "a163de89-63d5-45b1-8c31-71e7ebd633f1",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/9e6190c8-72bd-457e-b114-942e1488399f/0.deleted",
+                  "existed": true,
+                  "original": "uploads/a163de89-63d5-45b1-8c31-71e7ebd633f1.txt",
+                  "document_id": "56d5ce98-a53d-4f79-8a49-132f7662678d"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "f10d21685056018239eb5f3a1b307e4c1d605af32be7a9d3a45ae15cf709a1b9",
+            "created_at": "2026-10-19 23:57:19.189491+11:00",
+            "updated_at": "2026-10-19 23:57:19.212852+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "after": {
+        "counts": {
+          "chat_sessions": 0,
+          "session_workspaces": 0,
+          "session_profiles": 0,
+          "messages": 0,
+          "chat_turns": 0,
+          "message_evidence": 0
+        },
+        "operations": [
+          {
+            "id": "c869ae8c-efc0-42e7-acd8-aad053299bf4",
+            "workspace_id": "f4d61714-4d75-4f61-9682-9e4500e157d8",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/c869ae8c-efc0-42e7-acd8-aad053299bf4/0.deleted",
+                  "existed": true,
+                  "original": "uploads/f4d61714-4d75-4f61-9682-9e4500e157d8.txt",
+                  "document_id": "24c787a9-b3d9-4668-9cb4-3c269e464c82"
+                }
+              ],
+              "version": 1,
+              "session_ids": [
+                "e8bd811d-f562-44ad-bc8f-c76b12ad39d0"
+              ]
+            },
+            "manifest_sha256": "adfacc670ec402f9369ba2b864ebab3a7df83cbadde4b679110da05230c5e963",
+            "created_at": "2026-10-19 23:57:18.862900+11:00",
+            "updated_at": "2026-10-19 23:57:18.911227+11:00",
+            "last_error": null
+          },
+          {
+            "id": "b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb",
+            "workspace_id": "dc0ee72b-635a-4291-8772-5d6dbaae6c3f",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/b626c3ec-4f8f-4ddf-bb84-48fce8c26bfb/0.deleted",
+                  "existed": true,
+                  "original": "uploads/dc0ee72b-635a-4291-8772-5d6dbaae6c3f.txt",
+                  "document_id": "6982eaa2-d7fa-4dcc-9dc0-590d556fc23e"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "480d9620452abd5d5049c2244fa56e5583ace3fc01d5f551995a00bfea2d0172",
+            "created_at": "2026-10-19 23:57:19.073419+11:00",
+            "updated_at": "2026-10-19 23:57:19.100724+11:00",
+            "last_error": null
+          },
+          {
+            "id": "9e6190c8-72bd-457e-b114-942e1488399f",
+            "workspace_id": "a163de89-63d5-45b1-8c31-71e7ebd633f1",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/9e6190c8-72bd-457e-b114-942e1488399f/0.deleted",
+                  "existed": true,
+                  "original": "uploads/a163de89-63d5-45b1-8c31-71e7ebd633f1.txt",
+                  "document_id": "56d5ce98-a53d-4f79-8a49-132f7662678d"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "f10d21685056018239eb5f3a1b307e4c1d605af32be7a9d3a45ae15cf709a1b9",
+            "created_at": "2026-10-19 23:57:19.189491+11:00",
+            "updated_at": "2026-10-19 23:57:19.212852+11:00",
+            "last_error": null
+          },
+          {
+            "id": "4cfb4ee8-ed98-4497-8531-27bf8943f2e0",
+            "workspace_id": "e93fb020-e267-4885-922f-4dbf09ff7947",
+            "owner_id": "df135ad9-66bc-478b-9873-4723543fc575",
+            "state": "CLEANED",
+            "root": "D:\\Lunacia\\Asteria\\.local\\lifecycle-ly905ct8",
+            "manifest": {
+              "files": [
+                {
+                  "size": 24,
+                  "sha256": "261d598e1e7a5fa24b8310c4c7f5b7ff43a32eb436e958c55eb2035359b8a9e2",
+                  "staged": "deleted-files/4cfb4ee8-ed98-4497-8531-27bf8943f2e0/0.deleted",
+                  "existed": true,
+                  "original": "uploads/e93fb020-e267-4885-922f-4dbf09ff7947.txt",
+                  "document_id": "c9638fc3-662a-422a-aec9-7d594bf1176f"
+                }
+              ],
+              "version": 1,
+              "session_ids": []
+            },
+            "manifest_sha256": "f91ffeb76cd566c1f138e238e43a82f8ef2c2894398ee46c5f6f08adcfc84c5c",
+            "created_at": "2026-10-19 23:57:19.269170+11:00",
+            "updated_at": "2026-10-19 23:57:19.291817+11:00",
+            "last_error": null
+          }
+        ]
+      },
+      "lifecycle": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "llm_calls": 0,
+      "manifest_session_ids": []
+    }
+  ],
+  "responses": {
+    "success_blocked_delete": {
+      "status": 409,
+      "body": "{\"detail\":\"Wait for the current answer to finish\"}"
+    },
+    "success_chat": {
+      "status": 200,
+      "body": "{\"answer\":\"### Model knowledge (unverified)\\nAtomicity means that all changes in a transaction succeed together or none take effect.\",\"session_id\":\"e8bd811d-f562-44ad-bc8f-c76b12ad39d0\",\"session_type\":\"questioning\",\"learning_goal\":null,\"sources\":[],\"ai_mode\":\"embedding=test;llm=provider\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "success_delete": {
+      "status": 204,
+      "body": ""
+    },
+    "commit_failure_blocked_delete": {
+      "status": 409,
+      "body": "{\"detail\":\"Wait for active chat transactions to finish\"}"
+    },
+    "commit_failure_chat": {
+      "status": 500,
+      "body": "Internal Server Error"
+    },
+    "commit_failure_delete": {
+      "status": 204,
+      "body": ""
+    },
+    "generation_failure_blocked_delete": {
+      "status": 409,
+      "body": "{\"detail\":\"Wait for the current answer to finish\"}"
+    },
+    "generation_failure_chat": {
+      "status": 502,
+      "body": "{\"detail\":\"Injected generation failure\"}"
+    },
+    "generation_failure_delete": {
+      "status": 204,
+      "body": ""
+    },
+    "delete_first_chat": {
+      "status": 409,
+      "body": "{\"detail\":\"Workspace deletion/recovery is in progress\"}"
+    },
+    "delete_first_delete": {
+      "status": 204,
+      "body": ""
+    }
+  },
+  "llm_calls": 3,
+  "head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "git_status": " M backend/.env.example\n M backend/app/api/routes/chat.py\n M backend/app/api/routes/knowledge.py\n M backend/app/api/routes/learning.py\n M backend/app/core/config.py\n M backend/app/main.py\n M backend/app/services/README.md\n M backend/app/services/knowledge/retrieval.py\n M backend/app/services/workspace_delete_recovery.py\n M backend/tests/test_auth.py\n?? backend/app/services/chat/singleflight.py\n?? backend/app/services/knowledge/persistent_query.py\n?? backend/app/services/knowledge/query_supervisor.py\n?? backend/app/services/knowledge/query_worker.py\n?? backend/app/services/knowledge/windows_job.py\n?? backend/app/services/session_coordination.py\n?? backend/app/services/workspace_lifecycle.py\n?? backend/docs/chat-singleflight.txt\n?? backend/docs/persistent-query-worker.txt\n?? backend/docs/workspace-lifecycle.txt\n?? backend/tests/experiments/\n?? backend/tests/test_chat_singleflight.py\n?? backend/tests/test_chat_waiters.py\n?? backend/tests/test_persistent_query.py\n?? backend/tests/test_persistent_query_process.py\n?? backend/tests/test_query_supervisor.py\n?? backend/tests/test_restart_policy.py\n?? backend/tests/test_session_coordination.py\n?? backend/tests/test_workspace_creation.py\n?? backend/tests/test_workspace_lifecycle.py\n",
+  "environment": "One Uvicorn worker, real TCP, real auth, explicit general route, mock external LLM",
+  "source_before": {
+    "app\\main.py": "f65338f6d252525cb84ff7bddf6eee1f71fce07e45920396e464d73a50cb3af2",
+    "app\\api\\router.py": "4087b5f9fe8bf7f2d845a049e6886b2baf019c84b15b8dd0c4c939f8ce6e8996",
+    "app\\cli\\check_trial.py": "a7479d447f94bb209928fbe2f4105545d6b75c72938762dcea1d07302826845c",
+    "app\\cli\\learning_trial.py": "529cfce643f01e7b7ed519cae011d1a0a662dbd3242e176cbf9bb530221b2a86",
+    "app\\cli\\local.py": "c416fee92eea954442b0060622d95e702881b85ab0ec82be3ab459e0084b0a02",
+    "app\\cli\\prepare_embeddings.py": "72acb2cf42651179a57fc36a1e4201ed671795cd75f91a0e4e20d7725ce874c1",
+    "app\\cli\\__init__.py": "c191280cff0d115e298eabda301c89327d23e66d89a2fb7a51eaf7e50e4b6c58",
+    "app\\core\\config.py": "76baeea2f0ddce08f2f781e4b4582cc32f2305b28e71fabfb24db2a9399ac753",
+    "app\\core\\deps.py": "b575033ebc38fc6ad09a9564d8d87af6e168ca844d964a0220fe84c49e0668c9",
+    "app\\core\\recovery_gate.py": "7a22a9f973670a8ab295c45747f434c04a94f048ec77c2f0226621ebab9e6fb2",
+    "app\\core\\request_limits.py": "34914c51a0a8a13371a1c5f03f85eb11bbf5953b96a3b44bf52b9d8493fe7cf3",
+    "app\\core\\security.py": "3606b28091f2c489a320fa646881035cbc76dddc387a6b1c3007eff1844069ae",
+    "app\\db\\base.py": "37d085d920e5ccf7f88ec53610b6edd79037062ad86474cf72673c05f45f30e6",
+    "app\\db\\init_local.py": "0b02145488b778ca629380e2bcf0753ca3a9808a1785bbfeb7235f0fff3b50df",
+    "app\\db\\session.py": "40b777739d675747b8bb6050d49683de2183d05f46ff5a2431501931ed718c89",
+    "app\\models\\chat_sessions.py": "9d1c81d3efcb85975ae1f94aa91e7b7228f754f0410b23de490dd86862b857c3",
+    "app\\models\\chat_turn.py": "0369b1cc4a9339f5ccab18faa89c7fb84fdc504320bd1eff14055b2c0c265360",
+    "app\\models\\knowledge.py": "f5080d4c82d2564c64bd1bf6a372741f9a8117069b2f3b143b593d82e1af043f",
+    "app\\models\\learning.py": "900d6ec8af41c819deed503b43fb5f20897c5bc68994cc4822f62373feccbdc0",
+    "app\\models\\messages.py": "b04a1611931e627c9bcf736ed577e28ce89d53265a2a5df62fa61b64e7a5491c",
+    "app\\models\\session_profile.py": "abe1380eb9b5077badc0382ae8c008a71ab0fee2d56eb29dadef2dea4d47d0c0",
+    "app\\models\\users.py": "953670f51c52ac23d96371b35c03c38171a48d6e0ecb4d995453c0f566031ff5",
+    "app\\models\\user_llm_settings.py": "494544837ecca56e3d25fc08e0a7527192a051b4795d780789858c5f7f437a50",
+    "app\\models\\workspace_delete_operation.py": "050f044e5e91145d410dc5581cc9a552fb9972b6b756da8c860334c4ff643cc6",
+    "app\\schemas\\auth.py": "087744fe1487062cb223372a0018b37d3bcdeb1c5255a503ffb8aafb9093a9c6",
+    "app\\schemas\\chat.py": "9f79e6368e4d3f8e6bf6f0fc7a12feeb575d2ca006f67fd9d3d0b9bbbed9bc85",
+    "app\\schemas\\chat_history.py": "78ec21a29a35a4fc979d67b6659665a4674f9f19addd84d46c12ea28c31f3785",
+    "app\\schemas\\learning.py": "92d21e247a6f700d3c74da41c3cf4853e666f0b442cb1321f285dc9a93edbe40",
+    "app\\schemas\\llm_settings.py": "43c8f68436e5f9534e29267cb8abe7dc7047e466fb73879789bec296e02efdf4",
+    "app\\schemas\\user.py": "a65c1f43e0d6642febb81beb4d1c65e4674406657982713b2e98f7310a71bf60",
+    "app\\services\\deletion_service.py": "23837146976a0c3899bdd1f7bc3bfc492f64a582020fee7fe4ab83bc312c117d",
+    "app\\services\\runtime_metrics.py": "c61996a996f6edcde41c2bb30610b67cae1ccf79b78e0c7ffd8c656d24681895",
+    "app\\services\\session_coordination.py": "9de2e2c69d7f6c718a478f40efb29a8b09992d7873e91c2cd5cfc81726ba2b4c",
+    "app\\services\\startup_recovery.py": "632c8a1bac5f0f5d46d52bdf8dc079c2eb6795be565b7487d6a8fb28c468c376",
+    "app\\services\\workspace_delete_recovery.py": "d7a5367625015d5853abc5b47b01c99596f962f64cb4bb224019e68cf66af781",
+    "app\\services\\workspace_lifecycle.py": "d4f6ddb6d4e5033145773bb69ea8a018b33b941be8a410318ae6fa81c0dbf83f",
+    "app\\utils\\system_prompt.py": "37009a7621bb8af3ebab68a261f843081e4772bab7008cd11c4b37c03676dd60",
+    "app\\api\\routes\\auth.py": "f5558c8d92fdc16ba5e0ba9db535ea27121328325fc8fb502d101d601e76d48c",
+    "app\\api\\routes\\chat.py": "c907bbe5c18d41458200a1ac7d3d0febac0b445324b944fcbb04a4b191f66d63",
+    "app\\api\\routes\\dashboard.py": "5b050b2567066d0d23e30627b6b11c28758cf2115a58cb31a7407ad1433d8811",
+    "app\\api\\routes\\document_recovery.py": "9d0c2bb23a4510387ac0a20347203bd1927a9a7e70944b147d0bdf17ba69734f",
+    "app\\api\\routes\\health.py": "d13a97fbcbdc99de703cc7236fba9dd264a47512f4d6df176a6b8440ab64ba97",
+    "app\\api\\routes\\ingest.py": "a7bdcf37a7b13e4810859b662959748a87662769c09c3d92d52f8d181546475b",
+    "app\\api\\routes\\knowledge.py": "46c9e27303ef9e03f05a5cc62b3d9e8d0120f7c0e014facd0255d24cb8dcbc4e",
+    "app\\api\\routes\\learning.py": "c3c21f95e243160c12cbd8df92841d6820b6f6ddb194f11d355ca9dce015724f",
+    "app\\api\\routes\\llm_settings.py": "0ebdeebb17dbc0664aba6cc523787484609d9c245221765684806ad514007a62",
+    "app\\api\\routes\\runtime_metrics.py": "e481426703e558c9df5caf3500e2843f3716b259a5ebec4abd2b43433106cf52",
+    "app\\services\\chat\\answers.py": "539f63fb4de8a95f9c6e72ede595faf554e24663c6ac2a873b2238871f767f40",
+    "app\\services\\chat\\citations.py": "0c99f6a685f53f083f67019e598f15e186b205dc2233567e8a52b733b44a0cc8",
+    "app\\services\\chat\\language.py": "058c9f08575ce4f344345bd089a9b517ba82553cb499aa816a6f95184458fd9a",
+    "app\\services\\chat\\routing.py": "75bb2d19f6aa936e5a725f894ee4edde5762d3e745e59549867d3f8c35ce1219",
+    "app\\services\\chat\\singleflight.py": "91f7675897e43d28bf3e6dfd3cbbb5642bd7d9bde95b67822a20dec64ebe836a",
+    "app\\services\\chat\\__init__.py": "372e16f7ed83046bcf2f1ebc63e89837ba13dc4899cd1c53a8f90ed2b3b402a5",
+    "app\\services\\knowledge\\index_worker.py": "8859ae1a23dce0ef5459437d65d4523f10e0e8677cad5ee6748e392264e15cf5",
+    "app\\services\\knowledge\\persistent_query.py": "882f36bc82daff23f4bad9ea288203a1cc4e6628bfc6c8af7dbb0742b738f471",
+    "app\\services\\knowledge\\query_supervisor.py": "451f59c25ef3698b4875876876bc442697d59e4ccd71e8bf017d99220efc4a31",
+    "app\\services\\knowledge\\query_worker.py": "ee09b642649b7be7e3189e3031ab036121c4810c6942a351b082e7e2bdcc3a5d",
+    "app\\services\\knowledge\\retrieval.py": "8f16eaab9888bfdb1d823071384ae258e8fa9f9a65f37c683de619723410d2eb",
+    "app\\services\\knowledge\\scoring.py": "ed47742aab73397851a7b730b14d4b70759f4dc0ad4a26a994dab7e0f4c4060b",
+    "app\\services\\knowledge\\windows_job.py": "26070e5a4e2281693a5e98b851d2bf74c80b28f155d54992f626be87d2335fbb",
+    "app\\services\\knowledge\\__init__.py": "ad4dd67161cf5e17c5f004106b3f9fadcc0214a176049a958b518aabe3b9a7cc",
+    "app\\services\\learning\\materials.py": "810fd5d056c0a05fd9f161a1d9e01c92ecf2744d50e055e9af00bd1a481a8f4f",
+    "app\\services\\learning\\response.py": "5f236c83905dbd6b4643491b1db574af930598272e5b5e38db97967e37551598",
+    "app\\services\\learning\\state.py": "5beccfd3647153b6737e5a759ad1cb77fe8b75abf4c52570fd4ceef163aabb9f",
+    "app\\services\\learning\\__init__.py": "e35d3abbf8d2ec3df54ef911d85de235cdb4725f2cdd25eb3fc3d2746af2f2bc",
+    "app\\services\\llm\\completion.py": "c362c26604bba0d9f43b7dd4426599c5b52e9cc93f4f441948abb1268a740aec",
+    "app\\services\\llm\\protocol.py": "7f6d9d5af32e213f1aea0d05f843ff784cc4798485d0e7f192a6c153c9e7cec6",
+    "app\\services\\llm\\provider.py": "36b014ed19e60c4e0284a1f2ff0cc82535f2e479ed1b3e2b12dcdc652300bc34",
+    "app\\services\\llm\\__init__.py": "f2649fe511d72f38ce9c163ca5192f5b58a5ddf5ea006bdedaf7848b12579535"
+  },
+  "postgres": {
+    "version": "16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+    "isolation": "read committed",
+    "pgdata": "/tmp/asteria-concurrency-cross-session-20261019/pgdata"
+  },
+  "temporary_directory_removed": true,
+  "source_after": {
+    "app\\main.py": "f65338f6d252525cb84ff7bddf6eee1f71fce07e45920396e464d73a50cb3af2",
+    "app\\api\\router.py": "4087b5f9fe8bf7f2d845a049e6886b2baf019c84b15b8dd0c4c939f8ce6e8996",
+    "app\\cli\\check_trial.py": "a7479d447f94bb209928fbe2f4105545d6b75c72938762dcea1d07302826845c",
+    "app\\cli\\learning_trial.py": "529cfce643f01e7b7ed519cae011d1a0a662dbd3242e176cbf9bb530221b2a86",
+    "app\\cli\\local.py": "c416fee92eea954442b0060622d95e702881b85ab0ec82be3ab459e0084b0a02",
+    "app\\cli\\prepare_embeddings.py": "72acb2cf42651179a57fc36a1e4201ed671795cd75f91a0e4e20d7725ce874c1",
+    "app\\cli\\__init__.py": "c191280cff0d115e298eabda301c89327d23e66d89a2fb7a51eaf7e50e4b6c58",
+    "app\\core\\config.py": "76baeea2f0ddce08f2f781e4b4582cc32f2305b28e71fabfb24db2a9399ac753",
+    "app\\core\\deps.py": "b575033ebc38fc6ad09a9564d8d87af6e168ca844d964a0220fe84c49e0668c9",
+    "app\\core\\recovery_gate.py": "7a22a9f973670a8ab295c45747f434c04a94f048ec77c2f0226621ebab9e6fb2",
+    "app\\core\\request_limits.py": "34914c51a0a8a13371a1c5f03f85eb11bbf5953b96a3b44bf52b9d8493fe7cf3",
+    "app\\core\\security.py": "3606b28091f2c489a320fa646881035cbc76dddc387a6b1c3007eff1844069ae",
+    "app\\db\\base.py": "37d085d920e5ccf7f88ec53610b6edd79037062ad86474cf72673c05f45f30e6",
+    "app\\db\\init_local.py": "0b02145488b778ca629380e2bcf0753ca3a9808a1785bbfeb7235f0fff3b50df",
+    "app\\db\\session.py": "40b777739d675747b8bb6050d49683de2183d05f46ff5a2431501931ed718c89",
+    "app\\models\\chat_sessions.py": "9d1c81d3efcb85975ae1f94aa91e7b7228f754f0410b23de490dd86862b857c3",
+    "app\\models\\chat_turn.py": "0369b1cc4a9339f5ccab18faa89c7fb84fdc504320bd1eff14055b2c0c265360",
+    "app\\models\\knowledge.py": "f5080d4c82d2564c64bd1bf6a372741f9a8117069b2f3b143b593d82e1af043f",
+    "app\\models\\learning.py": "900d6ec8af41c819deed503b43fb5f20897c5bc68994cc4822f62373feccbdc0",
+    "app\\models\\messages.py": "b04a1611931e627c9bcf736ed577e28ce89d53265a2a5df62fa61b64e7a5491c",
+    "app\\models\\session_profile.py": "abe1380eb9b5077badc0382ae8c008a71ab0fee2d56eb29dadef2dea4d47d0c0",
+    "app\\models\\users.py": "953670f51c52ac23d96371b35c03c38171a48d6e0ecb4d995453c0f566031ff5",
+    "app\\models\\user_llm_settings.py": "494544837ecca56e3d25fc08e0a7527192a051b4795d780789858c5f7f437a50",
+    "app\\models\\workspace_delete_operation.py": "050f044e5e91145d410dc5581cc9a552fb9972b6b756da8c860334c4ff643cc6",
+    "app\\schemas\\auth.py": "087744fe1487062cb223372a0018b37d3bcdeb1c5255a503ffb8aafb9093a9c6",
+    "app\\schemas\\chat.py": "9f79e6368e4d3f8e6bf6f0fc7a12feeb575d2ca006f67fd9d3d0b9bbbed9bc85",
+    "app\\schemas\\chat_history.py": "78ec21a29a35a4fc979d67b6659665a4674f9f19addd84d46c12ea28c31f3785",
+    "app\\schemas\\learning.py": "92d21e247a6f700d3c74da41c3cf4853e666f0b442cb1321f285dc9a93edbe40",
+    "app\\schemas\\llm_settings.py": "43c8f68436e5f9534e29267cb8abe7dc7047e466fb73879789bec296e02efdf4",
+    "app\\schemas\\user.py": "a65c1f43e0d6642febb81beb4d1c65e4674406657982713b2e98f7310a71bf60",
+    "app\\services\\deletion_service.py": "23837146976a0c3899bdd1f7bc3bfc492f64a582020fee7fe4ab83bc312c117d",
+    "app\\services\\runtime_metrics.py": "c61996a996f6edcde41c2bb30610b67cae1ccf79b78e0c7ffd8c656d24681895",
+    "app\\services\\session_coordination.py": "9de2e2c69d7f6c718a478f40efb29a8b09992d7873e91c2cd5cfc81726ba2b4c",
+    "app\\services\\startup_recovery.py": "632c8a1bac5f0f5d46d52bdf8dc079c2eb6795be565b7487d6a8fb28c468c376",
+    "app\\services\\workspace_delete_recovery.py": "d7a5367625015d5853abc5b47b01c99596f962f64cb4bb224019e68cf66af781",
+    "app\\services\\workspace_lifecycle.py": "d4f6ddb6d4e5033145773bb69ea8a018b33b941be8a410318ae6fa81c0dbf83f",
+    "app\\utils\\system_prompt.py": "37009a7621bb8af3ebab68a261f843081e4772bab7008cd11c4b37c03676dd60",
+    "app\\api\\routes\\auth.py": "f5558c8d92fdc16ba5e0ba9db535ea27121328325fc8fb502d101d601e76d48c",
+    "app\\api\\routes\\chat.py": "c907bbe5c18d41458200a1ac7d3d0febac0b445324b944fcbb04a4b191f66d63",
+    "app\\api\\routes\\dashboard.py": "5b050b2567066d0d23e30627b6b11c28758cf2115a58cb31a7407ad1433d8811",
+    "app\\api\\routes\\document_recovery.py": "9d0c2bb23a4510387ac0a20347203bd1927a9a7e70944b147d0bdf17ba69734f",
+    "app\\api\\routes\\health.py": "d13a97fbcbdc99de703cc7236fba9dd264a47512f4d6df176a6b8440ab64ba97",
+    "app\\api\\routes\\ingest.py": "a7bdcf37a7b13e4810859b662959748a87662769c09c3d92d52f8d181546475b",
+    "app\\api\\routes\\knowledge.py": "46c9e27303ef9e03f05a5cc62b3d9e8d0120f7c0e014facd0255d24cb8dcbc4e",
+    "app\\api\\routes\\learning.py": "c3c21f95e243160c12cbd8df92841d6820b6f6ddb194f11d355ca9dce015724f",
+    "app\\api\\routes\\llm_settings.py": "0ebdeebb17dbc0664aba6cc523787484609d9c245221765684806ad514007a62",
+    "app\\api\\routes\\runtime_metrics.py": "e481426703e558c9df5caf3500e2843f3716b259a5ebec4abd2b43433106cf52",
+    "app\\services\\chat\\answers.py": "539f63fb4de8a95f9c6e72ede595faf554e24663c6ac2a873b2238871f767f40",
+    "app\\services\\chat\\citations.py": "0c99f6a685f53f083f67019e598f15e186b205dc2233567e8a52b733b44a0cc8",
+    "app\\services\\chat\\language.py": "058c9f08575ce4f344345bd089a9b517ba82553cb499aa816a6f95184458fd9a",
+    "app\\services\\chat\\routing.py": "75bb2d19f6aa936e5a725f894ee4edde5762d3e745e59549867d3f8c35ce1219",
+    "app\\services\\chat\\singleflight.py": "91f7675897e43d28bf3e6dfd3cbbb5642bd7d9bde95b67822a20dec64ebe836a",
+    "app\\services\\chat\\__init__.py": "372e16f7ed83046bcf2f1ebc63e89837ba13dc4899cd1c53a8f90ed2b3b402a5",
+    "app\\services\\knowledge\\index_worker.py": "8859ae1a23dce0ef5459437d65d4523f10e0e8677cad5ee6748e392264e15cf5",
+    "app\\services\\knowledge\\persistent_query.py": "882f36bc82daff23f4bad9ea288203a1cc4e6628bfc6c8af7dbb0742b738f471",
+    "app\\services\\knowledge\\query_supervisor.py": "451f59c25ef3698b4875876876bc442697d59e4ccd71e8bf017d99220efc4a31",
+    "app\\services\\knowledge\\query_worker.py": "ee09b642649b7be7e3189e3031ab036121c4810c6942a351b082e7e2bdcc3a5d",
+    "app\\services\\knowledge\\retrieval.py": "8f16eaab9888bfdb1d823071384ae258e8fa9f9a65f37c683de619723410d2eb",
+    "app\\services\\knowledge\\scoring.py": "ed47742aab73397851a7b730b14d4b70759f4dc0ad4a26a994dab7e0f4c4060b",
+    "app\\services\\knowledge\\windows_job.py": "26070e5a4e2281693a5e98b851d2bf74c80b28f155d54992f626be87d2335fbb",
+    "app\\services\\knowledge\\__init__.py": "ad4dd67161cf5e17c5f004106b3f9fadcc0214a176049a958b518aabe3b9a7cc",
+    "app\\services\\learning\\materials.py": "810fd5d056c0a05fd9f161a1d9e01c92ecf2744d50e055e9af00bd1a481a8f4f",
+    "app\\services\\learning\\response.py": "5f236c83905dbd6b4643491b1db574af930598272e5b5e38db97967e37551598",
+    "app\\services\\learning\\state.py": "5beccfd3647153b6737e5a759ad1cb77fe8b75abf4c52570fd4ceef163aabb9f",
+    "app\\services\\learning\\__init__.py": "e35d3abbf8d2ec3df54ef911d85de235cdb4725f2cdd25eb3fc3d2746af2f2bc",
+    "app\\services\\llm\\completion.py": "c362c26604bba0d9f43b7dd4426599c5b52e9cc93f4f441948abb1268a740aec",
+    "app\\services\\llm\\protocol.py": "7f6d9d5af32e213f1aea0d05f843ff784cc4798485d0e7f192a6c153c9e7cec6",
+    "app\\services\\llm\\provider.py": "36b014ed19e60c4e0284a1f2ff0cc82535f2e479ed1b3e2b12dcdc652300bc34",
+    "app\\services\\llm\\__init__.py": "f2649fe511d72f38ce9c163ca5192f5b58a5ddf5ea006bdedaf7848b12579535"
+  },
+  "api_stopped": true,
+  "schema_removed": true
+}

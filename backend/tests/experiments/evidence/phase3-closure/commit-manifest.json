@@ -1,0 +1,1189 @@
+{
+  "base_head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "not_staged_or_committed": true,
+  "commit_1": [
+    {
+      "path": "backend/.env.example",
+      "bytes": 3349,
+      "sha256": "b331b8e439bbea282c117cded3f903cb8d9d08c2608f62161d123d003d3faa13"
+    },
+    {
+      "path": "backend/app/api/routes/chat.py",
+      "bytes": 22594,
+      "sha256": "2b3aadd6a840e1322ea39dfb012a424ed19a2caacc42d5ceb4ccf3d759f3b6bf"
+    },
+    {
+      "path": "backend/app/api/routes/knowledge.py",
+      "bytes": 11183,
+      "sha256": "46c9e27303ef9e03f05a5cc62b3d9e8d0120f7c0e014facd0255d24cb8dcbc4e"
+    },
+    {
+      "path": "backend/app/api/routes/learning.py",
+      "bytes": 11007,
+      "sha256": "c3c21f95e243160c12cbd8df92841d6820b6f6ddb194f11d355ca9dce015724f"
+    },
+    {
+      "path": "backend/app/core/config.py",
+      "bytes": 2491,
+      "sha256": "406b76b8caa7a197c3a0c62e41ae81ddccfd856de01f05fdc4e7249c2ca7219c"
+    },
+    {
+      "path": "backend/app/main.py",
+      "bytes": 5815,
+      "sha256": "f65338f6d252525cb84ff7bddf6eee1f71fce07e45920396e464d73a50cb3af2"
+    },
+    {
+      "path": "backend/app/services/README.md",
+      "bytes": 7327,
+      "sha256": "c26a1c77a932d10583cd109e9283f35612cc501231981e92fb24566db393b1b9"
+    },
+    {
+      "path": "backend/app/services/chat/capacity.py",
+      "bytes": 1309,
+      "sha256": "6ff471765119c90f043a0933204de1f3f3eb4fbbb1b9aa4b763d80b89c4b14c9"
+    },
+    {
+      "path": "backend/app/services/chat/singleflight.py",
+      "bytes": 4551,
+      "sha256": "91f7675897e43d28bf3e6dfd3cbbb5642bd7d9bde95b67822a20dec64ebe836a"
+    },
+    {
+      "path": "backend/app/services/knowledge/persistent_query.py",
+      "bytes": 10292,
+      "sha256": "882f36bc82daff23f4bad9ea288203a1cc4e6628bfc6c8af7dbb0742b738f471"
+    },
+    {
+      "path": "backend/app/services/knowledge/query_supervisor.py",
+      "bytes": 11406,
+      "sha256": "451f59c25ef3698b4875876876bc442697d59e4ccd71e8bf017d99220efc4a31"
+    },
+    {
+      "path": "backend/app/services/knowledge/query_worker.py",
+      "bytes": 1616,
+      "sha256": "ee09b642649b7be7e3189e3031ab036121c4810c6942a351b082e7e2bdcc3a5d"
+    },
+    {
+      "path": "backend/app/services/knowledge/retrieval.py",
+      "bytes": 4843,
+      "sha256": "8f16eaab9888bfdb1d823071384ae258e8fa9f9a65f37c683de619723410d2eb"
+    },
+    {
+      "path": "backend/app/services/knowledge/windows_job.py",
+      "bytes": 7752,
+      "sha256": "26070e5a4e2281693a5e98b851d2bf74c80b28f155d54992f626be87d2335fbb"
+    },
+    {
+      "path": "backend/app/services/llm/process.py",
+      "bytes": 4732,
+      "sha256": "8d2adb207bdf314229f12016dfb427bcd54897b4ea1c2fd2aae6d6d4da28d6cd"
+    },
+    {
+      "path": "backend/app/services/llm/provider.py",
+      "bytes": 6422,
+      "sha256": "719d66c3da94fcfabcfba01ed083e1bcdbe3a6c265cd1e2c4b93e4326e0fbeeb"
+    },
+    {
+      "path": "backend/app/services/session_coordination.py",
+      "bytes": 1438,
+      "sha256": "9de2e2c69d7f6c718a478f40efb29a8b09992d7873e91c2cd5cfc81726ba2b4c"
+    },
+    {
+      "path": "backend/app/services/workspace_delete_recovery.py",
+      "bytes": 14926,
+      "sha256": "d7a5367625015d5853abc5b47b01c99596f962f64cb4bb224019e68cf66af781"
+    },
+    {
+      "path": "backend/app/services/workspace_lifecycle.py",
+      "bytes": 4426,
+      "sha256": "d4f6ddb6d4e5033145773bb69ea8a018b33b941be8a410318ae6fa81c0dbf83f"
+    },
+    {
+      "path": "backend/docs/chat-singleflight.txt",
+      "bytes": 5653,
+      "sha256": "6451b7da25c4cc9fcd00967195962fecca5db556c98f80e631dc5599ee94634c"
+    },
+    {
+      "path": "backend/docs/persistent-query-worker.txt",
+      "bytes": 7034,
+      "sha256": "a4afcbacd4937a4de732078e4ea8a5296fb0d4e230fa04518084efce1535cd10"
+    },
+    {
+      "path": "backend/docs/session-chat-concurrency.txt",
+      "bytes": 2474,
+      "sha256": "30cb2b91e5068a629b41e3ccb988ff06167a192b68233ef24e205932981cb644"
+    },
+    {
+      "path": "backend/docs/session-coordination.txt",
+      "bytes": 3533,
+      "sha256": "2836842c54688d3a9fa244256b6bb50e844e2c522784ae028d602ad240b19731"
+    },
+    {
+      "path": "backend/docs/workspace-lifecycle.txt",
+      "bytes": 3096,
+      "sha256": "a4b09c1e6f65d5ecee45d573060a222a36a35b07380f29e37f2b8e5ea36155ed"
+    },
+    {
+      "path": "backend/tests/test_auth.py",
+      "bytes": 11420,
+      "sha256": "bdaa4736bd914b333d944cc8e52bd56f49d3a7852593fb578590ebefd6f0034b"
+    },
+    {
+      "path": "backend/tests/test_chat_capacity.py",
+      "bytes": 2651,
+      "sha256": "f040157e738ca357d4621e1743d259b7baaa939b0ac1cfda504831ec39c14671"
+    },
+    {
+      "path": "backend/tests/test_chat_singleflight.py",
+      "bytes": 4106,
+      "sha256": "a793b5a5ff64a3822264cbb7a09c4268383e7f1c2dcb45232af274489d561eff"
+    },
+    {
+      "path": "backend/tests/test_chat_waiters.py",
+      "bytes": 7578,
+      "sha256": "d54a6c0663c214c690932f06782b8a6731d879f1302ab5cb4adbf898fe27b3dc"
+    },
+    {
+      "path": "backend/tests/test_generation_reliability.py",
+      "bytes": 9868,
+      "sha256": "84878d328bbb5639d59bca3a9bcee764b753b48efecb65701402a6ec035bd852"
+    },
+    {
+      "path": "backend/tests/test_persistent_query.py",
+      "bytes": 7837,
+      "sha256": "e2e25f8f041bfa530fce43a7b3c49c9f87d277eb0b5fae9c2e266f361578b742"
+    },
+    {
+      "path": "backend/tests/test_persistent_query_process.py",
+      "bytes": 3369,
+      "sha256": "b3d93ae6dd699bd3d8e57611da12c1d25002402e4ce70a779f0dec3faebc370a"
+    },
+    {
+      "path": "backend/tests/test_provider.py",
+      "bytes": 3668,
+      "sha256": "0adf370dd77640252e6b4d242bb96cfe9c979488d2dbe49ab5c84e41451054e0"
+    },
+    {
+      "path": "backend/tests/test_provider_process.py",
+      "bytes": 3430,
+      "sha256": "a7c22c4e591f7a7ecfcf25b37ee9df6846f506fe8871f35503e1b6a2123f2837"
+    },
+    {
+      "path": "backend/tests/test_query_supervisor.py",
+      "bytes": 8375,
+      "sha256": "e217f8aa5eb735dbd2c02f76d3fed694722c8d116fdf017611419659f7bbc384"
+    },
+    {
+      "path": "backend/tests/test_restart_policy.py",
+      "bytes": 5853,
+      "sha256": "2aa6a3322b4b33a4e69fe95f1545fb674acf1862646bcf302214316e9ac31be6"
+    },
+    {
+      "path": "backend/tests/test_session_coordination.py",
+      "bytes": 3162,
+      "sha256": "fec8fff8a0966cc32b21f95f0aefbeb407d3f77dfbe22e00ae09469c9660c540"
+    },
+    {
+      "path": "backend/tests/test_workspace_creation.py",
+      "bytes": 2250,
+      "sha256": "b3dd8b9044ddc8fbf10556c985c732c342fdc1b83dad6525c7c132e68684dade"
+    },
+    {
+      "path": "backend/tests/test_workspace_lifecycle.py",
+      "bytes": 5023,
+      "sha256": "c3ebc91643321d08aa30864ea724d6a321ebe919c2091855a8be7602c6b3c57e"
+    }
+  ],
+  "commit_2": [
+    {
+      "path": "backend/docs/phase3-closure.txt",
+      "bytes": 10592,
+      "sha256": "2038d7a8e21bb6f13d844eed213d331951cca5b25454ec09be34cabfbbbbed8c"
+    },
+    {
+      "path": "backend/tests/experiments/CHAT_BASELINE_REPORT.txt",
+      "bytes": 9706,
+      "sha256": "330e6ffac53d56350fd0a72dcbe47ed8eec0107c64b0eecff943c5f4b4282cd7"
+    },
+    {
+      "path": "backend/tests/experiments/CHAT_CONCURRENCY_REPORT.txt",
+      "bytes": 11059,
+      "sha256": "75efebf0711f25384ea3e3545f1020455bcbd0925bd72ea65147c7f4df21a1e3"
+    },
+    {
+      "path": "backend/tests/experiments/CHAT_IDEMPOTENCY_REPORT.txt",
+      "bytes": 5176,
+      "sha256": "4b7aab2702ae99628fbff1e58067035ebb888d6c73ff6502fe61f144fe8094af"
+    },
+    {
+      "path": "backend/tests/experiments/CHAT_SINGLEFLIGHT_REPORT.txt",
+      "bytes": 6412,
+      "sha256": "5c889aed3a369c1caa2eb5aa191c78c4eb3da263a10cded690885ed1bfb63fe2"
+    },
+    {
+      "path": "backend/tests/experiments/CHAT_WAITERS_REPORT.txt",
+      "bytes": 6169,
+      "sha256": "b783bf37efeb3b47423209eb41db377f25c71d383abb1548de9d5e513bff0688"
+    },
+    {
+      "path": "backend/tests/experiments/CHAT_WORKER_AB_REPORT.txt",
+      "bytes": 8158,
+      "sha256": "21d197b001512f7ac007fe03007cd6c7a07c9365dc4192f3fcb97c96b4d5a044"
+    },
+    {
+      "path": "backend/tests/experiments/CROSS_PROCESS_REPORT.txt",
+      "bytes": 5307,
+      "sha256": "23df4bfe8d8b3a9deb694d032b24731858a1a40ba31fa4c690996193cbeb8418"
+    },
+    {
+      "path": "backend/tests/experiments/EMBEDDING_PROFILE_REPORT.txt",
+      "bytes": 10028,
+      "sha256": "319f3847677163ea11204b45d96aea36eefa06017ca507b624d0d8f64ed692e7"
+    },
+    {
+      "path": "backend/tests/experiments/FINAL_LOAD_REPORT.txt",
+      "bytes": 9205,
+      "sha256": "66cebd8b3668dbd06004b13a7eba77718ca695a11b81a0e46c4546e9793418f6"
+    },
+    {
+      "path": "backend/tests/experiments/PERSISTENT_EMBEDDING_POC_REPORT.txt",
+      "bytes": 9593,
+      "sha256": "89062937b1f6f058e198c2b816a345f066c93c61f0466bf206533cb311a35cd2"
+    },
+    {
+      "path": "backend/tests/experiments/PERSISTENT_QUERY_STEP1_REPORT.txt",
+      "bytes": 6372,
+      "sha256": "f48ebefdf892b9ac6bc413edb2d7f317cb0931774947fb3c776831f1bd7a03bf"
+    },
+    {
+      "path": "backend/tests/experiments/POOL_LIFECYCLE_REPORT.txt",
+      "bytes": 7137,
+      "sha256": "c77832273874548ad0c3b1e446a6e465558aa69b40218b701df809082ffe23df"
+    },
+    {
+      "path": "backend/tests/experiments/PROVIDER_CONCURRENCY_REPORT.txt",
+      "bytes": 6857,
+      "sha256": "7c70549ff6b16155175b3a39c207274e0b8e921660b73dcc37b451d0d8364a0e"
+    },
+    {
+      "path": "backend/tests/experiments/PROVIDER_FAILURE_ISOLATION_REPORT.txt",
+      "bytes": 7002,
+      "sha256": "3d6297fa46fe7eff2dcab84dbf91aadb28e8b41cd771ab9cf3c0d7e98e40ee61"
+    },
+    {
+      "path": "backend/tests/experiments/PROVIDER_ISOLATION_FIX_REPORT.txt",
+      "bytes": 7374,
+      "sha256": "85f7ed8c54b9af87692bafda028cba1e1b9b3a2464436597578b323c63ab594b"
+    },
+    {
+      "path": "backend/tests/experiments/QUERY_SUPERVISOR_STEP2_REPORT.txt",
+      "bytes": 6592,
+      "sha256": "7bd958dfd6e2b4d2f342b337145e7b533b79d237ccbfc33286850252b182fea2"
+    },
+    {
+      "path": "backend/tests/experiments/RESTART_POLICY_STEP25_REPORT.txt",
+      "bytes": 5160,
+      "sha256": "254deff13276ae89bb93a2e0660fba589ca03b60b5749a0ea0c207bc4da42641"
+    },
+    {
+      "path": "backend/tests/experiments/ROW_LOCK_FIX_REPORT.txt",
+      "bytes": 5076,
+      "sha256": "7517017173dc338e1e2b354a4595bb5cfaed71897a7e7ce927a7433ca93ed565"
+    },
+    {
+      "path": "backend/tests/experiments/SESSION_CHAT_CONCURRENCY_REPORT.txt",
+      "bytes": 9878,
+      "sha256": "1dae435cb6a3f14ceb7fa7ccda4b8f92f843c78b93013e8b251c4a0ac6101a3b"
+    },
+    {
+      "path": "backend/tests/experiments/SESSION_COORDINATION_REPORT.txt",
+      "bytes": 5532,
+      "sha256": "51e12088a1938cce2b3d5a25c870a2729c943b17f84afab059eb8c3d18bc1ece"
+    },
+    {
+      "path": "backend/tests/experiments/WORKER_LIFECYCLE_ISOLATION_REPORT.txt",
+      "bytes": 6733,
+      "sha256": "df739689badb8c5a6673763bfedde8a4e1b9657ac1a1ab1af8cc69d34cfea727"
+    },
+    {
+      "path": "backend/tests/experiments/WORKSPACE_CREATION_REPORT.txt",
+      "bytes": 4938,
+      "sha256": "43e41ab7458224c5f255da9f4f4e8ea3a3c8de068982485d99041dfff146e867"
+    },
+    {
+      "path": "backend/tests/experiments/WORKSPACE_LIFECYCLE_REPORT.txt",
+      "bytes": 5447,
+      "sha256": "d4e5c8aebcbb9461ddc7142a8332f91574cbd8cc1d117c9b6724a08f05afb845"
+    },
+    {
+      "path": "backend/tests/experiments/analyze_final_load.py",
+      "bytes": 6094,
+      "sha256": "6aaab5221008fe13e966cdcc2a8592300100c515e6235dccdd24f6df3437b472"
+    },
+    {
+      "path": "backend/tests/experiments/chat_baseline.py",
+      "bytes": 14633,
+      "sha256": "ce839d33ad15e21f8fafb7c24d1baf61a05b4b3c9487ff01681c2d0824063968"
+    },
+    {
+      "path": "backend/tests/experiments/chat_concurrency.py",
+      "bytes": 20276,
+      "sha256": "7f6f7a200873a0093f0b63e77b4bca52809b3b5aac8bdb72d4088cf59fd407cd"
+    },
+    {
+      "path": "backend/tests/experiments/chat_idempotency.py",
+      "bytes": 13976,
+      "sha256": "afeee829a8071eab1194fe0015f5d745100f6f5419e6886e9a2bc453e135f6b5"
+    },
+    {
+      "path": "backend/tests/experiments/chat_singleflight.py",
+      "bytes": 22501,
+      "sha256": "8978f16b4fa8b7c9cfd1f1acb0cafc9637a116fb7532e16cb18678f8935a4fbe"
+    },
+    {
+      "path": "backend/tests/experiments/chat_waiters.py",
+      "bytes": 1928,
+      "sha256": "4f97b049b18583887fc805cacbf514ba822350ff2f2452bb1d05f06ebd411157"
+    },
+    {
+      "path": "backend/tests/experiments/chat_worker_ab.py",
+      "bytes": 5583,
+      "sha256": "e64e601a67494e47e22372ac2f3b94beea770699ae9ee4b997c312bcde52491c"
+    },
+    {
+      "path": "backend/tests/experiments/chat_worker_ab_block.py",
+      "bytes": 20138,
+      "sha256": "bd17de169393908a9bd736409e9a7bbd21d3807e0b4bbc3ac4de81c6a277665a"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-baseline-50/cleanup.json",
+      "bytes": 241,
+      "sha256": "bce3d9545a54c5dcf304fe5575175fdf9c5169575cbd2e55ae67212c711a9ca0"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-baseline-50/result.json",
+      "bytes": 173355,
+      "sha256": "6b2483dc07dd7b7319b56bb5f106aaf8f858a72d12d1d2709ae6b2192b6a3023"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-baseline-repeat-50/cleanup.json",
+      "bytes": 241,
+      "sha256": "e6ccbd40a2e1ff01cb179dfb05405d86b2604e989e191a84bae03cd5f4e0988c"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-baseline-repeat-50/result.json",
+      "bytes": 173340,
+      "sha256": "b111cf050365097ef6ca232fa60a427f431b3112ef79c58daf43139a3e3baecf"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-baseline-summary.json",
+      "bytes": 4230,
+      "sha256": "7abeef0f4f392ef4e2f1d705317d4eaf3860037eb848a1811fb1aa7ba3b17041"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-concurrency-10-users/cleanup.json",
+      "bytes": 216,
+      "sha256": "c2808d7958ed473764a4b7450bb5310c2750dba30457ac47f1671188b143588e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-concurrency-10-users/result.json",
+      "bytes": 109968,
+      "sha256": "6dbe4b4d18301b159a9f03e73f5015d97adfad92264ad6cc8d53aebeb61781c0"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-idempotency-concurrency/cleanup.json",
+      "bytes": 217,
+      "sha256": "792ad9541f54101b77611754eaaeb573b45db1a85e4a6972f7af9ff240fd6a8a"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-idempotency-concurrency/result.json",
+      "bytes": 32380,
+      "sha256": "81b944322fd08d768edb76db766eba691c515773798cc66e2a083b675de1279f"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-singleflight-step1-02/cleanup.json",
+      "bytes": 213,
+      "sha256": "118385b6424df367e9023f67a6edb1e5e6ea1047b2d1d30e11bab5cea48014ec"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-singleflight-step1-02/result.json",
+      "bytes": 317476,
+      "sha256": "48eeab960f96764687b0d144f3720618231d474197929bbba0e1d1c249a9df44"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-waiters-http-step2-v2/cleanup.json",
+      "bytes": 377,
+      "sha256": "0b213007bcecc8b80bca8ac185bbfd2d7fbb75e380d9a61fec02f7c979578025"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-waiters-http-step2-v2/result.json",
+      "bytes": 321324,
+      "sha256": "e103ee4bd30cdd768e53cb0381eb2b4935c950540061d86213799efa9f770fde"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-waiters-step2-final-v2/result.json",
+      "bytes": 4162,
+      "sha256": "752e4787692727f40248b72d8242ac3f88e1c76b3147bfab58dd534d2f437250"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/0-persistent.json",
+      "bytes": 103956,
+      "sha256": "33666be84a45678e3f1564bd59870f7207a6d396db17a73d3e74b1e9413433fb"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/1-disposable.json",
+      "bytes": 102398,
+      "sha256": "2e21f186bb7d808138b5b43b0e2d3716a9681915e7eee9bf15229094677befa3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/2-disposable.json",
+      "bytes": 102388,
+      "sha256": "0c9b5b451fb42bd1280ddaf7fc4e57eda75e0283705ff9834f4932f5bc868791"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/3-persistent.json",
+      "bytes": 103935,
+      "sha256": "1ecdd504f57ef7947261cbd2cf7eaaa1b4b80f86f4eb3fcef043f9592faa1c66"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/cleanup.json",
+      "bytes": 423,
+      "sha256": "91808e09bcb70b082a660d8730654a212c6faa2d2a1c94bc258b820bd6faa839"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/environment-extra.json",
+      "bytes": 650,
+      "sha256": "05ae1722725849e91dfeb9418a2c0b35a6c57d85f570056df885cab1335ce2d6"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/result.json",
+      "bytes": 477961,
+      "sha256": "5f41f040a830f2a240fef0b36ca34bbf949c776e143e1e078494bf3580c384ab"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/cross-process-unit1/cleanup-retry.json",
+      "bytes": 235,
+      "sha256": "a39e50fe8fa1f3ab0671e95ee40960ddfdcc457c659672f80d44104bbb0e05ef"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/cross-process-unit1/result.json",
+      "bytes": 5769,
+      "sha256": "a702a3570df7b0c31c301ed7aa4d8c8a355eef6dc4cdfcca7572aecbdf0e9bfa"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/embedding-profile-final-30/additional-interval.json",
+      "bytes": 805,
+      "sha256": "d31e667ff7d796cc62075892d5505ff96e993e0d6b1da0e88cd00813a522c399"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/embedding-profile-final-30/instrumented_worker.txt",
+      "bytes": 6432,
+      "sha256": "e3da7e8e548e128d11b187847d082008a35d6b713cd2e124a742c3e6d6ee4e2f"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/embedding-profile-final-30/result.json",
+      "bytes": 93768,
+      "sha256": "eccd0accbeba2f0f4fc298aa16c2425a769d4c7a448fb5b2b3168c9b0d7f01c3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/coordination.cleanup.json",
+      "bytes": 323,
+      "sha256": "be1f396f7811b5836c7a3e7bae36ff3671d16b0bd4db704645100d61d4ad8a1e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/coordination/result.json",
+      "bytes": 11614,
+      "sha256": "9adb470c40c081426b2f4a38ef9555219179da92c4c38f9d6d2a34005818d5a9"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/hardware.json",
+      "bytes": 290,
+      "sha256": "e2da186939d903a05d63cdfbfa081f0058645cb258a220a7248428606f0f35bc"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/http.cleanup.json",
+      "bytes": 325,
+      "sha256": "0c96a4072e774c04b8a436091694e898f0aa9b071b579664cf8981f635a680e3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/http/analysis.json",
+      "bytes": 16532,
+      "sha256": "ecfb0569a1a03db94b383bc6916469681a80d1e9b083a70ca18f0df5822e390e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/http/result.json",
+      "bytes": 3267194,
+      "sha256": "9500f7e854a686401ec202c0075223ff145d85f77c286ad2e0dbe7eaa1208d79"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/result.json",
+      "bytes": 310,
+      "sha256": "80fa77802b1b7144daa6ce53e319ab9267029edcf03e542b628adb059d1acdc9"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/source.json",
+      "bytes": 9980,
+      "sha256": "ef45030e34251a7b0e3b7f3e8c846c0f5bd46e2474a48c86ef773fa73f90013d"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/final-load-01/verification.json",
+      "bytes": 4716,
+      "sha256": "33e4ad63c9da02e8d390b0afaf80d42cdb04f1eff9a56a4057b5dbc3a99251c7"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/persistent-actual-pid-check/result.json",
+      "bytes": 2177,
+      "sha256": "b81a98a6b6e4770babb735cc4c619ca338903e6b64381e8a6f8cb140621f0d2a"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/persistent-integration-step1-04/result.json",
+      "bytes": 4618,
+      "sha256": "a9e8dfd684c2c218b691f6ad9d7b1da090bf3abfbd0084d418502bb89e6dae63"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/persistent-poc-30-1000/result.json",
+      "bytes": 51447,
+      "sha256": "59c51a2325354caf18524c7cf3ef3d73ff187200cdf7821b5b64a49ae6c9ee60"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/coordination.cleanup.json",
+      "bytes": 323,
+      "sha256": "be1f396f7811b5836c7a3e7bae36ff3671d16b0bd4db704645100d61d4ad8a1e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/coordination/result.json",
+      "bytes": 11614,
+      "sha256": "609dcd3d55ae14723f7f9e7ac3a6edd8296a66345e66050a00522a470eee1c71"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/http.cleanup.json",
+      "bytes": 324,
+      "sha256": "5cfdb2e09b4c1b9aed2f6c3a8d5f56292d8885a7fc8f909e4b8e1032a21a0829"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/http/result.json",
+      "bytes": 54425,
+      "sha256": "bf4673d738a9988a4500901d97053d194bd2a5dbab8e1c887a29dd9bce2bf349"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/result.json",
+      "bytes": 310,
+      "sha256": "b8ba39d24f65530d350364491c0738b75de56dfc945f26329c72d48283a9a62c"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/row-lock/result.json",
+      "bytes": 5567,
+      "sha256": "b306854f67156837778574d1008c0afc233eb05be580e152ac64230a119e8cff"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/scope-scan.json",
+      "bytes": 1535,
+      "sha256": "4e890c1a7aeed67ad1e596bcc0098b048bf9a9a4bfbbf78234a4044797293c67"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/phase3-closure/verification.json",
+      "bytes": 1684,
+      "sha256": "7fc580f1d892dd20f7a0ebe4019f19c6458930d76bc8aea1c59c6afe394e659a"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/pool-lifecycle-ab/cleanup.json",
+      "bytes": 241,
+      "sha256": "2643b1abfb55f6c2b0213dafba4d3cdf858e8591a3366318f40f096153a3e75f"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/pool-lifecycle-ab/result.json",
+      "bytes": 10552,
+      "sha256": "35ebdfe6621057835cc5d88f0a8cb6c1d153ddc8bd109a83b7947a166e49a4d0"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-concurrency/analysis.json",
+      "bytes": 4015,
+      "sha256": "7fd1853e6cdd86bf153f059d3be913661566e496a373335183e07ccb47770dc0"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-concurrency/hardware.json",
+      "bytes": 299,
+      "sha256": "07cd6267edce7ab73557ec71221e795c9f0cb1313c59d2005170e7d2e16e3047"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-concurrency/result.json",
+      "bytes": 1283750,
+      "sha256": "7eb0bc6cdd65d791656f68a56bf5f7f6247c29431ce007675bb4af55bf13717d"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-failure-isolation/confirmed.json",
+      "bytes": 20928,
+      "sha256": "53b6bb1d0b14dbecbdec70d823b0aaf4ea55cce2926efa966ddc6fbe52e80071"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-failure-isolation/repeated.json",
+      "bytes": 20929,
+      "sha256": "b3f663e29fbf664440045c9c2e344071ba60f1659d1fbf14b84643433cec4db6"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-failure-isolation/result.json",
+      "bytes": 19141,
+      "sha256": "46c644139b27a0aeaac49481e367c6ca17e45b758d78a104b1c7d96533a0d91c"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/postgres-regression-verified/result.json",
+      "bytes": 250,
+      "sha256": "7d5f28ffe2e39a74014fca42fb746e1f3bbb65f9a777ee77dad12dde7f30b3ee"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/postgres-regression/result.json",
+      "bytes": 249,
+      "sha256": "42fd935380a646b7a26187d69203a1386b58f8443d7c7caf9c5414fea252e2a3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/run1.json",
+      "bytes": 26318,
+      "sha256": "b7e612cfbd3fe1aad681f8d3812a635fd23c1fae970d59677f6b8d0af07746f6"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/run2.json",
+      "bytes": 27655,
+      "sha256": "db8bcd57cb528c3072de37ebf4f3249d94d833c922c48a54fcc40585b2e2d052"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/run3.json",
+      "bytes": 27640,
+      "sha256": "5e69f1d5d75b0a85a80ada4f766f07db6dcd71d7316e501d2462e34d9f12dc9d"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/source-manifest.json",
+      "bytes": 682,
+      "sha256": "3359e71b76eae94a9139f31def2f629fe37e3e6591ccec828c33e4925c060307"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/provider-isolation-fix/verification.json",
+      "bytes": 473,
+      "sha256": "9f7695efac14fc0c93fba4a11db8d94e6bac7401a2820e0d04258fc3695fa8de"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/query-supervisor-step2/result.json",
+      "bytes": 4005,
+      "sha256": "548059d52cfa9c820c23fee4db6ec89a3e088f820ac6f23e3e1a164f9947acdf"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/restart-policy-step25-03/result.json",
+      "bytes": 7397,
+      "sha256": "cbd1f6503192489db234c5770be9968204aab42e31275caca963bc0b983bc7b3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/restart-policy-step25-validation.json",
+      "bytes": 796,
+      "sha256": "c251a6965a15e944ba5450adbf57ee27009aa3d024d7d736a6b3f64b424d0a32"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/row-lock-different-users/result.json",
+      "bytes": 6071,
+      "sha256": "959152cd05de60313a14e73463b5008b64daa237347ee3f2888c5e9f5a05029b"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/row-lock-same-user/result.json",
+      "bytes": 5545,
+      "sha256": "4bad3a2372501da42874fd47beabfe2deecfc51605df7348c8ad7c8a5ecb7d6f"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/row-lock-single-worker/cleanup.json",
+      "bytes": 241,
+      "sha256": "39bbbecf7a716d7bc9eb7391432355b37a6526362197c3eb0300d26bb1466c13"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/row-lock-single-worker/result.json",
+      "bytes": 4578,
+      "sha256": "9752feb464bd24b6b6f063cf40938adaad735131da6b43920d8c6224549acfc6"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/coordination.cleanup.json",
+      "bytes": 324,
+      "sha256": "c36eb165591c55769b298e9af62e586db357a720c67d0a126fff5aafea5e867b"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/coordination/result.json",
+      "bytes": 11614,
+      "sha256": "97a9e66e39283ac2f5703251ff4f40df95bfcf5b80e8a6f2b730079f1ad8fa27"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/http.cleanup.json",
+      "bytes": 324,
+      "sha256": "5cfdb2e09b4c1b9aed2f6c3a8d5f56292d8885a7fc8f909e4b8e1032a21a0829"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/http/analysis.json",
+      "bytes": 3199,
+      "sha256": "bf34f6049abdb7f1c3d880f5a40376f17010a859b1000199b2c71128b44a237b"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/http/result.json",
+      "bytes": 52043,
+      "sha256": "9f2f1c9e17f76ff47a4c4254ea306476ba09b76554db3ec4193817d1b96fd7f9"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/result.json",
+      "bytes": 277,
+      "sha256": "bfff48921d26c91a4200c82b656b42682875dd2e79d318601ad30e30e147b5a9"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-final/verification.json",
+      "bytes": 799,
+      "sha256": "d83d5a28100625512bff11d3ee9f94505bd5da50d70097b8a3e0c6f21ded802e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run3/coordination.cleanup.json",
+      "bytes": 323,
+      "sha256": "be1f396f7811b5836c7a3e7bae36ff3671d16b0bd4db704645100d61d4ad8a1e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run3/coordination/result.json",
+      "bytes": 9169,
+      "sha256": "399fea5ef7e5a335ea624efee367d4f21cfcc3c4e261e5d640757d82957d2284"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run3/http.cleanup.json",
+      "bytes": 325,
+      "sha256": "5d41db99d994c37e33fc05a2b17ada78f4fffb0910d35afed3146f95e491fb63"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run3/http/analysis.json",
+      "bytes": 3031,
+      "sha256": "353be127f3139369f3b0d645e678dca170e3da2933a4fdb593b63531cfd13448"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run3/http/result.json",
+      "bytes": 50060,
+      "sha256": "1845edb804e6c40fdc97f2e27afa338d35f0d20c068924ee2ed1a09d95d20c8b"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run3/result.json",
+      "bytes": 309,
+      "sha256": "5a0825f4121dcea4a47e318b376e3226733605de2145160ec61012e514135e5d"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-coordination-step1-final/cleanup.json",
+      "bytes": 369,
+      "sha256": "ab83d8c3bb6eed645e1cad906649154f8d75ae863c7a7ca5b52a0dfe8dbbb634"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-coordination-step1-final/result.json",
+      "bytes": 9169,
+      "sha256": "2c9669423f510a26ea6f0d04e73cc4ff9e7821bc1ae2cf13fce9d8745176a134"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-singleflight-regression/result.json",
+      "bytes": 322104,
+      "sha256": "2a188675cfd2aea80a91497de4205f7247c9bf886ba3e1dc434a8b797da60853"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-workspace-regression/result.json",
+      "bytes": 46154,
+      "sha256": "0c9519294832eaa21f226da58b5d2ebc75770b7ebb3dce802c016bbcada147f1"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/0-hang/result.json",
+      "bytes": 14489,
+      "sha256": "0645c2aa076396cf883781fefc138e6462faa973e275bd9305cd4d5e6442509b"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/0-normal/result.json",
+      "bytes": 14823,
+      "sha256": "656aeb7121c880c00c9e1c7ed8a6d64c5ae6456699bb6f620f58b6b113494ce7"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/0-parent_kill/result.json",
+      "bytes": 13832,
+      "sha256": "34a16363005e95fd6ffddff40d319f59fff90c0e0f1c2d8a368b85d9a065ebb8"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/0-termination_timeout/result.json",
+      "bytes": 15194,
+      "sha256": "92579601b29be518f9c983a38be902296efe1f02695f7143f033cc19dbcfaf40"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/1-hang/result.json",
+      "bytes": 14489,
+      "sha256": "734d7579f8e55213d359815d2996e5e09af86776bc5f5c0633a3bb22961050f3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/1-normal/result.json",
+      "bytes": 14823,
+      "sha256": "c32f972d2db2120f5d1569e77ef7788824fafef4c9f3dbdf5a3cedb9ec6466ba"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/1-parent_kill/result.json",
+      "bytes": 13830,
+      "sha256": "03f2d1b01d689a8ef4ad14964b45563cfe04d9645e4ffe500b8647a4636da797"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/1-termination_timeout/result.json",
+      "bytes": 15193,
+      "sha256": "e8b3e9ef381bfadb2ba516e8c3ff46efa7ce32f389f2e5d537dd453093d37fcd"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/2-hang/result.json",
+      "bytes": 14491,
+      "sha256": "da154851c2f1fbc8baf20fbdd07d2a417f87ebc73c6ef543fe23b7fe8193762f"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/2-normal/result.json",
+      "bytes": 14817,
+      "sha256": "85175bbf5a7df3850873c010ebe0b05b102ee3a60832aef4649a5a41d7217ccb"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/2-parent_kill/result.json",
+      "bytes": 13830,
+      "sha256": "e0d5aade326ffa9bf5836c0a22b287a4b6a95f8893275776ddd9ef710e1bc506"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/2-termination_timeout/result.json",
+      "bytes": 15197,
+      "sha256": "731b11ece79dd9cec2a698d4c2d26513d6b077eeb54af7e643497ba1468b3253"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final-02/result.json",
+      "bytes": 199732,
+      "sha256": "7612975411eea18dce8a376d82374abf3edfb809e59ef4fc0d8584f1455393bf"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/workspace-creation-unit1.json",
+      "bytes": 4546,
+      "sha256": "ca68fa8ff85a2778b2f6c6101ca9a55366cf1ee806b95e137562066a52d865b8"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/workspace-lifecycle-singleflight/result.json",
+      "bytes": 321676,
+      "sha256": "7c3b0d33216a25ecc0a22506a658137a25b72ca2e0d91c76fa3f3a8434d84bf5"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/workspace-lifecycle-step1/cleanup.json",
+      "bytes": 368,
+      "sha256": "d4b2ba21db912956c5f90ed2eea24724ff5a5711cfb510155c936629fb28f959"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/workspace-lifecycle-step1/result.json",
+      "bytes": 45751,
+      "sha256": "d2676ccc1b5639a32785866c74fdd7b128f032b3a247f5d85b5519afc95d1ad8"
+    },
+    {
+      "path": "backend/tests/experiments/final_load_workload.py",
+      "bytes": 5390,
+      "sha256": "7f921517bd0f8dc2ef04c0dce379563b4e5c1329f1c782c5d4ecc52f8a8d60e0"
+    },
+    {
+      "path": "backend/tests/experiments/persistent_embedding_child.py",
+      "bytes": 3285,
+      "sha256": "b9a4ebe7bc6f00efb1140dc4863ba8bdb1e776963e6e5a6b300bbf3e01c634dc"
+    },
+    {
+      "path": "backend/tests/experiments/persistent_embedding_poc.py",
+      "bytes": 11916,
+      "sha256": "7e439c111f41f4c08a64c4eac4cbf3f9bdf171e6bc86b8e0de5ee08ed03545f2"
+    },
+    {
+      "path": "backend/tests/experiments/persistent_failure_check.py",
+      "bytes": 2683,
+      "sha256": "02829a407c06ce85a8b6fa99abb26d66e4432ce7ce11ee04725f412833dee216"
+    },
+    {
+      "path": "backend/tests/experiments/persistent_query_integration.py",
+      "bytes": 9558,
+      "sha256": "b63cf70f80e24179592c987107ea72b403e8d2bab7a28b8abe17c2306dcbd437"
+    },
+    {
+      "path": "backend/tests/experiments/pool_index_lifecycle.py",
+      "bytes": 9046,
+      "sha256": "5e4f11abdd51b4d76268d11dec90800be9804fd157abe076bf443fe84e361f9a"
+    },
+    {
+      "path": "backend/tests/experiments/profile_embedding_worker.py",
+      "bytes": 10915,
+      "sha256": "a29df7cfb71d6398f4fcc92e02aacf1984e2c463535d518387b8561a4e53a85f"
+    },
+    {
+      "path": "backend/tests/experiments/provider_concurrency.py",
+      "bytes": 13563,
+      "sha256": "c750d149876286ddea6ea0b1109b7206f27cda78d0a18027d0fb6d456d4c87f9"
+    },
+    {
+      "path": "backend/tests/experiments/provider_failure_isolation.py",
+      "bytes": 16980,
+      "sha256": "bb687e750ac24d19e3b5a326759b07d935d5fcce45f43ce183c1dfcbb440d990"
+    },
+    {
+      "path": "backend/tests/experiments/provider_fix_regression.py",
+      "bytes": 2601,
+      "sha256": "889be322df4c89e47c14e4e9ec07c79487e7ffc7a4fffb7c39564a5b5880fe4f"
+    },
+    {
+      "path": "backend/tests/experiments/query_supervisor_recovery.py",
+      "bytes": 12960,
+      "sha256": "80e1dda9c5ae8da63b39cd199105200967e101d98e3b1b3a787622f5b9148668"
+    },
+    {
+      "path": "backend/tests/experiments/restart_policy.py",
+      "bytes": 5906,
+      "sha256": "1d78159adf8f37810b2913084bcb7b440681bd8a93513a81eac32d01b65d3def"
+    },
+    {
+      "path": "backend/tests/experiments/run_final_load.py",
+      "bytes": 4923,
+      "sha256": "6194423f8209e80190aae8da3ed57ea5945fec516fb75bfc82f7b34dfa5e37c8"
+    },
+    {
+      "path": "backend/tests/experiments/run_session_chat.py",
+      "bytes": 4811,
+      "sha256": "a3c99699c5888ef1484f2e4d9c706d48fa98d25dc8104848facd1fef635ccdf6"
+    },
+    {
+      "path": "backend/tests/experiments/run_single_worker.py",
+      "bytes": 2250,
+      "sha256": "e610f290a3df67ffbb6b242f09fdfcf9e005fda46b214846d9d680627590c991"
+    },
+    {
+      "path": "backend/tests/experiments/session_chat_analysis.py",
+      "bytes": 3654,
+      "sha256": "c39e59b5ea57685d559c2e197b8a79eaaa57cd9c2a6c1fbcaf8bd3f8b5310e2f"
+    },
+    {
+      "path": "backend/tests/experiments/session_chat_concurrency.py",
+      "bytes": 21666,
+      "sha256": "4a17827e281bde5f32b8f28eee585d96b39071cfe0bf887b6414669676e41346"
+    },
+    {
+      "path": "backend/tests/experiments/session_coordination.py",
+      "bytes": 14798,
+      "sha256": "090ced7f752d5f901a2c294c4bce93ec7153a33bffccd3e2959efd9b46dd543c"
+    },
+    {
+      "path": "backend/tests/experiments/summarize_chat_baseline.py",
+      "bytes": 1595,
+      "sha256": "05858f069223d0f8094bc57661ee2e6a2ec4229d3c07503704374da54270dd03"
+    },
+    {
+      "path": "backend/tests/experiments/windows_worker_job.py",
+      "bytes": 7347,
+      "sha256": "c0563a44724f7c3093fe9b1fa64495b20c41960dd5b6ce864205bf6beb90529f"
+    },
+    {
+      "path": "backend/tests/experiments/worker_lifecycle_isolation.py",
+      "bytes": 13732,
+      "sha256": "9ded745f402b7d0297ee12d9e504af9a8afe56b4be49522d07ef7fd32704ecdf"
+    },
+    {
+      "path": "backend/tests/experiments/workspace_concurrency_pg.sh",
+      "bytes": 1078,
+      "sha256": "b82aeb92233061cb1f115f6fd0df51c76b298d2c30856923f999b5f14a989130"
+    },
+    {
+      "path": "backend/tests/experiments/workspace_creation_concurrency.py",
+      "bytes": 9294,
+      "sha256": "7561aea3a626573824b63b7dc921e1f3942878d08f69c33039d187b215f5c458"
+    },
+    {
+      "path": "backend/tests/experiments/workspace_cross_cleanup.sh",
+      "bytes": 502,
+      "sha256": "d7bae792fc4f76ac526925049b6f4a50e1024d1f59f772167ae0c79f69278e8b"
+    },
+    {
+      "path": "backend/tests/experiments/workspace_cross_process.py",
+      "bytes": 15016,
+      "sha256": "6d14462077d2953b69b835ebb38cd1422dd6f8765fec5524bc914ccaf3ed150c"
+    },
+    {
+      "path": "backend/tests/experiments/workspace_lifecycle.py",
+      "bytes": 16006,
+      "sha256": "6a30834955b562e00a6f548ee611cd9c86e16791e80851e82a4f83a96d1c43f2"
+    }
+  ],
+  "retain_local": [
+    {
+      "path": "backend/tests/experiments/evidence/chat-singleflight-step1/result.json",
+      "bytes": 104127,
+      "sha256": "72b7ec228c3a76366d229acd05c87e4811faf52eedbf99c1a06b18210b2761a4"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-waiters-http-step2/result.json",
+      "bytes": 321331,
+      "sha256": "829b0966ac0cb3bf2f1d4d0e465da1c9525b1e1c5c2170da5035b362ba063919"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-waiters-step2-final/result.json",
+      "bytes": 4162,
+      "sha256": "752e4787692727f40248b72d8242ac3f88e1c76b3147bfab58dd534d2f437250"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-waiters-step2/result.json",
+      "bytes": 4020,
+      "sha256": "85fda7bc99985e8306fee275a34c971bb79c14be9383c7f37bb9348ab08575b7"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-50/initial-summary.json",
+      "bytes": 469524,
+      "sha256": "20ae970efaa8533dfa9a1d642ab73c90d45cbe0e58f7b30accd5739dd47a4754"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-pilot-02.json",
+      "bytes": 6300,
+      "sha256": "abacac3bfe4b708c00f0a686749ad8ab04437f410d76425c1f39bd8e2ea4c4b9"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-pilot-03.json",
+      "bytes": 4148,
+      "sha256": "4c41f21d7f7d3457cc76ae74ca63ee5183b2b572fa7926f0d2312c6f3cd04d23"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-pilot-04.json",
+      "bytes": 4150,
+      "sha256": "8f542b92fbbdaaabb19a5cf47fefe753b1c06bcad753b6a4e2f131bbda78df03"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-pilot-05.json",
+      "bytes": 27685,
+      "sha256": "7d36dfeda29fb5615102b979070d42c49b72b17ab7557e940749568ce4c18de8"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/chat-worker-ab-pilot.json",
+      "bytes": 8983,
+      "sha256": "2d2bcf5230464267c0140741d25611c907260e9f5047e5196ddfc051fc035d81"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/embedding-profile-30-retry/instrumented_worker.txt",
+      "bytes": 6432,
+      "sha256": "e3da7e8e548e128d11b187847d082008a35d6b713cd2e124a742c3e6d6ee4e2f"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/embedding-profile-30-retry/result.json",
+      "bytes": 20363,
+      "sha256": "44a4d1eae18dc408a43000a2e1c3fad6e57b78a3d8e878781c7152ce6b5a6642"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/embedding-profile-30/result.json",
+      "bytes": 595,
+      "sha256": "9cdd3b92b53830c4e6d8b728b9ac5f7a041e19d75dfdcd2a95407f6787307d42"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/persistent-integration-step1-02/result.json",
+      "bytes": 3588,
+      "sha256": "af9fa8e4b32e817eae1641cefd4462723e2895623c0035ad531ea7d05436968e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/persistent-integration-step1-03/result.json",
+      "bytes": 3588,
+      "sha256": "52f4ab55681623071292e6a429b6d6aecf3bd916d94fcb97fcb62a2ede254647"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/persistent-integration-step1/result.json",
+      "bytes": 458,
+      "sha256": "d1b54b50356833a7dc30dce8f498689447f288ec7f34b8e043c67e7e91d7f522"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/restart-policy-step25-02/result.json",
+      "bytes": 6257,
+      "sha256": "19ced49fb7846b2e3e94dd4392fdb40de254d5b0a36d25956cddd0c594fa3408"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/restart-policy-step25/result.json",
+      "bytes": 5836,
+      "sha256": "915cb0554185a3f57daaac0b147f7bbd6f0a18f7cf8ca9aad9151d90728c0829"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run1/http.cleanup.json",
+      "bytes": 324,
+      "sha256": "45ed5e680efcc7ccbca3d8fde6ad07535697b5c646363b87b9bff9a0e481dca5"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run1/http/result.json",
+      "bytes": 776,
+      "sha256": "503442be0155602f2142b9159cdd24f9850c6685d502162b8dc84e6f61a512f3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run1/result.json",
+      "bytes": 227,
+      "sha256": "7ea7edf178107a2490e09d83e806c9312063b184df95a99a805287be2aca38c3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run2/http.cleanup.json",
+      "bytes": 324,
+      "sha256": "45ed5e680efcc7ccbca3d8fde6ad07535697b5c646363b87b9bff9a0e481dca5"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run2/http/result.json",
+      "bytes": 820,
+      "sha256": "28a2c203dfb5b88691f02189e1bc7de0200405f72e5ec5c2868df3e7ed22366c"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-chat-stage2-run2/result.json",
+      "bytes": 227,
+      "sha256": "667d79011a735b51faad22ad4725d31325b4e941f77444f55ec086447c0cf2b1"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/session-coordination-step1/result.json",
+      "bytes": 9061,
+      "sha256": "4bb0af92b978607446c9c9c88b133ddc3e1ffb63561258d5fa429a7acdf18325"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-01/0-normal/result.json",
+      "bytes": 12500,
+      "sha256": "55c869a7adede9d0869ce8b949261e3541a2833eff00ff856d42d8164fd20fe8"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-01/result.json",
+      "bytes": 1118,
+      "sha256": "5b5419a45bc982f282a283fe0b2d0c1f5a9d7b048a757367a0d530e37cc8b10e"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-02/0-normal/result.json",
+      "bytes": 13069,
+      "sha256": "6c92c9796af8f8b6cc75b4c7db16a2be9e519252f11913860ef96f58a05ca7e3"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-02/result.json",
+      "bytes": 908,
+      "sha256": "f22c8baae589bf25478445d2e37340d45f8ff9419b0bcd332f5c9e91ef927df9"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-03/0-hang/result.json",
+      "bytes": 13861,
+      "sha256": "53d5bffaf141d9a60ef008b81417df786118a4a537875ff5909d265ddd7b177b"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-03/0-normal/result.json",
+      "bytes": 14190,
+      "sha256": "f46b4982a0c7541df502026de6f7b8df060d099d72a03b95d3f47241482a03d4"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-03/0-parent_kill/result.json",
+      "bytes": 13205,
+      "sha256": "4e94e12937d891df651ff4999678cb5b06a28ed68c752d624fa96d0d266cbf08"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-03/0-termination_timeout/result.json",
+      "bytes": 14565,
+      "sha256": "6b06e1d58852c376893904a0470cb9837254f2c312f55cc9a8a9445ef6987bf6"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-03/result.json",
+      "bytes": 64257,
+      "sha256": "a56f08fa87f95c11c423de289022d007c2523541af034c36f0e6ca0505d132fe"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final/0-normal/result.json",
+      "bytes": 12569,
+      "sha256": "261ba1947d67c16b909a5ed41f9e5f757445bca055e192076053cf87f51cd506"
+    },
+    {
+      "path": "backend/tests/experiments/evidence/worker-lifecycle-job-final/result.json",
+      "bytes": 1460,
+      "sha256": "f2526a9e010cada090101e591d33e4722ea44b406489f39fc99e6c8b1107a7b6"
+    }
+  ],
+  "excluded_by_existing_gitignore": [
+    ".env",
+    "data/",
+    ".local/",
+    "*.log",
+    "venv and cache files"
+  ],
+  "note": "Manifest excludes its own hash; no files deleted. Recompute hashes before staging. Logs remain local; verification JSON records result and digest.",
+  "manifest_itself": "backend/tests/experiments/evidence/phase3-closure/commit-manifest.json belongs to commit_2; no self hash"
+}

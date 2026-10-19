@@ -1,0 +1,189 @@
+{
+  "head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "events": [
+    {
+      "sequence": 1,
+      "elapsed_seconds": 0.547,
+      "event": "seed_committed",
+      "count": 99
+    },
+    {
+      "sequence": 2,
+      "elapsed_seconds": 0.594,
+      "event": "http_send",
+      "request": "A"
+    },
+    {
+      "sequence": 3,
+      "elapsed_seconds": 0.813,
+      "event": "session_open",
+      "request": "A",
+      "session": "d6bca87b23444b99ae5a89d076804351",
+      "backend_pid": 468,
+      "isolation": "read committed"
+    },
+    {
+      "sequence": 4,
+      "elapsed_seconds": 0.813,
+      "event": "workspace_count_returned",
+      "request": "A",
+      "count": 99
+    },
+    {
+      "sequence": 5,
+      "elapsed_seconds": 0.813,
+      "event": "http_send",
+      "request": "B-held"
+    },
+    {
+      "sequence": 6,
+      "elapsed_seconds": 0.985,
+      "event": "session_open",
+      "request": "B-held",
+      "session": "0aa8b3e1d31f4145ac4117233b06fb1b",
+      "backend_pid": 469,
+      "isolation": "read committed"
+    },
+    {
+      "sequence": 7,
+      "elapsed_seconds": 0.985,
+      "event": "session_dependency_exit",
+      "request": "B-held",
+      "session": "0aa8b3e1d31f4145ac4117233b06fb1b"
+    },
+    {
+      "sequence": 8,
+      "elapsed_seconds": 0.985,
+      "event": "http_response",
+      "request": "B-held",
+      "status": 429,
+      "body": {
+        "detail": "A document operation is already running. Please try again shortly."
+      }
+    },
+    {
+      "sequence": 9,
+      "elapsed_seconds": 0.985,
+      "event": "database_snapshot",
+      "label": "A_held",
+      "count": 99,
+      "created": []
+    },
+    {
+      "sequence": 10,
+      "elapsed_seconds": 0.985,
+      "event": "release_signal"
+    },
+    {
+      "sequence": 11,
+      "elapsed_seconds": 0.985,
+      "event": "A_released"
+    },
+    {
+      "sequence": 12,
+      "elapsed_seconds": 0.985,
+      "event": "commit_start",
+      "request": "A"
+    },
+    {
+      "sequence": 13,
+      "elapsed_seconds": 1.0,
+      "event": "commit_done",
+      "request": "A"
+    },
+    {
+      "sequence": 14,
+      "elapsed_seconds": 1.016,
+      "event": "session_dependency_exit",
+      "request": "A",
+      "session": "d6bca87b23444b99ae5a89d076804351"
+    },
+    {
+      "sequence": 15,
+      "elapsed_seconds": 1.016,
+      "event": "http_response",
+      "request": "A",
+      "status": 200,
+      "body": {
+        "id": "a6397e28-0adf-40e2-87c6-017eac6fb3d3",
+        "name": "A",
+        "created_at": "2026-10-16T03:50:33.708544+11:00"
+      }
+    },
+    {
+      "sequence": 16,
+      "elapsed_seconds": 1.031,
+      "event": "database_snapshot",
+      "label": "after_A",
+      "count": 100,
+      "created": [
+        "A"
+      ]
+    },
+    {
+      "sequence": 17,
+      "elapsed_seconds": 1.031,
+      "event": "http_send",
+      "request": "B-retry"
+    },
+    {
+      "sequence": 18,
+      "elapsed_seconds": 1.172,
+      "event": "session_open",
+      "request": "B-retry",
+      "session": "562dec975e624cf1b7f6f406f23dd1aa",
+      "backend_pid": 473,
+      "isolation": "read committed"
+    },
+    {
+      "sequence": 19,
+      "elapsed_seconds": 1.172,
+      "event": "workspace_count_returned",
+      "request": "B-retry",
+      "count": 100
+    },
+    {
+      "sequence": 20,
+      "elapsed_seconds": 1.172,
+      "event": "session_dependency_exit",
+      "request": "B-retry",
+      "session": "562dec975e624cf1b7f6f406f23dd1aa"
+    },
+    {
+      "sequence": 21,
+      "elapsed_seconds": 1.172,
+      "event": "http_response",
+      "request": "B-retry",
+      "status": 409,
+      "body": {
+        "detail": "Maximum 100 workspaces"
+      }
+    },
+    {
+      "sequence": 22,
+      "elapsed_seconds": 1.188,
+      "event": "database_snapshot",
+      "label": "after_B_retry",
+      "count": 100,
+      "created": [
+        "A"
+      ]
+    }
+  ],
+  "passed": true,
+  "workers": 1,
+  "database": {
+    "data_directory": "/tmp/asteria-concurrency-20261016-unit1a/pgdata",
+    "name": "workspace_concurrency_test",
+    "port": 55489,
+    "version": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit",
+    "default_isolation": "read committed"
+  },
+  "final_state": {
+    "count": 100,
+    "created": [
+      "A"
+    ]
+  },
+  "api_stopped": true
+}

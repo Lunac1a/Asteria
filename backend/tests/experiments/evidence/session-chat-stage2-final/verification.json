@@ -1,0 +1,18 @@
+{
+  "ruff": "passed",
+  "head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "diff_check": "passed",
+  "tests": {
+    "skipped": 1,
+    "run": 303,
+    "result": "OK",
+    "seconds": 200.274
+  },
+  "source_hashes": {
+    "backend/app/services/knowledge/query_supervisor.py": "451F59C25EF3698B4875876876BC442697D59E4CCD71E8BF017D99220EFC4A31",
+    "backend/app/api/routes/chat.py": "2B3AADD6A840E1322EA39DFB012A424ED19A2CAACC42D5CEB4CCF3D759F3B6BF",
+    "backend/app/services/llm/process.py": "8D2ADB207BDF314229F12016DFB427BCD54897B4EA1C2FD2AAE6D6D4DA28D6CD",
+    "backend/app/core/config.py": "406B76B8CAA7A197C3A0C62E41AE81DDCCFD856DE01F05FDC4E7249C2CA7219C",
+    "backend/app/services/chat/capacity.py": "6FF471765119C90F043A0933204DE1F3F3EB4FBBB1B9AA4B763D80B89C4B14C9"
+  }
+}

@@ -1,0 +1,91 @@
+Asteria Phase 3 / Unit 1 — Cross-Process Workspace Race
+Date: 2026-10-16 (Australia/Sydney)
+HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b
+
+VERIFIED OBSERVATIONS
+One deterministic experiment reproduced the cross-process quota race.
+Fresh PostgreSQL 16.15 cluster, unique /tmp/asteria-concurrency-cross-* path,
+loopback port 55489, database workspace_concurrency_test. Exact PGDATA,
+database name and empty public schema verified before creating synthetic data.
+No development database or real users were used.
+
+                            Request A          Request B
+FastAPI OS process PID      27996              39916
+HTTP loopback port          2180               2186
+PostgreSQL transaction PID  441                440
+Actual isolation           READ COMMITTED     READ COMMITTED
+COUNT before release       99                 99
+INSERT affected rows       1                  1
+COMMIT                     succeeded          succeeded
+HTTP result                200                200
+
+One synthetic user started with 99 workspaces. Each child ran one Uvicorn
+server/worker and imported its own unchanged document_slot. Both real HTTP
+requests reached the test checkpoint after the real COUNT completed and
+before returning that value to create_workspace. The parent verified both
+checkpoints and both counts before setting the shared multiprocessing Event.
+An independent connection observed 99 rows while both were paused.
+
+After release, both INSERTs and COMMITs succeeded. An independent connection
+(PostgreSQL PID 445 in postgres.log) observed 101 rows, including distinct A
+and B IDs matching the HTTP responses. No 429 or quota 409 was returned.
+
+CONCLUSION AND SCOPE
+The 100-workspace quota can be exceeded by two independent FastAPI processes
+under this tested READ COMMITTED interleaving. Each request passes its own
+process-local semaphore; this does not mean either request disabled or skipped
+the decorator. The experiment establishes an actual cross-process race, not
+only a theoretical possibility. No production fix was attempted.
+
+LIMITATIONS
+One forced interleaving; not a frequency estimate, stress test, or benchmark.
+Two separate loopback endpoints; load balancing was not tested. Default
+connection pooling was replaced with NullPool for distinct DB connections.
+Only the get_db dependency and test instrumentation were replaced: production
+auth, recovery gate, route, semaphore and quota code remained unchanged.
+READ COMMITTED was explicitly selected and verified in each request.
+Maintenance mode and Startup Recovery were disabled and asserted in each child.
+No external writers, other isolation levels, crash/retry paths, indexing,
+deletion, or recovery operations were tested or authorized by this result.
+No conclusion is drawn here about whether changing the supported single-worker
+architecture or adding database locks is necessary.
+
+BOUNDS AND CLEANUP
+Cross-process Event synchronization; no sleep-based race generation.
+Checkpoint wait 20s; controller checkpoint deadline 15s; HTTP timeout 30s;
+database connect/statement/lock limits 5s/8s/4s; API startup 20s;
+graceful shutdown 5s plus parent join/termination limits.
+Both API processes exited normally (exit code 0, no forced termination).
+Raw PostgreSQL SQL log was archived BEFORE database shutdown.
+Initial cleanup failed with 'set: Illegal option -' because Windows text-mode
+stdin converted shell-script newlines. This was a test-harness cleanup error,
+not an application or PostgreSQL concurrency failure. Initial result.json and
+cleanup.log are preserved unchanged. Cleanup now uses a saved LF shell file.
+cleanup-retry.json records successful PostgreSQL stop and removal of the exact
+owned temporary cluster (exit 0). No test cluster or API process remains running.
+No production business logic, semaphore capacity, or quota mechanism changed.
+
+RETAINED EVIDENCE (relative to this report)
+evidence/cross-process-unit1/result.json
+  Real event order, both process/PID identities, counts, INSERT/COMMIT outcomes,
+  HTTP bodies, final DB rows, production source hashes and initial cleanup error.
+evidence/cross-process-unit1/postgres.log
+  Raw SQL evidence including both requests' COUNT, INSERT and COMMIT.
+evidence/cross-process-unit1/cleanup-retry.json
+  Final successful cleanup; supersedes initial cluster_cleanup_ok=false only.
+evidence/cross-process-unit1/setup.log and cleanup.log
+  Original setup and initial cleanup outputs.
+
+REPRODUCE (PowerShell from repository root)
+Historical pre-fix reproduction requires the original production source at the
+HEAD above and --mode race. Do not use the dual-COUNT barrier on the row-lock
+fix: the second COUNT correctly cannot run until the first transaction ends.
+For current verification, see ROW_LOCK_FIX_REPORT.txt and use --mode same-user
+or --mode different-users (same-user is now the default).
+
+Use a new evidence directory every time. Requires WSL Ubuntu-24.04, network
+access to download PostgreSQL Ubuntu packages, and unused loopback port 55489.
+The runner creates a unique cluster and two spawned Python API processes,
+archives raw SQL, stops the processes and removes only its own cluster.
+If interrupted outside normal Python cleanup, inspect result/cleanup evidence
+and invoke workspace_cross_cleanup.sh with that run's exact owned cluster path.

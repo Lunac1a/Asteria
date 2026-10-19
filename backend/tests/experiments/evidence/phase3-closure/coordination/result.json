@@ -1,0 +1,189 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "parallel_learning_sessions",
+      "statuses": [
+        200,
+        200
+      ],
+      "independent_learning_revisions_and_notes": true
+    },
+    {
+      "case": "chat_then_learning",
+      "statuses": [
+        200,
+        409
+      ],
+      "waiting_references": {
+        "bdd43c74-dbc1-4a3b-abb1-bc0893278411": 2
+      },
+      "registry_after": {},
+      "lifecycle_after": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "turns": 2,
+      "messages": 4
+    },
+    {
+      "case": "learning_then_chat",
+      "statuses": [
+        200,
+        200
+      ],
+      "waiting_references": {
+        "17fb8865-839f-4a52-9ae8-024939256f96": 2
+      },
+      "registry_after": {},
+      "lifecycle_after": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "turns": 2,
+      "messages": 4
+    },
+    {
+      "case": "chat_then_delete",
+      "statuses": [
+        200,
+        204
+      ],
+      "waiting_references": {
+        "2de7f2bc-6fb0-4248-927e-9675351866a5": 2
+      },
+      "registry_after": {},
+      "lifecycle_after": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "turns": 0,
+      "messages": 0
+    },
+    {
+      "case": "rollback_timeout",
+      "statuses": [
+        500,
+        409
+      ],
+      "waiting_references": {
+        "5dbafbe1-e094-4877-bef2-a36a4f2066d6": 2
+      },
+      "registry_after": {},
+      "lifecycle_after": {
+        "active": 0,
+        "deleting": false,
+        "uncertain": false
+      },
+      "turns": 1,
+      "messages": 2
+    }
+  ],
+  "responses": {
+    "parallel_learning_sessions:setup": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"6b0a6b26-6e2a-42bb-ac1c-fefa071823c9\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "parallel_learning_sessions:read": {
+      "status": 200,
+      "body": "{\"session_id\":\"6b0a6b26-6e2a-42bb-ac1c-fefa071823c9\",\"status\":\"active\",\"cycle\":1,\"revision\":2,\"goal\":\"Give a general explanation of atomicity.\",\"focus\":\"\",\"notes\":\"\",\"next_step\":\"\",\"evidence\":[],\"update_warning\":true,\"finished_at\":null,\"updated_at\":\"2026-10-20T02:30:49.138518+11:00\",\"recaps\":[],\"drafts\":[]}"
+    },
+    "parallel_learning_sessions:parallel_a": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"9db3a7ca-acf3-4487-bec9-27443fc6e970\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "parallel_learning_sessions:parallel_b": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"6b0a6b26-6e2a-42bb-ac1c-fefa071823c9\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "chat_then_learning:setup": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"bdd43c74-dbc1-4a3b-abb1-bc0893278411\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "chat_then_learning:read": {
+      "status": 200,
+      "body": "{\"session_id\":\"bdd43c74-dbc1-4a3b-abb1-bc0893278411\",\"status\":\"active\",\"cycle\":1,\"revision\":2,\"goal\":\"Give a general explanation of atomicity.\",\"focus\":\"\",\"notes\":\"\",\"next_step\":\"\",\"evidence\":[],\"update_warning\":true,\"finished_at\":null,\"updated_at\":\"2026-10-20T02:30:49.331451+11:00\",\"recaps\":[],\"drafts\":[]}"
+    },
+    "chat_then_learning:chat_owner": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"bdd43c74-dbc1-4a3b-abb1-bc0893278411\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "chat_then_learning:waiter": {
+      "status": 409,
+      "body": "{\"detail\":\"Learning records changed. Reload the latest version before saving; your editing draft is kept.\"}"
+    },
+    "learning_then_chat:setup": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"17fb8865-839f-4a52-9ae8-024939256f96\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "learning_then_chat:read": {
+      "status": 200,
+      "body": "{\"session_id\":\"17fb8865-839f-4a52-9ae8-024939256f96\",\"status\":\"active\",\"cycle\":1,\"revision\":2,\"goal\":\"Give a general explanation of atomicity.\",\"focus\":\"\",\"notes\":\"\",\"next_step\":\"\",\"evidence\":[],\"update_warning\":true,\"finished_at\":null,\"updated_at\":\"2026-10-20T02:30:49.471683+11:00\",\"recaps\":[],\"drafts\":[]}"
+    },
+    "learning_then_chat:learning_owner": {
+      "status": 200,
+      "body": "{\"session_id\":\"17fb8865-839f-4a52-9ae8-024939256f96\",\"status\":\"active\",\"cycle\":1,\"revision\":3,\"goal\":\"Atomicity\",\"focus\":\"focus\",\"notes\":\"controlled notes\",\"next_step\":\"\",\"evidence\":[],\"update_warning\":false,\"finished_at\":null,\"updated_at\":\"2026-10-20T02:30:49.494174+11:00\",\"recaps\":[],\"drafts\":[]}"
+    },
+    "learning_then_chat:waiter": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"17fb8865-839f-4a52-9ae8-024939256f96\",\"session_type\":\"learning\",\"learning_goal\":\"Atomicity\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "chat_then_delete:setup": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"2de7f2bc-6fb0-4248-927e-9675351866a5\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "chat_then_delete:read": {
+      "status": 200,
+      "body": "{\"session_id\":\"2de7f2bc-6fb0-4248-927e-9675351866a5\",\"status\":\"active\",\"cycle\":1,\"revision\":2,\"goal\":\"Give a general explanation of atomicity.\",\"focus\":\"\",\"notes\":\"\",\"next_step\":\"\",\"evidence\":[],\"update_warning\":true,\"finished_at\":null,\"updated_at\":\"2026-10-20T02:30:49.621523+11:00\",\"recaps\":[],\"drafts\":[]}"
+    },
+    "chat_then_delete:chat_owner": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"2de7f2bc-6fb0-4248-927e-9675351866a5\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "chat_then_delete:waiter": {
+      "status": 204,
+      "body": ""
+    },
+    "rollback_timeout:setup": {
+      "status": 200,
+      "body": "{\"answer\":\"[\u6a21\u62df LLM\uff1a\u4ec5\u7528\u4e8e\u5de5\u7a0b\u6d41\u7a0b\u9a8c\u8bc1] \u6a21\u578b\u77e5\u8bc6\u6f14\u793a\uff1b\u8fd9\u4e0d\u662f\u5b9e\u9645\u6a21\u578b\u751f\u6210\u7684\u77e5\u8bc6\u56de\u7b54\u3002\",\"session_id\":\"5dbafbe1-e094-4877-bef2-a36a4f2066d6\",\"session_type\":\"learning\",\"learning_goal\":\"Give a general explanation of atomicity.\",\"sources\":[],\"ai_mode\":\"embedding=test;llm=test\",\"answer_basis\":\"general\",\"answer_mode\":\"smart\",\"learning_mode\":\"direct\"}"
+    },
+    "rollback_timeout:read": {
+      "status": 200,
+      "body": "{\"session_id\":\"5dbafbe1-e094-4877-bef2-a36a4f2066d6\",\"status\":\"active\",\"cycle\":1,\"revision\":2,\"goal\":\"Give a general explanation of atomicity.\",\"focus\":\"\",\"notes\":\"\",\"next_step\":\"\",\"evidence\":[],\"update_warning\":true,\"finished_at\":null,\"updated_at\":\"2026-10-20T02:30:49.770455+11:00\",\"recaps\":[],\"drafts\":[]}"
+    },
+    "rollback_timeout:waiter": {
+      "status": 409,
+      "body": "{\"detail\":\"Session update is still in progress. Please try again shortly.\"}"
+    },
+    "rollback_timeout:workspace_delete": {
+      "status": 409,
+      "body": "{\"detail\":\"Wait for active chat transactions to finish\"}"
+    },
+    "rollback_timeout:failed_owner": {
+      "status": 500,
+      "body": "Internal Server Error"
+    }
+  },
+  "transport": "real TCP, one Uvicorn worker",
+  "models": "existing deterministic test backends, no paid provider",
+  "head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "postgres": {
+    "version": "16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+    "isolation": "read committed"
+  },
+  "different_session_coordinator": {
+    "independent_acquisition": true,
+    "registry_after": {}
+  },
+  "api_stopped": true,
+  "session_registry": {},
+  "lifecycle": {
+    "active": 0,
+    "deleting": false,
+    "uncertain": false
+  }
+}

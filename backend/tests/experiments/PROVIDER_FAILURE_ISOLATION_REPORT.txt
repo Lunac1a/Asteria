@@ -1,0 +1,90 @@
+Asteria Phase 3 — Provider Process Failure Isolation
+2026-10-20; HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b plus existing uncommitted Phase 3 work.
+
+Scope / reproduction
+- No production files changed, no database, FastAPI server, paid provider or concurrent load.
+- Windows 11 build 26300, CPython 3.12.10, existing backend venv.
+- Run from D:\Lunacia\Asteria:
+  backend/.venv/Scripts/python.exe -B backend/tests/experiments/provider_failure_isolation.py --output backend/tests/experiments/evidence/provider-failure-isolation/new-run.json
+- Real unmodified generate_response -> subprocess -> OpenAI SDK -> loopback HTTP mock.
+  Test-only Popen subclass records launch/kill/pipe-close, delegates every operation.
+  Synthetic config, empty temporary cwd, dummy credentials; no engine imported.
+- HTTP arrival event gates observation/fault injection. Blocking response sends whitespace
+  every 200 ms, never completes JSON; this keeps SDK idle-read timeout from preempting
+  the outer 6-second deadline. Pacing is a controlled fault, not a race-order assumption.
+- External observer owns a safety Job, holds actual process handles, and has a 20-second
+  watchdog. Safety Job stays OPEN throughout natural-cleanup observation. It does not
+  implement parent-death cleanup for the caller. All jobs/processes/pipes/server cleaned.
+
+Code facts (repository-relative paths and current line numbers)
+- backend/app/services/llm/provider.py:18,24,42-59: disposable subprocess per call;
+  timeout clamped 1..45 sec; credentials in stdin; stdout/stderr captured.
+- provider.py:80-90: SDK idle timeout min(30,max(.5,T-2)), retries=0, redirects=False;
+  OpenAI/HTTPX clients have context-managed close.
+- provider.py:119-123 -> backend/app/services/knowledge/index_worker.py:12-70:
+  child creates its own 1536 MiB PROCESS_MEMORY Job; flags at line56 contain no
+  KILL_ON_JOB_CLOSE. No caller-owned Provider Job lifecycle is installed here.
+- Python312/Lib/subprocess.py:548-568: TimeoutExpired kills direct Popen child,
+  then on Windows calls communicate() again without timeout; reader threads wait EOF.
+- backend/app/services/knowledge/windows_job.py:80-94,126-170: existing reusable
+  non-inherited KILL_ON_JOB_CLOSE Job with atomic JOB_LIST assignment. Experiment
+  successfully uses it as outer containment with Provider's nested memory Job.
+
+Verified observations
+Evidence: confirmed.json and repeated.json (two successful confirmation runs).
+Scenario                    confirmed       repeated        Native result
+Normal completion           1.281 sec       1.297 sec       answer OK; both Provider PIDs exit 0
+Execution timeout (T=6)      6.015 sec       6.032 sec       provider_timeout; both Provider PIDs exit
+Parent crash observation    8.016 sec       8.016 sec       both Provider PIDs STILL ALIVE
+
+- Normal/timeout: stdin/stdout/stderr all closed; caller Python threads only MainThread.
+  Caller OS thread count returns from6 to4 (baseline4). Orderly caller exit code0;
+  entire Job reaches active_processes=0 BEFORE safety termination.
+- Observed tree: observer -> caller venv launcher -> actual caller Python -> Provider
+  venv launcher -> actual Provider Python; conhost is also recorded in the Job.
+  Full parent IDs, image paths, thread/handle counts, exit codes and monotonic times
+  are retained in JSON. Actual Provider was NOT inferred solely from launcher exit.
+- Final repeat crash: caller6084 and its launcher24016 exit code93; Provider launcher
+  41564 (3 threads/81 handles) and actual Python40532 (8 threads/212 handles) survive.
+  conhost16432 also survives. Job active count3; all three captured handles unsignaled.
+  Mock continues read progress; no successful Provider result occurs after caller death.
+- Final repeat normal Provider22812 ->11624 exits; timeout10488 ->36072 exits.
+  On timeout the kill event targeted10488, both processes were exited by result observation.
+  This experiment does not establish which launcher/OS mechanism caused descendant exit.
+- Crash safety cleanup takes 0.110 / 0.062 seconds INCLUDING local server shutdown.
+  Every captured handle signals exit, Job active count0, observer pipe reader joined.
+  These are harness-assisted recovery timings, NOT production cleanup guarantees.
+  Watchdog did not fire; explicit final safety cleanup handled the observed survivors.
+- Caller handle samples remain a few handles above pre-call baseline (e.g.181 ->185
+  in confirmed.json). Three pipe closures and process exits are verified, but this is
+  not a handle-type attribution or repeated-call leak study; no zero-leak claim.
+
+Root cause / minimum proposal (not implemented)
+- Confirmed missing guarantee: killing actual caller does not clean Provider descendants.
+  The outer wall-clock deadline lives in that caller; after it dies it cannot enforce it.
+  The child memory-only Job does not tie its lifetime to caller survival. SDK read timeout
+  is not a complete-response deadline when the server continually makes read progress.
+- Minimum candidate: caller-owned, non-inherited KILL_ON_JOB_CLOSE Job per Provider
+  invocation; atomic process assignment including launcher descendants; retain memory cap,
+  credential stdin boundary, allowlist/no redirects, SDK retry policy and existing chat_slot.
+  On timeout terminate the tree, boundedly verify captured handles AND Job membership count,
+  then boundedly finish/close IPC. Failure to confirm cleanup must remain an explicit failure.
+- Existing Windows helper is mechanically compatible in outer-containment experiment;
+  integrating it directly into Provider still needs targeted tests, bounded IPC design and
+  unsupported-platform fail-closed behavior. No implementation or limiter change this round.
+
+Limits / evidence quality
+- NO infinite wait reproduced while caller alive. Source-level unbounded second communicate
+  remains a portability/other-descendant risk, not a demonstrated failure in this environment.
+- Parent-crash survivors observed beyond configured6 sec; forcibly removed at8 sec after
+  crash. This is real orphaned resource retention, not proof of infinite lifetime.
+- External safety Job, Windows venv launchers and this Python build define tested topology;
+  no claim for other Windows/Python builds, arbitrary subprocess descendants or Linux.
+- Isolated caller used as permitted by task; FastAPI health/readiness not exercised.
+- No CPU/RSS benchmark, handle-object inventory, long-run leak or concurrency capacity claim.
+- result.json is pilot evidence: provider observations valid but caller exited1 because the
+  test temporary directory was still cwd on removal. Fixed only harness, preserved pilot;
+  confirmed.json exits0; final repeated.json additionally gives temp-directory ownership
+  to observer so caller crash cannot strand its directory. Use confirmation files for claims.
+- Ruff on experiment and git diff --check passed. Existing uncommitted work preserved.
+  No backend regression suite run: production code unchanged, scope is process experiment.

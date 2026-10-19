@@ -1,0 +1,147 @@
+Asteria Phase 3 — Persistent Embedding Worker PoC
+Date: 2026-10-18 Australia/Sydney
+Base HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b
+
+Scope / architecture
+Production code and existing disposable index_worker.py/run_worker() unchanged.
+Prior uncommitted User row-lock change and all experiment files preserved.
+PoC lives in tests/experiments: persistent_embedding_child.py and
+persistent_embedding_poc.py. Parent launches a separate Python process with the
+same restricted environment and no-window flag. Child imports the original
+limit_memory() and installs the same fail-closed 1536 MiB Windows Job limit.
+It loads TextEmbedding once, threads=2/local_files_only=True, then accepts one
+JSON-lines task at a time and uses the same query_embed(batch_size=16) plus
+vector.tolist materialization as production. UUID task IDs are echoed and checked.
+No backend integration, DB, Redis, external LLM/provider or model download.
+No queue service, restart, retry, cancellation or persistent result store.
+The in-process reader queue only transfers child stdout to a bounded-time
+receive call. FastEmbed must not appear in the test parent's loaded modules.
+
+Comparison protocol
+Same Python, model cache copied from the previous local model, fixed query:
+According to the document, what does a database transaction guarantee?
+Local temporary cache is isolated under repository .local, model hashes saved.
+One initial disposable call establishes a reference vector. Persistent launch
+to ready, FastEmbed import and constructor times are recorded separately; its
+first query is also recorded. These are process-cold timings, not cold-disk-cache
+measurements. The first disposable call can warm filesystem pages for startup.
+Then 3 paired warmups and 30 measured pairs, alternating D/P and P/D order.
+Disposable timing surrounds actual production run_worker; persistent timing
+surrounds JSON send, result receipt/parse and Task-ID validation. Transport
+differences are intentionally part of the architectural PoC comparison.
+Every child computes the real model output. Vector checks occur outside the
+timed parent interval; finite 384-D output must match the original within 1e-6.
+
+Memory protocol
+After latency measurements, record query-0 memory, then execute 1000 additional
+identical queries sequentially with all outputs checked. Sample every 50 queries.
+Windows GetProcessMemoryInfo / PROCESS_MEMORY_COUNTERS_EX measures WorkingSetSize
+(RSS), PeakWorkingSetSize, PrivateUsage and PeakPagefileUsage. Native historical
+peak complements periodic samples. No psutil dependency was installed.
+Before model import, after initialization, after first query and post-latency
+warm state are retained separately. Job process-memory limit concerns committed
+private memory, not RSS alone; compare private/peak-pagefile counters with cap.
+No intentional OOM test or claim of proving memory-limit failure behavior.
+RSS movement alone cannot identify a leak: allocator reuse, runtime caches,
+working-set changes and sampling overhead can all contribute. Identical-query
+1000-call behavior cannot establish stability for varied lengths or long uptime.
+
+Failure protocol
+Benchmark worker first receives a normal stop command and exits. A separate
+loaded worker acknowledges a test-only hold task, establishing an in-flight
+checkpoint without timing races. Parent forcibly terminates that process;
+caller must observe stdout EOF within 5 seconds, then reap it. No fabricated
+success, retry or automatic restart. Reader threads and pipes are closed.
+This tests forced termination, not every native crash, deadlock, timeout or
+parent-crash/orphan scenario. A running-but-hung worker has bounded receive
+timeout but this PoC is not a production task-recovery policy.
+
+Reproduction / evidence
+From repository root, use a NEW output directory:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/persistent_embedding_poc.py --output backend/tests/experiments/evidence/persistent-NEW
+Requires Windows, backend Python dependencies and existing local FastEmbed cache.
+No API or PostgreSQL service is started. Per-call receive timeout 10s, startup
+30s, production disposable timeout 30s, cleanup waits 5s; no concurrent workload.
+evidence/persistent-poc-30-1000/result.json retains raw paired latencies, memory
+samples, vectors/validation counts, startup, failure and cleanup observations.
+stderr files and evidence/persistent-poc-execution.log retain execution output.
+
+Trade-offs / production-design boundary
+Reusing the model trades per-query initialization for continuously resident
+memory. Process isolation is retained, but a persistent child accumulates state
+and faults affect subsequent requests until a recovery policy acts. Production
+design would still need ownership/lifespan integration, admission/backpressure,
+bounded IPC/protocol validation, task deadlines and cancellation semantics,
+restart/health supervision, shutdown and parent-death orphan handling, model
+version/cache invalidation, memory monitoring and recycling, workload-specific
+correctness tests, and integration with existing semaphore/multi-worker limits.
+This PoC is not approval to replace production run_worker or relax deployment
+restrictions. Numeric findings and recommendation follow below.
+
+Measured results (ms, 30 measured pairs; 3 pairs excluded as warmup)
+Mode                  Mean          P50          P95
+Disposable          1567.746      1565.282      1603.717
+Persistent warm       13.938        13.804        15.360
+Mean worker-boundary latency improvement: 112.48x, or about 99.11% reduction.
+This is not an end-to-end Chat API speedup claim.
+First disposable invocation: 2451.452ms. Persistent launch-to-ready: 1532.771ms;
+within child, FastEmbed import 641.947ms and constructor 712.041ms. First query
+after ready: 9.031ms roundtrip, 8.265ms embedding compute/materialization.
+Startup values are one observation each, process-cold with uncontrolled/warmed
+OS file cache and fixed ordering, not a statistically controlled cold-start win.
+Warmup-pair results and all paired measurements are retained in result.json.
+
+Correctness
+1069 vectors checked across the main run, max absolute difference 0.0 against
+the original implementation, all finite and 384-D. 1035 distinct persistent task
+IDs validated with no mismatch. Parent did not import FastEmbed. Model cache
+and production worker SHA256 are recorded in evidence.
+
+Memory findings (MiB, main latency/memory worker)
+Before FastEmbed import:                  RSS  19.602
+After model initialization:               RSS 604.418
+After first query:                        RSS 605.801
+Warm memory phase, query 0:               RSS 605.922
+After 1000 additional queries:            RSS 606.047
+Lifetime peak WorkingSet/RSS:                 620.590
+Final private committed memory:               621.402
+Lifetime peak pagefile/commit counter:         636.699
+Production Job process limit:                1536.000
+All observed counters remain below the installed limit, with substantial headroom
+for this workload. RSS delta over 1000 queries: +0.125 MiB; last 500: +0.078 MiB.
+OLS RSS slope on 21 samples: +0.0843 MiB per 1000 queries (descriptive, not a
+long-term projection). Private bytes fell by 0.0586 MiB over the same window;
+peak counters did not rise during the 1000-query phase. No material runaway
+growth was observed. Small stepwise RSS increases could reflect allocator/cache
+or working-set behavior; neither a leak nor indefinite stability is proven.
+
+Failure isolation and Windows process identity
+Main run first tested launcher termination and observed EOF in 15.314ms. Review
+found that Windows virtualenv's launcher PID differs from the actual model PID;
+launcher reaping alone is insufficient evidence for absence of orphan workers.
+The fixture now opens a native process handle to the PID reported by the worker,
+targets that handle for fault injection and verifies the real process exits.
+Supplemental persistent_failure_check.py tested both normal shutdown and direct
+termination of the actual model process after task acceptance. Actual kill was
+detected by EOF in 34.161ms (deadline 5s); parent survived. Worker process handle
+was signaled, launcher was reaped, reader stopped and pipes closed in both cases.
+Evidence: evidence/persistent-actual-pid-check/result.json. Original main-run
+evidence remains unchanged; supplemental evidence supplies stronger PID checks.
+This is forced-termination evidence, not a test of parent death or native faults.
+
+Recommendation
+Worth entering a scoped production DESIGN phase: the measured warm-latency
+benefit is large, the tested footprint fits the existing cap, and actual-worker
+termination is isolated in this PoC. Do not integrate or replace production yet.
+Especially resolve Windows launcher/actual-child ownership and parent-death
+cleanup, supervision/restart policy, bounded admission and task deadlines, and
+longer varied-input memory testing. Retain independent-process isolation.
+Resident ~606 MiB is an ongoing resource cost; model lifecycle reliability now
+lasts beyond a single request. Multiple resident instances would multiply it.
+
+Final verification
+Both test programs passed, temporary copies were removed, and actual-worker
+exit was checked in supplemental runs. No backend logic, disposable worker,
+deployment configuration or real database changed. Ruff and git diff --check
+passed. No Git commit. Reproduce supplemental checks with:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/persistent_failure_check.py --output backend/tests/experiments/evidence/failure-NEW

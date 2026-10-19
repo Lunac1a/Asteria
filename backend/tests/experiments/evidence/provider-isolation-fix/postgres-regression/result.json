@@ -1,0 +1,6 @@
+{
+  "cluster": "/tmp/asteria-concurrency-cross-provider-4e58c50066c04993a60d18dd9e50d11c",
+  "tests_returncode": 1,
+  "cleanup_returncode": 0,
+  "cleanup": "waiting for server to shut down.... done\nserver stopped\nisolated_cluster_removed\n"
+}

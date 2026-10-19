@@ -1,0 +1,11 @@
+{
+  "cluster": "/tmp/asteria-concurrency-cross-chat-ab-20261019",
+  "exit_code": 0,
+  "output": "waiting for server to shut down..... done\nserver stopped\nisolated_cluster_removed",
+  "removed": true,
+  "api_cleanup": "All four blocks confirmed stopped and managed handles exited in result.json",
+  "regression_run": 274,
+  "regression_passed": 273,
+  "regression_skipped": 1,
+  "regression_seconds": 131.194
+}

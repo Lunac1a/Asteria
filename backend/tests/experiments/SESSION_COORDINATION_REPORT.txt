@@ -1,0 +1,78 @@
+Session-level Coordination Step 1 — 2026-10-19
+
+HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b, prior uncommitted changes preserved.
+No Git commit, development database or external paid provider access.
+
+Changes and architecture inspection
+app/services/session_coordination.py: keyed RLock registry with holder/waiter
+reference counts, atomic registration/eviction, bounded acquisition and 409 timeout.
+app/services/workspace_lifecycle.py: optional session_id; Session lock retained
+through rollback via ExitStack; session_operation wraps complete synchronous routes.
+app/api/routes/chat.py: existing-session Chat and Session Delete share that scope.
+app/api/routes/learning.py: all six routes share it, including lazy-writing GET.
+app/core/config.py, .env.example, tests/test_auth.py: SESSION_LOCK_WAIT_SECONDS=1,
+range .01–10, untuned default. Tests/docs added; existing global lock remains 1.
+
+Inspection found Learning GET may create a context, recap-draft has an intermediate
+commit before provider generation and a later draft commit, and finish/resume call
+read() internally. The outer reentrant Session scope covers these whole operations.
+No transaction sequence or recovery state transition was changed.
+Order: Workspace permit -> Session lock -> original chat_slot. On failure, the
+global slot may release first, but Session/Workspace protection lasts through
+Rollback. On success it lasts through Commit. Workspace Delete preserves its
+document_slot -> chat_slot order and uses fail-fast lifecycle exclusion, never
+waiting for holders while retaining these gates. Registry mutexes remain short.
+
+Verified deterministic checks
+tests/test_session_coordination.py: four tests pass. Same Session times out with
+409, another Session acquires independently, eight contenders serialize, nested
+same-thread calls work, 100 distinct failed scopes leave an empty registry, and
+Session/Workspace protection remains held while rollback is explicitly paused.
+
+Real TCP HTTP / PostgreSQL 16.15, READ COMMITTED
+Fresh isolated cluster, one Uvicorn worker; real authentication, request validation,
+Chat/Learning business code and persistence. Existing deterministic local model
+backends replace paid generation. Two HTTP clients plus Events control interleaving.
+No sleeps establish order. No Session-level HTTP concurrency claim is made.
+
+Chat -> Learning: waiter registered on the same Session while Chat held in generation;
+after Chat commits, old Learning revision returns 409, not a stale overwrite.
+Learning -> Chat: Learning held before Commit; Chat waits on the same Session;
+after release both return 200; notes and the subsequent Chat revision are persisted.
+Chat -> Session Delete: Delete waits while Chat is active; Chat 200, Delete 204;
+independent SQL reads confirm no Session, LearningContext, ChatTurn or Message remains.
+Commit failure: actual deferred PostgreSQL constraint rejects Chat Commit. Pause
+before Rollback; chat_slot is already free but Session/Workspace remain held.
+Session Delete times out with 409 (.05-second test setting); Workspace Delete also
+returns 409. Release Rollback: Chat 500, original turn/messages/revision unchanged,
+Session registry and active Workspace permits both zero.
+Different Sessions: independent acquisition additionally recorded at Coordinator
+level while another key is held. This does not bypass global Chat admission.
+Evidence: evidence/session-coordination-step1-final/result.json and adjacent .log.
+
+Additional regression evidence
+Full Backend: 295 tests in 140.306 seconds, OK (one SQLite-only rejection test
+skipped in the PostgreSQL Recovery run). Log: evidence/session-coordination-regression.log.
+Full backend Ruff and git diff --check passed. Single-flight real HTTP/PostgreSQL
+regression passed: evidence/session-singleflight-regression/result.json.
+Workspace lifecycle real-HTTP experiment passed: evidence/session-workspace-regression/result.json.
+Test servers stopped; the owned PostgreSQL cluster and databases were removed.
+Cleanup JSON: evidence/session-coordination-step1-final/cleanup.json.
+The deferred COMMIT traceback in experiment logs is expected fault injection.
+An earlier restricted-environment Learning smoke run produced no output and was
+terminated after verifying its process IDs. Its cause was not established and it
+is not counted as passing. Full regression is run with local HTTP access separately.
+
+Reproduction from repository root
+wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_concurrency_pg.sh /tmp/asteria-concurrency-cross-session-NEW start
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/session_coordination.py --url postgresql+psycopg://concurrency_test@127.0.0.1:55489/workspace_concurrency_test --pgdata /tmp/asteria-concurrency-cross-session-NEW/pgdata --output backend/tests/experiments/evidence/session-NEW
+wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_cross_cleanup.sh /tmp/asteria-concurrency-cross-session-NEW
+Use fresh names; clean up even on failure. Each fixture owns and drops a fresh
+schema, including its test-only deferred trigger/function.
+
+Limits
+Only tested interleavings establish absence of a reproduced deadlock, not a proof
+for every schedule. No fairness, cancellation, multi-worker support or throughput
+increase. Learning GET now participates in bounded Session contention. Waiting may
+retain a read transaction/connection; no pool optimization was attempted. Existing
+uncertain-outcome fail-closed behavior still requires operator verification.

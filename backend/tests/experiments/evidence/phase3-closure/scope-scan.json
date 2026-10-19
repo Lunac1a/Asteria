@@ -1,0 +1,48 @@
+{
+  "files_scanned": 225,
+  "findings": [
+    {
+      "file": "backend/tests/experiments/WORKER_LIFECYCLE_ISOLATION_REPORT.txt",
+      "line": 89,
+      "kind": "url",
+      "value": "https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects"
+    },
+    {
+      "file": "backend/tests/experiments/WORKER_LIFECYCLE_ISOLATION_REPORT.txt",
+      "line": 90,
+      "kind": "url",
+      "value": "https://learn.microsoft.com/en-us/windows/win32/procthread/nested-jobs"
+    },
+    {
+      "file": "backend/tests/experiments/WORKER_LIFECYCLE_ISOLATION_REPORT.txt",
+      "line": 91,
+      "kind": "url",
+      "value": "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute"
+    },
+    {
+      "file": "backend/tests/experiments/evidence/chat-worker-ab-pilot.json",
+      "line": 53,
+      "kind": "url",
+      "value": "https://sqlalche.me/e/20/e3q8)\\n"
+    },
+    {
+      "file": "backend/tests/test_auth.py",
+      "line": 30,
+      "kind": "url",
+      "value": "http://testserver"
+    },
+    {
+      "file": "backend/tests/test_generation_reliability.py",
+      "line": 107,
+      "kind": "url",
+      "value": "https://other.invalid/v1"
+    },
+    {
+      "file": "backend/tests/test_provider.py",
+      "line": 62,
+      "kind": "url",
+      "value": "https://untrusted.invalid/collect"
+    }
+  ],
+  "method": "literal key/JWT/private-key, nonlocal URL and nonsynthetic email patterns; manual review required"
+}

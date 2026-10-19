@@ -1,0 +1,113 @@
+Asteria Phase 3 — Connection Pool Lifecycle Experiment
+Date: 2026-10-17 Australia/Sydney
+HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b
+
+Architecture / source facts
+At start, knowledge.py had the prior uncommitted User-row-lock fix, and the
+previous experiment directory/test_workspace_creation.py were untracked.
+This experiment did not modify any production file. Source SHA256s are saved
+in evidence/pool-lifecycle-ab/result.json.
+backend/app/db/session.py:5-18: create_engine(DATABASE_URL), SessionLocal with
+autocommit=False/autoflush=False, dependency yields Session and finally closes.
+No explicit pool sizing, recycle, pre_ping or isolation setting in that module.
+Transactions begin automatically on DB use (including gate/auth/ownership reads).
+backend/app/api/routes/knowledge.py:257: upload commits the processing Document.
+index_document at 160-169 reads document attributes / counts existing chunks,
+starting a new read transaction after that upload commit. At 180 the file path
+is materialized; 181 commits the read transaction BEFORE run_worker at 183.
+199-205 perform post-worker chunk replacement / ready status and commit.
+215 refreshes the Document, starting another read transaction. Dependency close
+ends that last transaction and returns its connection. This is not one checkout
+spanning the HTTP request, nor does commit close the Session itself.
+
+Actual experiment configuration
+PostgreSQL 16.15, psycopg, SQLAlchemy 2.0.49, READ COMMITTED.
+QueuePool defaults observed on the actual experiment engine:
+pool_size=5, max_overflow=10, pool_timeout=30s, recycle=-1,
+pre_ping=false, reset_on_return=rollback. These are constructor defaults matching
+production's create_engine call; no running development engine was inspected.
+No pool parameters were passed or changed. Test-only connection/statement/lock
+timeouts were 5s/8s/4s. Session autoflush=False, autocommit=False and default
+expire_on_commit=True. Independent validation used a separate NullPool engine,
+excluded from application checkout measurements.
+
+Method
+Fresh dedicated cluster on loopback 55489, database workspace_concurrency_test;
+exact PGDATA/database name and empty schema verified before fixture writes.
+One synthetic user, two initially empty workspaces, identical 63-byte document,
+same app, engine, settings and stub result. A then B, sequentially. Schema/seed
+warm-up checkouts are labeled null and excluded from request summaries.
+One real Uvicorn server and real multipart HTTP upload route; get_db overrides
+only the engine destination. Worker stub validates the input file and returns
+the real {chunks: [{page, content, vector}]} interface, one fixed chunk.
+No external provider, parser or embedding model was called. The 5s wait models
+worker duration only; no delay is used to infer lifecycle ordering.
+Pool checkout/checkin events and Worker/HTTP boundaries use perf_counter.
+Every checkout is paired; overlap is computed from complete intervals.
+Each request waits for explicit Session-finalizer completion before validation
+and before starting the next request. HTTP timeout 15s; finalizer wait 5s;
+outer experiment subprocess timeout 60s; bounded server startup/shutdown.
+
+Observed timings (milliseconds; one A/B pair, not a benchmark)
+                               A (0s stub)       B (5s stub)
+HTTP request duration              59.424           5049.013
+Worker duration                    0.014           5003.286
+Checkout #1 duration              25.725             21.886
+Checkout #2 duration               3.928              5.285
+Checkout #3 duration               7.795              7.495
+Checkout #4 duration               3.117              4.242
+Total checkout duration           40.566             38.909
+Max single checkout               25.725             21.886
+Worker-overlapping checkouts           0                  0
+Unreturned connections                 0                  0
+HTTP delta B-A: 4989.589 ms. Checkout total delta: -1.657 ms (noise/order,
+not a claimed speedup). Connection pool wait time was NOT measured; checkout
+events alone cannot separate queue waiting from connection acquisition costs.
+
+Timeline relative to each HTTP start (ms)
+A: checkout1 [19.18,44.91], checkout2 [45.17,49.10],
+   Worker [49.24,49.25], checkout3 [49.37,57.16],
+   checkout4 [57.38,60.50], HTTP end 59.42, Session closed 60.51.
+B: checkout1 [6.52,28.41], checkout2 [28.73,34.01],
+   Worker [34.26,5037.55], checkout3 [5037.83,5045.33],
+   checkout4 [5045.54,5049.78], HTTP end 5049.01, Session closed 5049.80.
+The fourth checkout extends slightly beyond client response receipt; this is
+the refresh/read transaction closed by dependency cleanup, not a 5s leak.
+
+Verified Observations
+Both HTTP responses were 200/ready with one chunk. Separate DB connections
+confirmed ready state, chunk_count=1, exact content and vector persistence.
+Pool checkedout() was zero at both Worker boundaries in both runs, and there
+were no checkout intervals intersecting either Worker interval. Four checkout
+intervals per request match pre-upload commit, pre-worker commit, post-worker
+commit, and refresh/finalizer. No unexpected checkout was observed.
+In this scenario, worker delay increased HTTP duration by about 5s without
+extending connection checkout duration. This supports the explicit pre-worker
+commit's intended connection-release behavior.
+
+Unverified Limitations / design assessment
+Returning to QueuePool means reusable, not physically disconnecting PostgreSQL;
+an idle pooled database connection can remain open. The HTTP request, Session
+object, synchronous endpoint thread and document_slot still exist during Worker
+execution. This experiment proves no pool checkout retention in the tested
+successful upload path, not that the whole request consumes no resources.
+Only one ordered A/B pair, one small file, one stubbed chunk, and an otherwise
+idle warmed pool were tested. No pool saturation/waiting, real embedding process,
+large documents, cancellation, crashes, failed worker/commit, or multi-worker
+behavior was tested. Timing precision does not establish stable performance.
+The lifecycle design is consistent with releasing a scarce pooled connection
+before slow indexing and reacquiring it for persistence. No optimization or
+production change is proposed based on these observations.
+
+Artifacts / reproducibility
+pool_index_lifecycle.py: test-only instrumentation and Worker stub.
+run_single_worker.py: provisioning, timeout, SQL archive and cleanup wrapper.
+evidence/pool-lifecycle-ab/result.json: full monotonic events and intervals.
+evidence/pool-lifecycle-ab/postgres.log: SQL trace, archived before shutdown.
+evidence/pool-lifecycle-ab/cleanup.json: successful stop/removal, returncode=0.
+API stopped; temporary upload files removed; experiment cluster removed.
+
+From repo root, use a NEW output directory each time (WSL Ubuntu-24.04 required):
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/run_single_worker.py --experiment pool_index_lifecycle.py --output backend/tests/experiments/evidence/pool-NEW
+
+Ruff and git diff --check passed. No Git commit; no production changes this turn.

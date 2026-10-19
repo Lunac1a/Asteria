@@ -1,0 +1,156 @@
+Asteria Phase 3 — Chat Concurrency Baseline
+2026-10-19 | HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b + existing uncommitted work
+
+Chat Lock Scope Audit — code facts (paths relative to backend)
+app/api/routes/chat.py:28 defines one module-level threading.BoundedSemaphore(1).
+chat.py:46 acquires nonblocking, before ChatTurn idempotency lookup at :52.
+Failure returns 429 immediately with the Chat-specific busy message. The semaphore
+is shared across users/workspaces/sessions in ONE API process, not keyed per user.
+FastAPI authentication and Recovery dependencies execute before endpoint admission:
+app/core/deps.py:19 (JWT + User lookup), app/core/recovery_gate.py:12 (pending state).
+Thus a rejected request can already have a Session/read transaction and DB traffic.
+
+The protected interval includes idempotency binding checks; ownership/session/history
+reads; routing; retrieval; model/provider execution; source revalidation; learning
+state updates; Message/Evidence/ChatTurn creation; and final commit (chat.py:299).
+Read transactions are rolled back at chat.py:186 and services/llm/completion.py:44,
+but these do NOT release chat_slot. Provider waiting remains inside the lock.
+chat.py:301-302 finally releases on success, replay return and exceptions. It does
+not explicitly roll back failures there; dependency Session closure is later
+(app/db/session.py:13-18). The lock does not encompass response transmission or
+the entire dependency cleanup lifetime. Successful Commit precedes lock release.
+
+Other cooperating operations:
+- chat.py:407-420 session deletion uses the same semaphore; busy returns 409.
+- api/routes/learning.py:22-37 imports the same object; mutation() guards lazy context
+  creation (:76), notes (:111), recap draft (:148), finish (:214), resume (:274),
+  recap edit (:300). Learning revision checks (:50) run within these mutation scopes.
+- services/workspace_delete_recovery.py:49-63 takes document_slot then chat_slot;
+  bounded nonblocking acquisition, releasing acquired gates in finally.
+- api/routes/knowledge.py:24,37-49,304-323 document deletion uses document_slot,
+  not chat_slot. The two admission controls have different scopes.
+- app/cli/local.py:85-88 retains workers=1, limit_concurrency=16; experiment matches.
+
+Confirmed protection / business invariants
+Within one cooperating process, Chat turns cannot interleave their history read,
+answer generation and persistence. This also serializes shared learning read/modify/
+revision updates and cooperating deletion operations. ChatTurn.request_id remains a
+DB primary key (models/chat_turn.py:10); Message/Evidence/turn writes share a commit.
+The semaphore is admission/serialization, not a DB transaction or a substitute for
+JWT ownership checks, constraints or atomic persistence. Persistent embedding has
+its own single-task/resource controls, which this experiment does not change.
+
+Unverified potential races / boundaries
+Multiple API processes have different semaphore instances: same-session history and
+learning revision read/modify sequences would no longer be serialized by this lock.
+Duplicate request_id primary-key rejection alone would not prove graceful idempotent
+handling across processes. No such configuration was started or tested this round.
+Document deletion/reindexing can use a separate gate; chat.py:237-249 rechecks source
+Document existence/readiness after generation, but this is not a lock on documents
+through commit, nor a version check of the originally retrieved chunks. Interleavings
+with these operations and failure/rollback cleanup remain outside this experiment.
+No actual data race was observed in the tested ten-user scenario.
+
+Experiment
+Windows 11 / Python 3.12.10; separate WSL PostgreSQL 16.15 cluster, READ COMMITTED,
+127.0.0.1:55489, exact PGDATA identity + empty-schema check before any DDL/DML.
+QueuePool defaults size=5, max_overflow=10, timeout=30s. Single Uvicorn worker,
+limit_concurrency=16; real TCP HTTP, actual JWT authentication, RAG, offline FastEmbed,
+response/citation validation and SQLAlchemy persistence. Only external LLM boundary
+is mocked. Feature Flag enabled only in test settings; Recovery maintenance disabled
+for normal Chat operation. No production config, semaphore, Supervisor or DB logic edits.
+
+10 separate users, each with an equivalent workspace, ready document and persisted
+real embedding chunk. Fixed atomicity query and two-message initial history. Each
+user has 4 independent equivalent sessions: 1 sequential and 3 concurrent rounds.
+40 distinct request_id values, no retry/replay. Sequential phase: all 10 users once.
+Concurrent phase: 3 rounds, rotate the preselected successful user among users 0–2.
+
+Synchronization:
+A enters LLM mock and signals an Event while an observer confirms lock ownership.
+Nine client threads rendezvous at a Barrier, then send their requests; A cannot
+leave the mock until the controller has received all nine responses and sets release.
+The mock sets a monotonic 2-second deadline at entry; after release it waits any
+remaining duration. All three release events occurred before that deadline, so
+additional control hold was 0 ms. Event/Barrier ordering, not a sleep race, selects
+the overlap. Event/Barrier/client/startup/shutdown waits are bounded.
+Gate instrumentation delegates acquire/release to the original semaphore object;
+it neither changes capacity nor replaces rejection with queueing. Per-request
+ContextVar/event records avoid using one shared current-request measurement buffer.
+
+Verified Results
+                              Sequential (N=10)    Concurrent (3 x 10)
+HTTP 200                       10                   3
+HTTP 429                        0                  27
+Success rate                  100%                 10%
+429 rate                        0%                 90%
+HTTP RPS                      0.471                4.763
+Successful throughput         0.471                0.476 requests/s
+Success latency Mean       2101.66              2099.54 ms
+Success latency P50        2090.81              2099.56 ms
+Success latency P95        2125.56              2104.72 ms
+Success latency range      2077.44–2125.56       2094.35–2104.72 ms
+429 latency Mean                —                 36.75 ms
+429 latency P50                 —                 35.76 ms
+429 latency P95                 —                 67.85 ms
+429 latency range               —                 17.28–68.29 ms
+
+Each concurrent round: 1 success + 9 rejected; windows 2.094/2.105/2.100 seconds;
+successful throughput 0.477/0.475/0.476 requests/s. No 503/other HTTP status observed.
+RPS denominator: first client send to last response in each active phase/round;
+concurrent results aggregate the three windows, excluding between-round verification.
+Sequential window includes per-request independent DB verification gaps. No startup
+or fixture setup included. HTTP RPS includes rejections; it is not successful capacity.
+Percentiles are nearest rank; samples are small, especially 3 concurrent successes.
+Raw P99 is retained in JSON but is just the maximum at these sample counts.
+
+Execution paths / data integrity
+Success: Session -> acquired chat_slot -> Retrieval -> Embedding -> LLM -> Commit
+completed -> slot release -> Session close. All 13 successes followed this order,
+called Mock exactly once and produced the expected grounded answer with their own
+document source. All observed 384-dimensional query vector hashes matched.
+Rejection: Session -> failed chat_slot acquisition -> Session close. All 27 had
+the Chat-specific 429 message and no Retrieval/Embedding/LLM/Commit/release events.
+This distinguishes application admission rejection from Uvicorn or Worker rejection.
+
+Independent NullPool connections checked every request after its Session closed:
+- Success: 4 messages (original 2 + new user/assistant), matching owned ChatTurn
+  response, exactly one MessageEvidence with matching sources and route=retrieve.
+- Rejection: unchanged two-message history, no ChatTurn for request_id, no Evidence;
+  workspace binding and questioning profile retained.
+Final: 10 users, 10 workspaces, 40 sessions, 106 messages, 13 ChatTurns, 13 Evidence,
+10 ready Documents, 10 Chunks. No cross-user source contamination or partial turns.
+Persistent model PID 34544 remained READY with restarts=0; /api/ready stayed 200.
+All three captured Job process handles exited after shutdown; API stopped and test
+schema/model directory removed. Production Python hashes before/after are identical.
+Ruff and git diff --check passed. No production edits: full regression suite was
+not rerun this round; this controlled real HTTP/PG experiment is the validation.
+
+Interpretation / future investigation only
+Benefit: simple fail-fast admission bounds simultaneous Chat work and prevents
+cooperating read/modify/persist operations from interleaving in the supported process.
+Limitation: an unrelated user's two-second provider wait blocks all other Chat users.
+Faster embedding does not remove this lock-holding interval. Fast rejections raise
+HTTP RPS while successful throughput remains approximately 0.48 requests/s here.
+Requests still perform authentication/Recovery reads before rejection, so admission
+does not eliminate upstream database load. Fairness, starvation and real arrival
+patterns are not measured: the successful request is deliberately selected first.
+
+Potential design directions (not implemented): separate per-session consistency
+from global resource admission, then evaluate per-user fairness and provider capacity.
+Before changing granularity, preserve idempotency, revision updates, deletion ordering,
+document consistency and the single-task embedding contract; simply increasing the
+global semaphore is not established as safe. No Queue/Retry/Cancellation added.
+Not a maximum concurrency/capacity test, stress test or multi-worker validation;
+no real paid provider, same-session contention, mutation/deletion race or fault test.
+
+Reproduction from repository root (new unique directories each run)
+1. wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_concurrency_pg.sh /tmp/asteria-concurrency-cross-chat-NEW start
+2. backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_concurrency.py --url postgresql+psycopg://concurrency_test@127.0.0.1:55489/workspace_concurrency_test --pgdata /tmp/asteria-concurrency-cross-chat-NEW/pgdata --output backend/tests/experiments/evidence/chat-concurrency-NEW
+3. Always stop/remove that owned cluster afterwards:
+   wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_cross_cleanup.sh /tmp/asteria-concurrency-cross-chat-NEW
+Requires free test port, WSL PostgreSQL16 package availability, Windows Job support
+and existing offline model cache. Does not load development .env/DB credentials.
+Evidence: evidence/chat-concurrency-10-users/result.json (events, requests, statuses,
+latencies, integrity counts, source hashes); cleanup.json records cluster removal.
+No Git commit was created; earlier uncommitted changes preserved.

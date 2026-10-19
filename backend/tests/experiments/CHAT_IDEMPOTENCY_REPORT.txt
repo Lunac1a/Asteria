@@ -1,0 +1,78 @@
+Asteria Phase 3 — Chat Idempotency Concurrency Experiment
+2026-10-19 | HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b + preserved uncommitted changes
+
+Environment and scope
+Independent PostgreSQL 16.15, READ COMMITTED, dedicated PGDATA:
+/tmp/asteria-concurrency-cross-chat-idempotency-20261019/pgdata
+Real FastAPI TCP HTTP / one Uvicorn worker / limit_concurrency=16.
+Synthetic user, workspace and ready document; real offline FastEmbed indexing and
+query embedding using the default Disposable path. Persistent feature flag remains
+disabled in this experiment. Authentication, retrieval, validation and persistence
+are real. Only external LLM generation is mocked. No production DB/provider used.
+No production code, semaphore or Supervisor changes; no Single-flight implementation.
+
+Deterministic sequence and verified observations
+All four requests omit session_id and use one fixed UUID request_id (recorded in JSON).
+A reaches the Mock LLM and signals entered; it cannot continue until release is set.
+The controller waits for entered, sends B and reads an independent DB snapshot before
+releasing A. No sleep is used to manufacture the overlap. All waits have deadlines.
+
+Request                         HTTP   Latency (one observation)
+A                               200    1495.79 ms, includes real embedding and controlled hold
+B while A paused                429      18.96 ms
+B after A Commit, same payload  200       5.99 ms
+B same ID, different question   409       5.45 ms
+
+429 detail: A chat is already running locally. Please try again shortly.
+409 detail: Request ID already used for a different turn
+The replay response equals A's entire response, including the newly created Session ID.
+LLM calls across the complete sequence: exactly 1.
+A executes retrieval -> LLM -> commit_returned -> Session close.
+Concurrent B, replay and conflict requests have Session open/close events but no
+Retrieval, LLM or Commit events. These measurements describe this execution only,
+not performance distributions or throughput.
+
+Independent database integrity verification
+Snapshots use independent NullPool connections, after request Session closure.
+Initial and while-A-paused snapshots: zero Sessions/bindings/profiles/messages/turns/evidence.
+After A Commit:
+  ChatSession       1
+  SessionWorkspace  1
+  SessionProfile    1
+  Message           2 (one user question, one expected assistant answer)
+  ChatTurn          1
+  MessageEvidence   1
+Session/user ownership, workspace binding, request_id, turn response, assistant
+Evidence association and document source were checked. Complete row snapshots,
+including IDs and timestamps, remain identical after replay and after conflict.
+No duplicate session, extra messages, orphan Evidence or partial extra turn observed.
+
+Meaning of the guarantee under tested conditions
+Current chat_slot serializes admission before the ChatTurn lookup:
+backend/app/api/routes/chat.py:46 acquire; :51 lookup; :65 conflict; :66 replay.
+Session is allocated only after generation (:222); turn inserted :290; commit :299;
+finally releases slot :302. ChatTurn.request_id is a global primary key:
+backend/app/models/chat_turn.py:10.
+Therefore the overlapping duplicate is rejected rather than joined to A. Only after
+completion can B reuse persisted results. This is fail-fast mutual exclusion plus
+persisted replay, not in-flight result sharing or a guaranteed exactly-once external
+provider call across crashes, lost commit acknowledgements or retries after failure.
+
+Limitations
+One controlled single-process case with an existing workspace and no session_id.
+No multiple API workers, crash/rollback, cross-user request_id collision, session
+deletion, different-mode conflicts or expanded retry behavior tested. Other semantics
+must not be inferred from this pass. No full regression rerun for test-only changes.
+Ruff on the experiment and git diff --check passed; all backend/app Python hashes
+match before/after execution. Existing uncommitted work and feature defaults preserved.
+
+Reproduction from repository root; use a fresh unique path/output each run
+1. wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_concurrency_pg.sh /tmp/asteria-concurrency-cross-idempotency-NEW start
+2. backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_idempotency.py --url postgresql+psycopg://concurrency_test@127.0.0.1:55489/workspace_concurrency_test --pgdata /tmp/asteria-concurrency-cross-idempotency-NEW/pgdata --output backend/tests/experiments/evidence/chat-idempotency-NEW
+3. Always clean up the owned cluster, even after assertion failure:
+   wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_cross_cleanup.sh /tmp/asteria-concurrency-cross-idempotency-NEW
+Requires Windows, WSL PostgreSQL16 package availability, free test port and the existing
+offline FastEmbed model cache. Identity and empty-schema checks precede any writes.
+API stopped, schema and temporary model copy removed; cluster cleanup in cleanup.json.
+Evidence: evidence/chat-idempotency-concurrency/result.json (requests, events, snapshots,
+LLM count, source hashes); adjacent .log preserves execution output. No Git commit.

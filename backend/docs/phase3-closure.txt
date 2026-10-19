@@ -1,0 +1,111 @@
+Asteria Backend Phase 3 — Concurrency & Performance 工程验收
+2026-10-20 | 基准 HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b
+
+验收范围
+本轮只审查、验证和整理文档/提交清单；不新增功能，不调整容量，不提交或推送。
+已有未提交生产实现全部保留。正式验收结果见 tests/experiments/evidence/phase3-closure/verification.json。
+本文件是阶段总结和证据入口；早期报告记录当时实现，当前运行协议以本目录运行说明为准。
+
+架构和保护范围（代码事实）
+1. Workspace Creation：api/routes/knowledge.py 的 User SELECT FOR UPDATE → COUNT → INSERT →
+   COMMIT 同一事务。异常 rollback 后释放原 document_slot。READ COMMITTED 下后来的同用户
+   创建者重新 COUNT；不同用户行独立。只约束遵守此协议的写入者，不是数据库硬配额约束。
+2. Chat：认证/Recovery Gate → request_id Single-flight → Workspace lifecycle permit →
+   Session lock → Chat admission → 读取/检索/生成/持久化。Leader 成功提交后 Follower 从
+   ChatTurn 重放；Follower 不占 Chat admission，等待前结束读事务，超时不取消 Leader。
+   Registry 原子分配每请求4、总计8个等待名额；409参数冲突、429容量拒绝、504等待超时。
+3. Session：session_coordination.py 按 session_id 使用有引用计数的 RLock，默认等待1秒。
+   Chat、Learning（包括可能懒写入的GET）、Session Delete 使用统一保护；异常 rollback
+   完成后才释放 Session 和生命周期许可。没有 session_id 的新会话仍走旧排他路径。
+4. Lifecycle：workspace_lifecycle.py 的短 Mutex 原子登记活动许可与删除资格，SQL/LLM/等待
+   不持有此 Mutex。当前是进程内全局删除屏障，不是逐 Workspace 的独立并行删除。
+   Delete/Recovery 顺序仍为 document_slot → chat_slot → lifecycle 排他；有活动许可则拒绝。
+   PREPARED / COMMITTED / RESTORED / CLEANED 协议未变。异常连接结果不确定时 fail closed，
+   不声称已恢复安全；保留人工核对/重启要求。启动恢复与持久化 pending gate 仍生效。
+5. Chat admission：chat/capacity.py 保留同一个 chat_slot(1)。默认排他；flag开启时最多两个
+   非空已有session_id请求共享，首个获取、最后一个释放。Legacy/Learning/Delete仍用原槽排他。
+   admission可先于异常rollback释放，但Session锁和Lifecycle Permit仍保护事务安全退出。
+6. Embedding：Persistent仅迁移Query；Document Indexing仍为Disposable。单任务worker_slot(1)
+   没有扩容。独立进程一次加载FastEmbed，READY/唯一Task ID/有限IPC/向量校验。
+   Supervisor单一线程管理替换，初始化和清理不持有状态锁；旧Job成员和IPC退出确认前不替换。
+   滚动预算默认10分钟3次，最多3个失败周期；COOLDOWN后台主动恢复，MANUAL_REQUIRED停止自动
+   恢复，DEGRADED保留资源所有权，时间窗口过期不能解除。参数是待调优默认值。
+7. Provider：调用仍为独立Disposable进程。Windows JOB_LIST创建时绑定非继承KILL_ON_JOB_CLOSE
+   Job，防止创建后绑定窗口及父进程死亡遗留子树。保留1536 MiB单进程内存限制、凭据stdin/
+   环境白名单及原调用预算。清理核验成员句柄、Job活跃数、IPC与管道；未确认则保留记录并拒绝
+   后续Provider执行。没有新Global Provider Limiter、请求自动重试或队列。
+
+已修复问题与证据
+- 跨进程Workspace配额：修复前两个COUNT=99均提交得到101；修复后第二个等待User行锁，随后
+  COUNT=100并409，最终100。tests/experiments/ROW_LOCK_FIX_REPORT.txt，
+  evidence/cross-process-unit1/result.json、row-lock-same-user/result.json、row-lock-different-users/result.json。
+- 相同request_id重复执行基线/协调：CHAT_SINGLEFLIGHT_REPORT.txt、CHAT_WAITERS_REPORT.txt。
+  Single-flight只在本进程协调，结果仍持久化；不能推广到跨API进程。
+- Delete与活动/失败事务交错：WORKSPACE_LIFECYCLE_REPORT.txt、SESSION_COORDINATION_REPORT.txt；
+  本轮phase3-closure/http与coordination结果再次检查Commit失败尚未Rollback时的保护。
+- Provider父进程强杀残留：PROVIDER_FAILURE_ISOLATION_REPORT.txt与PROVIDER_ISOLATION_FIX_REPORT.txt，
+  evidence/provider-isolation-fix/run3.json。当前代码无旧无保护fallback。
+- Worker替换/退出：QUERY_SUPERVISOR_STEP2_REPORT.txt、RESTART_POLICY_STEP25_REPORT.txt，
+  evidence/restart-policy-step25-03/result.json。实际模型、launcher和观察到的成员句柄一并核验。
+
+性能与资源（实测，不是生产承诺）
+- Pool lifecycle A/B：模拟Worker0/5秒时总checkout40.566/38.909ms，Worker区间无持有连接。
+  只有一对实验，不构成吞吐基准；POOL_LIFECYCLE_REPORT.txt与evidence/pool-lifecycle-ab/result.json。
+- 完整Chat顺序A/B，各50样本：Disposable/Persistent HTTP mean1441.27/68.97ms，
+  P95 1502.47/73.92ms；Embedding mean1371.50/5.88ms。向量与业务结果一致。
+  CHAT_WORKER_AB_REPORT.txt、evidence/chat-worker-ab-50/result.json。该LLM为立即返回Mock，
+  不能将95.21% HTTP改善推广到真实远程LLM；也不能与后续2秒Mock直接比较。
+- 常驻Embedding Job RSS约625MiB（实际模型约606MiB），初始化成本移至启动；RSS合计可能
+  重复计算共享页。PoC千次相同Query检查不是长期/多样输入泄漏证明。
+- Final Load固定2秒本地Mock、1/2/4 Session、每模式每级别10批，共140请求：
+  成功率100→100%、50→60%、25→35%；成功吞吐.260→.260、.249→.300、.245→.338 req/s。
+  成功P95 3953→4016、4188→4187、4375→4454ms；没有大幅恶化，但无既定SLO且样本少。
+  2/4并发新路径429仍40%/65%，来源包括单任务Embedding和Chat容量，不建议据此默认开启。
+  Provider峰值3→6进程、RSS约90→180MiB；无失控/清理失败证据。API指标包含测试驱动，
+  资源采样有退出边界缺口，未测完整系统利用率。FINAL_LOAD_REPORT.txt与
+  evidence/final-load-01/http/analysis.json、result.json；完整延迟含客户端构造，拒绝另行统计。
+
+平台、配置与已知限制
+PERSISTENT_QUERY_WORKER_ENABLED=false；SESSION_CHAT_CONCURRENCY_ENABLED=false。
+backend/.env.example与Settings均如此；未修改真实.env。app/cli/local.py仍workers=1、limit_concurrency=16。
+Provider执行需要Windows JOB_LIST/嵌套Job支持；Linux/macOS明确失败，不宣称跨平台生产支持。
+Persistent还需fastembed和已准备离线缓存。实际验证Windows11；其他Windows版本/受限宿主Job待验证。
+除User数据库行锁外，Single-flight、Session、Lifecycle和容量都是进程内机制，不能扩展多Worker。
+维护/启动恢复仍需原单实例确认及fail-closed gate；该flag不代替Recovery授权/维护操作。
+Learning及新Session仍排他；Embedding容量1；无公平性/队列/复杂取消/自动请求重试。
+Lifecycle不确定事务、Provider quarantine、Supervisor DEGRADED/MANUAL_REQUIRED需要人工处理。
+数据库连接丢失及所有可能的原生资源分配失败路径未穷尽测试。原生Job创建极端FD/句柄耗尽边界
+不能由正常/超时/父进程强杀试验推导完全正确。单进程内存上限不是整个服务总资源预算。
+没有持续到达流、长历史、大文档、多租户、长期运行或真实付费Provider容量证据。
+未来工作应先明确真实SLO和代表性负载，再讨论Embedding拒绝、容量管理、取消及跨平台方案；
+本阶段不实施这些扩展，也不将默认关闭改为默认启用。
+
+审查与Git准备
+生产差异集中在配额、可选Query Worker、Provider隔离、Chat协调和Recovery调用边界。
+没有数据库schema迁移、第三方基础设施或新增依赖；没有实验埋点进入生产路径。
+本轮只补齐services/README中的capacity/Provider职责，并创建本总结和文件清单。
+关键字/Token格式扫描与人工核对没有发现真实凭据或真实用户材料；测试email/密码/Provider key
+均为合成值。证据保留本地路径、PID、硬件信息，不等同于已完成通用PII或秘密扫描工具认证。
+.env、data、.local、venv、缓存、原始.log仍不纳入提交；不执行git add .或强制加入忽略文件。
+旧失败pilot、重复轮次和错误初版汇总保留在磁盘，不伪装为成功结论；候选集合与留存集合逐文件
+列于tests/experiments/evidence/phase3-closure/commit-manifest.json（含大小、SHA256及分组）。
+原始回归log受现有.gitignore忽略，结构化verification.json保留结果及log哈希；不改ignore规则。
+
+建议Commit Plan（尚未暂存、Commit或Push）
+1. feat(backend): harden query worker ownership and coordinate chat lifecycles
+   生产实现、配置模板、相关单元/集成回归、五份运行说明、services README。
+   不机械拆成各功能小Commit：chat.py/main.py/config.py和共享Job helper有交叉依赖；逐功能拆分
+   需要额外hunk分割并重新验证中间状态。一个可运行的实现Commit更稳妥。
+2. test(backend): preserve phase 3 concurrency and performance acceptance evidence
+   可复现实验代码/报告、经筛选正式JSON、阶段总结、最终验收结果和清单。
+   原始失败试运行本地留存，不删除；报告引用的关键反例和失败诊断证据仍保留在候选集合。
+逐文件精确清单以manifest的commit_1、commit_2、retain_local字段为准。最终确认后才可暂存/提交，
+提交前重新比对清单哈希、diff和敏感信息；Push需要独立授权。
+
+完成标准
+最终实测：303项中302通过、1项已有SQLite专用测试不适用，耗时131.783秒；没有新增SKIP。
+Ruff和git diff --check通过；真实HTTP/协调器/异常事务检查通过。User行锁复查COUNT=99/100、
+HTTP=200/409、最终100；测试服务和两个独立集群均正常清理。生产Python与Final Load时一致。
+详见verification.json：完整Backend、Ruff、隔离PostgreSQL事务/Recovery测试通过；必要
+交错与资源清理再次核验；没有未处理的正确性阻断项，则满足本阶段默认关闭、单Worker范围的
+工程完成标准（本轮已满足）。该判断不等于生产全面并发启用、跨平台支持或系统最大容量验收。

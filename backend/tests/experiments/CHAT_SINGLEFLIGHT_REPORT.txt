@@ -1,0 +1,91 @@
+Chat Single-flight Step 1 — 2026-10-19
+
+Source and scope
+HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b, with existing uncommitted Phase 3 work preserved.
+No commit was created. Global chat_slot remains capacity 1. No changes in this
+step to Worker Supervisor, document indexing, database schema/transactions,
+Recovery protocol, or concurrency between different request IDs.
+
+Implementation
+app/services/chat/singleflight.py: short threading.Lock makes leader registration
+atomic. Registry stores a semantic fingerprint, completion Event and failure
+metadata only. Fingerprint includes authenticated user and all request fields.
+app/api/routes/chat.py: followers are identified before chat_slot. Their auth/read
+transaction is rolled back before bounded waiting; after leader success they read
+ChatTurn using their own Session and the existing persisted binding checks.
+Leader exceptions roll back before completing/removing the registry entry and
+waking all followers. Failure to acquire chat_slot follows this same cleanup.
+app/core/config.py and .env.example: CHAT_SINGLEFLIGHT_WAIT_SECONDS=30, range 0.1–90.
+tests/test_auth.py fixes that setting in synthetic test environment.
+tests/test_chat_singleflight.py: atomic registration, fingerprint conflicts,
+timeout independence, failure broadcast and stale ownership checks.
+docs/chat-singleflight.txt and services/README.md describe the integration.
+
+Verified experiment
+Python 3.12.10, Windows 11; dedicated WSL PostgreSQL 16.15, READ COMMITTED.
+Real loopback TCP Uvicorn, one API worker, real authentication, offline FastEmbed,
+RAG and persistence. Only LLM generation is mocked. No development DB/provider.
+Threading Events establish follower registration and LLM/slot interleavings;
+all waits and HTTP requests have finite timeouts. No timing sleeps establish order.
+Each target begins without session_id. Two followers join the same request ID.
+
+Scenario                 Leader / followers       Result
+Success                  200 / 200 / 200          One LLM call, one durable turn; replay identical.
+Parameter conflict       200 / 200 / 200          Additional mismatched question returns 409.
+Follower timeout         200 / 504 / 200          Timed-out follower leaves leader running.
+Leader slot denied       429 / 429 / 429          Target performs no LLM call or write.
+Generation failure       502 / 502 / 502          No durable changes, registry cleared.
+Commit failure           500 / 503 / 503          No durable changes, generic follower failure.
+
+Commit failure is a real PostgreSQL rejection using a test-only DEFERRABLE
+INITIALLY DEFERRED constraint trigger on ChatTurn. It fires during COMMIT after
+flush, rather than replacing Session.commit with a pre-commit exception.
+Failed cases can subsequently succeed on explicit caller retry; no automatic
+retry is implemented. In the busy case the unrelated slot holder succeeds:
+its one LLM call and durable turn are counted separately from the rejected target.
+Every scenario ends with zero registry entries. Followers/conflicts/replays have
+no retrieval, generation or commit events. Fresh independent database reads check
+ownership, response equality, message contents and source/evidence consistency.
+Final totals including explicit retries and the unrelated blocker: 7 Sessions,
+7 workspace bindings, 7 profiles, 14 Messages, 7 ChatTurns, 7 Evidence rows.
+Total LLM calls: 9 = 7 committed successes + 2 injected failures.
+
+Evidence
+evidence/chat-singleflight-step1-02/result.json: passing run, complete ordered
+events, HTTP responses, source hashes, independent DB snapshots and cleanup flags.
+evidence/chat-singleflight-step1-02.log: expected injected exception logs.
+evidence/chat-singleflight-step1/result.json: retained initial harness failure.
+That attempt failed because the test's slot-release Event was not reset between
+cases; the target finished before followers joined. Resetting the test Event
+fixed the interleaving. This was not evidence of a production Single-flight defect.
+Source hashes before/after the passing experiment match. API, schema/function,
+and temporary directory cleanup succeeded; cluster cleanup recorded separately.
+
+Regression and cleanup
+Full Backend unittest discovery: 278 tests in 190.783 seconds, OK (1 skipped).
+This includes existing auth, disposable/persistent worker, supervisor, startup
+readiness and PostgreSQL recovery coverage, plus 4 new registry tests.
+Full backend Ruff: All checks passed. git diff --check: passed.
+Log: evidence/chat-singleflight-regression.log.
+The dedicated PostgreSQL cluster was stopped and removed successfully, including
+the separate recovery_protocol database used for regression. Confirmation:
+evidence/chat-singleflight-step1-02/cleanup.json (exit_code=0, removed=true).
+
+Reproduction (PowerShell, repository root; WSL PostgreSQL packages required)
+wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_concurrency_pg.sh /tmp/asteria-concurrency-cross-singleflight-NEW start
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_singleflight.py --url postgresql+psycopg://concurrency_test@127.0.0.1:55489/workspace_concurrency_test --pgdata /tmp/asteria-concurrency-cross-singleflight-NEW/pgdata --output backend/tests/experiments/evidence/chat-singleflight-NEW
+wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_cross_cleanup.sh /tmp/asteria-concurrency-cross-singleflight-NEW
+Use a fresh unique cluster/output name and always run cleanup, even on failure.
+The script rejects a nonmatching PGDATA, wrong database endpoint or nonempty schema.
+
+Limits
+This is process-local coordination, not cross-process exactly-once execution.
+Process death or uncertain commit acknowledgement still requires persisted replay
+and does not prove the provider ran only once. Followers occupy bounded-wait HTTP
+thread resources; no admission/capacity or load claim is made. 30 seconds is a
+default wait bound, not a guarantee every leader finishes before follower timeout.
+Deleted committed results can yield follower 503. Optional null versus explicit
+values are distinct in-flight; historical persisted replay semantics, including
+its lack of a stored ui_locale binding, remain unchanged. Existing Recovery and
+Supervisor behavior is covered by regression, not exhaustively combined with all
+Single-flight failure timings. No Session-level lock or broader architecture added.

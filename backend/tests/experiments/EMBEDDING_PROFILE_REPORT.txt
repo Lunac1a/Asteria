@@ -1,0 +1,151 @@
+Asteria Phase 3 — Disposable Embedding Worker Profiling
+Date: 2026-10-17 Australia/Sydney
+HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b
+
+Scope and architecture
+The prior uncommitted knowledge.py row-lock fix and all experiment files were
+preserved. No production source changed in this profiling task.
+Actual chain: api/routes/chat.py calls retrieve(); services/knowledge/retrieval.py
+queries candidates and calls run_worker({texts:[question]}, timeout). run_worker
+keeps the existing semaphore, restricted environment, subprocess.run invocation
+and deadline. index_worker.py installs its memory limit, reads JSON, imports
+FastEmbed, constructs TextEmbedding(threads=2, local_files_only=True), calls
+query_embed(batch_size=16), materializes results and returns JSON.
+Every invocation remains a fresh disposable process; no persistent model/worker.
+
+Environment / workload
+Same Python executable, Windows host, offline model and fixed query as Chat
+Baseline. Model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2.
+Query: According to the document, what does a database transaction guarantee?
+Model cache copied into an owned temporary directory under repository .local;
+same ONNX/JSON file hashes retained. OMP_NUM_THREADS=2, TOKENIZERS_PARALLELISM=false,
+HF_HUB_OFFLINE=1, production worker memory limit and 30s timeout retained.
+This experiment directly invokes the actual retrieval.run_worker boundary. It
+does not repeat FastAPI, PostgreSQL or retrieval scoring: those are outside the
+1702.80ms worker interval being decomposed. No database connection is opened,
+and no external model download or paid provider call is made.
+3 paired warmups excluded, then 30 measured original/profiled pairs (60 child
+processes). Pair order alternates original/profiled and profiled/original to
+reduce ordering bias. No concurrency. Filesystem caches may remain warm; every
+child still imports and constructs its own encoder.
+
+Instrumentation
+Original mode runs the untouched production index_worker.py. Profiled mode
+runs a temporary source copy with guarded, exact-match timestamp insertions.
+The production file is never overwritten. The generated copy is preserved as
+instrumented_worker.txt. Apart from recording time points and writing timing
+JSON to stderr, the same functions and list-comprehension materialization run.
+The production parent handles stdout JSON exactly as usual. Parent encode/decode
+wrappers call the original json functions and measure their real boundaries.
+Python perf_counter_ns uses Windows QueryPerformanceCounter; parent/child time
+points share the same system clock. Raw timestamps and all samples are retained.
+
+Precisely measured intervals and important boundaries
+- Parent total: real retrieval.run_worker entry to return, including telemetry
+  extraction in profiled mode. This is the instrumentation overhead comparison.
+- Launch to first child marker: parent immediately before subprocess.run to
+  child's first marker AFTER importing time. COMBINED process creation, Python
+  initialization/site startup, script compilation, scheduling and tiny probe
+  setup. Process creation and Python initialization cannot be separated here.
+- Standard imports: first child marker to after worker standard-library imports.
+- Resource limits: actual limit_memory() call.
+- Input: sys.stdin.read plus json.loads; not a standalone IPC transfer metric.
+- FastEmbed import: from fastembed import TextEmbedding and transitive imports.
+- Model initialization: complete TextEmbedding constructor; includes all model,
+  tokenizer/runtime initialization work it performs, not isolated disk I/O.
+- Embedding pipeline: method(texts, batch_size=16) through full iterator/list
+  materialization and vector.tolist. Includes tokenization, inference and output
+  processing. It is NOT pure ONNX kernel execution time.
+- Child JSON encode: json.dumps(result). Stdout write: print(encoded), including
+  any buffering/pipe blocking. It does not guarantee flushed delivery.
+- After-write to parent return: child after print to subprocess.run return.
+  COMBINED stderr telemetry, flushing, process/library teardown, pipe draining,
+  reaping and scheduling. Pure IPC and teardown cannot be separated here.
+No leftover duration is presented as a precise startup, inference or IPC cost.
+Parent subprocess interval contains child intervals; do not sum nested rows.
+
+Output validation and failed preparation runs
+Every successful sample must produce one finite 384-dimensional vector and
+match the original reference within max absolute difference 1e-6; norms are
+recorded. This is numerical equivalence to production, not semantic-quality
+evaluation. No unit-norm assumption is imposed: this model's observed norm is
+about 4.99, and production scoring handles vector similarity independently.
+Two preparation attempts are excluded and preserved: first failed before any
+worker invocation because the sandbox temporary directory was not writable;
+second stopped on an incorrect test-only unit-norm assertion on ORIGINAL output.
+The fixture was corrected, not the model/production code. The first empty
+temporary directory was later confirmed absent. Successful temporary copies are
+cleaned by the runner; subprocess.run waits for each child to exit.
+
+Artifacts / reproduction
+Script: profile_embedding_worker.py
+Final raw evidence: evidence/embedding-profile-final-30/result.json
+Generated instrumentation: same directory/instrumented_worker.txt
+Preparation failures: evidence/embedding-profile-30/ and embedding-profile-30-retry/
+Execution logs: evidence/embedding-profile*-execution.log
+From repo root, use a NEW output directory:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/profile_embedding_worker.py --pairs 30 --output backend/tests/experiments/evidence/profile-NEW
+Requires the existing local model cache; no PostgreSQL or service startup.
+Run in the same host execution environment as the Chat Baseline. A sandbox
+with different process restrictions is not a comparable timing environment.
+
+Limitations
+One fixed query/model and host, warm filesystem caches, no CPU pinning or control
+over host load/antivirus/frequency. Probe overhead is checked by paired original
+runs but cannot be assumed zero. Child entry has no marker before Python starts.
+FastEmbed import and constructor are aggregate phases, not per-library or
+per-file profiles. P50/P95 use nearest-rank across 30 measured samples per mode.
+No performance optimization, global configuration change or Git commit.
+
+Measured results (milliseconds; 30 samples per mode; 6 warmup calls excluded)
+Interval                                      Mean        P50         P95
+Original worker parent total                1796.098    1822.529    1963.450
+Profiled worker parent total                1788.825    1820.234    1922.916
+Profiled subprocess.run                     1786.548    1818.314    1920.255
+Launch to first marker (combined)             103.521     103.642     124.487
+Worker standard imports                       32.233      32.996      37.657
+OS resource limit installation                 7.984       8.110       9.231
+Child stdin read + JSON decode                  0.032       0.026       0.041
+FastEmbed import                             696.991     712.931     818.119
+TextEmbedding constructor                    744.872     765.744     818.124
+Full embedding pipeline                        7.475       7.424       9.122
+Post-embedding return/output assembly         132.121     132.507     141.595
+Child result JSON encode                       0.199       0.175       0.405
+Child buffered stdout write                    0.022       0.017       0.035
+After-write to parent return (combined)        61.092      61.636      72.891
+Parent JSON encode (profiled mode)              0.016       0.014       0.029
+Parent JSON decode (profiled mode)              0.161       0.158       0.195
+
+The 132.121ms interval is measured between the existing embedding_end and
+serialize_start markers, NOT obtained by subtracting named stages from total.
+It includes returning from embed(), release of local objects and main's result
+assembly. Encoder/runtime destruction is a plausible contributor, but was not
+separately instrumented and is not established as the entire cost. Its raw
+values/statistics are preserved in additional-interval.json; future runs also
+include this interval directly in the main summary.
+
+Instrumentation and correctness findings
+All 66 final-run calls (including warmups) produced finite 384-D vectors with
+max absolute difference 0.0 against the untouched worker reference.
+Original mean 1796.098ms versus profiled mean 1788.825ms: profiled -7.273ms
+(-0.405%). Paired difference median -10.189ms, P95 +245.873ms, range -258.042
+to +308.052ms. No obvious mean slowdown is observed, but paired noise is large;
+this is not proof of zero instrumentation overhead or a measured speedup.
+The baseline worker mean was 1702.803ms; today's original mean is about 5.5%
+higher. Host/session variation and narrowed harness scope prevent interpreting
+that difference as a production regression or an instrumentation effect.
+
+Most useful next research target (no optimization performed)
+FastEmbed import plus model construction cost 1441.863ms on average, about
+80.6% of profiled parent total, versus 7.475ms for the complete embedding
+pipeline. Therefore initialization/import work is the strongest measured
+candidate for deeper investigation, especially constructor components and
+transitive import costs. The post-embedding 132ms interval is a secondary
+candidate for isolating object/runtime cleanup. This evidence does not authorize
+removing process isolation, adding a cache or introducing a persistent worker.
+
+Final status
+Profiling passed; temporary model/worker copies removed; every subprocess
+completed and was reaped. No database/service was started. Failed preparation
+records remain as evidence and are excluded from statistics. Ruff and
+git diff --check passed; no new production edits or Git commit.

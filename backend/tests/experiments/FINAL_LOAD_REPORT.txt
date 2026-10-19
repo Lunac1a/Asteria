@@ -1,0 +1,105 @@
+Asteria Phase 3 — Final Load Benchmark (2026-10-20)
+
+结论
+在本次受控突发负载下，新路径提高了成功率和成功吞吐，但仍有大量容量拒绝。
+支持保持 Feature Flag 的受控、单 API Worker 试用；不足以支持默认全面启用或宣称容量上限。
+本轮未修改生产代码、锁、容量、Supervisor、Recovery 或默认配置，未提交 Git。
+
+环境与固定负载
+HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b，保留已有未提交 Phase 3 修改。
+精确源码哈希和工作区状态见 evidence/final-load-01/source.json。
+Windows、i9-13980HX（24 核/32 逻辑处理器），约 31.62 GiB 系统内存。
+Python 3.12.10、Windows 11（10.0.26300）；详细配置见 http/analysis.json 的 plan。
+独立 WSL PostgreSQL 16.15，READ COMMITTED；隔离集群目录由外层脚本核对并清理。
+真实 TCP HTTP、JWT 用户查询、真实 FastEmbed 与常驻 Query Worker；仅外部 LLM 使用
+本地 OpenAI-compatible Mock。Mock 自动固定等待 2 秒，无阶段放行屏障干预测量请求。
+一个真实索引文档、固定问题及两条初始历史，每请求新建等价的已有 Session 和唯一 request_id。
+同一合成用户/Workspace 下的独立 Sessions；不代表多租户隔离或不同文档规模。
+连接池 size=5/max_overflow=10/timeout=30s；容量不变；Uvicorn 一个 Worker、limit_concurrency=16。
+Session 等待 1 秒；仅后续异常回归切换为旧夹具的 0.15 秒，不混入性能样本。
+并发级别 1、2、4，每模式每级别 10 轮，共 140 个测量请求。
+每级别 AB/BA 交替，所有请求线程通过同一 Barrier 放行；不按服务执行阶段安排下一请求。
+两模式各预热一次，测量期间复用同一模型进程，模式仅在上一批安全结束后切换。
+HTTP 延迟从客户端创建前计时，包含独立 httpx Client 的构造和 TCP 请求。
+这不是纯服务端耗时；Barrier 控制调用释放，不保证客户端初始化后 TCP 到达绝对同步。
+客户端放行离散度见 analysis.json。线程与 OS 调度仍影响哪个请求通过 Embedding 门禁。
+没有根据观察到的结果修改负载条件或追加更有利的错峰负载。
+
+相同负载下的结果（旧 → 新；延迟单位 ms，吞吐单位 requests/s）
+并发  成功数       成功率       HTTP RPS       成功吞吐       成功 Mean / P50 / P95
+1     10/10→10/10  100%→100%   .2604→.2599    .2604→.2599    3841/3875/3953 → 3846/3875/4016
+2     10/20→12/20   50%→60%    .4984→.5000    .2492→.3000    4013/3984/4188 → 4018/3969/4187
+4     10/40→14/40   25%→35%    .9797→.9664    .2449→.3382    4083/4047/4375 → 4160/4140/4454
+成功吞吐变化：1 并发 -0.17%，2 并发 +20.37%，4 并发 +38.10%。
+成功率在 2/4 并发各提高 10 个百分点。HTTP RPS 包含拒绝，不能单独视为能力收益。
+吞吐分母为各批 Barrier 放行至最后响应的累计墙钟时间，不含数据准备和事后核验。
+
+拒绝请求单独统计
+并发  429 旧→新    拒绝 Mean / P50 / P95（旧 → 新）
+1     0%→0%        无拒绝样本
+2     50%→40%      436/437/453 → 438/438/453
+4     75%→65%      514/516/562 → 517/515/532
+所有测量请求 409=0，5xx=0；后续故障注入的预期 500 不计入 Benchmark。
+2 并发：旧 10 次 Chat admission 429；新 8 次 Embedding capacity 429。
+4 并发：旧 30 次 Chat admission 429；新 19 次 Chat admission + 7 次 Embedding capacity 429。
+Embedding 拒绝有 Supervisor 异常埋点佐证，不仅根据延迟猜测。
+新架构 2 并发各轮成功数见 JSON（8 轮一个、2 轮两个）；4 并发为 6 轮一个、4 轮两个。
+
+P95 判断
+1/2/4 并发成功 P95 分别变化 +1.59%/-0.02%/+1.81%，未观察到大的尾延迟恶化。
+但每组仅 10–14 个成功样本，nearest-rank P95 实际接近最大值；未给出统计显著性。
+没有用户定义的 SLO，不能断言绝对约 4.0–4.5 秒一定可接受。
+新旧成功集合不同，成功 P95 存在选择效应；已同时保留拒绝延迟和全量响应。
+
+资源实测与边界
+每约 200ms 尝试采样；实际周期受 Windows 枚举/数据库读取开销影响，原始单调时间可复核。
+API 与客户端、Mock server、采样器共进程，以下 API 指标包含夹具开销。
+级别/模式     API+夹具 RSS峰值/Private MiB   Provider RSS/Private MiB  Provider进程/线程/句柄峰值
+1 旧/新       124.4/102.5 →124.2/102.5       90.2/60.2→90.2/60.1      3/15/414→3/15/418
+2 旧/新       144.3/122.3 →143.7/121.6       90.1/60.1→179.7/120.0    3/15/419→6/28/800
+4 旧/新       192.2/171.8 →190.3/168.8       90.0/60.1→179.9/120.1    3/15/418→6/29/831
+常驻 Embedding Job 三个进程合计 RSS 约 624.7 MiB、Private 626.2 MiB。
+它是一个模型 Worker 的启动器/执行进程树，不是三个模型实例。
+API+夹具线程峰值 18、句柄峰值 1103。实验主动保留进程句柄用于退出核对，客户端与证据也在
+该进程中累计；这些数值不能用于认定生产 API 泄漏或精确预测其稳态内存。
+4 并发 API/Embedding/Provider 的每批已采样 CPU 时间增量均值（秒）：
+旧 1.963 / .530 / 1.056；新 1.919 / .531 / 1.523。
+这是采样区间的 CPU 时间，不是系统 CPU 利用率，也没有覆盖 Provider 创建前后的全部 CPU。
+所有级别 CPU、RSS、Private、线程、句柄分组统计见 analysis.json。
+数据库池已 checkout 的采样峰值 2，PG 同库连接峰值 5（排除观察连接，含 idle 连接）。
+采样不捕获所有瞬时峰值；没有测量池等待时间或 PostgreSQL/WSL 整体 CPU/RSS。
+955 个资源样本中 6 个因进程退出边界上的 OS 读取失败而不完整，错误原样保留。
+RSS 求和会重复计算共享页。未观察到内存限额故障、进程失控或池耗尽；这不是资源安全上限证明。
+
+正确性与清理
+全部 140 请求独立数据库连接验证：成功 Session Message=4、ChatTurn=1，回答一致且 Evidence
+指向指定文档；拒绝 Session Message=2、ChatTurn=0，没有生成；Learning notes/revision 保持初值。
+成功请求恰好一次 LLM，拒绝请求零次；Registry、Session Coordinator 与 Workspace Permit 退出后为空。
+真实模型 HTTP 后置实验：同 Session 修改409、Session Delete409、Workspace Delete409；相同
+request_id 同时调用返回同一持久化结果，仅一次生成。延迟约束 COMMIT 失败暂停 Rollback 时，
+同 Session 和 Workspace Delete 仍409；释放后预期500，无部分持久化。新 Session 仍走排他旧路径。
+独立 coordination 实验使用确定性测试模型验证 Learning 双向互斥、删除、独立 Learning 更新及异常清理；
+不能将该部分标记为真实 FastEmbed 性能样本。
+72 个 Provider Job 关闭时 active_processes=0，捕获进程句柄均确认退出；生产清理同时核验 Job
+成员退出与 IPC 完成。Persistent Worker 最后 READY/restarts=0，正常关闭捕获成员均退出。
+外层实验 Job total_processes=224、active_processes=0、日志线程停止。
+完整 Backend 回归：303 项、198.811 秒，OK（跳过1项）；Ruff 与 git diff --check 通过。
+生产 app 源码哈希在本轮前后完全一致。隔离服务已退出，PostgreSQL 已停止且集群目录已删除。最终清理状态以 evidence/final-load-01/result.json、regression.log 为准。
+
+决策与未验证限制
+本轮观察到小规模突发请求的成功率/吞吐改善，未发现持久化一致性回退。
+但新路径在 2/4 并发仍有 40%/65% 拒绝，Embedding 单任务容量成为明确限制之一。
+没有充分证据建议直接默认启用；保留 opt-in 更符合现有证据。真实 Provider、长历史、大文档集、
+不同用户、多租户、长期稳态、持续到达流、真实网络延迟及系统饱和未验证。
+仅单 API Worker，最多两路共享 Chat；不是四路成功生成或多 Worker 支持。
+后续可讨论真实 SLO 和代表性到达流实验，但本轮不修改容量或实施优化。
+
+复现（仓库根目录，Windows + 当前离线模型缓存 + WSL Ubuntu-24.04）
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/run_final_load.py --output backend/tests/experiments/evidence/<new-directory>
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/analyze_final_load.py backend/tests/experiments/evidence/<new-directory>/http/result.json
+backend/.venv/Scripts/ruff.exe check backend
+输出目录必须不存在；脚本创建独立 PG16 集群，外部 Job watchdog 600秒，完整回归300秒，最后清理集群。
+使用端口55489，勿与其他隔离实验同时运行。生产数据库从不连接。
+脚本：final_load_workload.py、run_final_load.py、analyze_final_load.py；复用 session_chat_concurrency.py
+的 --load 模式与现有隔离夹具。JSON：evidence/final-load-01/http/result.json、analysis.json，
+以及 coordination/result.json、各 cleanup.json、source.json、hardware.json、regression.log。

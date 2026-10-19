@@ -1,0 +1,77 @@
+Asteria Phase 3 / Unit 1 — Workspace quota row-lock fix
+Date: 2026-10-16 (Australia/Sydney)
+Base HEAD: 925c8bd6a91444fb63d8403c9a642775e67b658b; changes uncommitted.
+
+Root cause and minimal fix
+document_slot is process-local. Previously two processes could each COUNT 99
+and commit one workspace, yielding 101. create_workspace now executes
+SELECT users.id ... FOR UPDATE before COUNT. At READ COMMITTED, a request
+waiting for that same user row runs its subsequent COUNT after the preceding
+creator commits. COUNT, INSERT and COMMIT stay in the same transaction.
+All exceptions inside this section, including quota HTTP 409, trigger explicit
+rollback; the existing decorator still releases document_slot in finally.
+If the user disappears after authentication, creation returns HTTP 401.
+
+Production change: backend/app/api/routes/knowledge.py only. Existing semaphore,
+session configuration, global isolation, indexing/chat/recovery concurrency and
+deployment restrictions are unchanged. No new infrastructure or migration.
+
+PostgreSQL observations (real HTTP, fresh dedicated cluster for each test)
+PostgreSQL 16.15, actual READ COMMITTED recorded in each request.
+Before: cross-process-unit1/result.json records COUNT 99/99, HTTP 200/200,
+both INSERT/COMMIT successful, final count 101.
+After / single-worker: B during A's pause returns 429; A returns 200; retry B
+returns 409. Independent database snapshots: 99 -> 100 -> 100.
+After / same-user: A pauses immediately after SELECT FOR UPDATE completes.
+B attempts its own SELECT FOR UPDATE. pg_blocking_pids(B) contains A's actual
+PostgreSQL backend PID. Neither request has COUNTed yet. After release,
+A COUNT=99/HTTP 200; B COUNT=100/HTTP 409; final count 100.
+After / different-users: A holds its user lock; process B locks its different
+user row, COUNTs 99 and commits/returns 200 before A is released. A subsequently
+returns 200; both users have 100 workspaces. This isolates DB row-lock behavior;
+different users in the SAME process still share document_slot and can get 429.
+
+Synchronization and evidence
+Multiprocessing Events replace the old dual-COUNT barrier for row-lock tests.
+Database blocker observation is bounded to 3 seconds, using read-only queries;
+no sleep-based race injection. Checkpoints, HTTP, SQL statements, connections,
+process startup and shutdown have finite timeouts. Independent Sessions use
+NullPool; isolation/PID observation adds read-only queries before the handler.
+Per-run result.json and postgres.log are in:
+  evidence/row-lock-single-worker/
+  evidence/row-lock-same-user/
+  evidence/row-lock-different-users/
+All API processes exited; dedicated clusters were stopped and removed.
+Cross-process cleanup is recorded in result.json; single-worker cleanup.json
+records exit 0 and cluster removal. No development DB or real users were used.
+
+Repeat from repository root (use a fresh output directory for each invocation)
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/run_single_worker.py --output backend/tests/experiments/evidence/single-NEW
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/workspace_cross_process.py --mode same-user --output backend/tests/experiments/evidence/same-NEW
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/workspace_cross_process.py --mode different-users --output backend/tests/experiments/evidence/different-NEW
+Requires WSL Ubuntu-24.04 and unused loopback PostgreSQL port 55489.
+Runners provision and clean their own isolated cluster; do not run concurrently.
+
+Additional regression coverage
+test_workspace_creation.py checks real HTTP quota rejection and rollback on an
+injected commit error AFTER INSERT flush, verifies no row persists, then checks
+that the next request succeeds (including semaphore release). These tests use
+SQLite and do not claim PostgreSQL locking coverage.
+Related Learning, Deletion, Document Recovery, Workspace Delete Recovery and
+Startup Recovery tests run with synthetic settings and isolated SQLite; optional
+PostgreSQL tests are skipped in that suite. Result: 81 tests, 73 passed and
+8 skipped, no failures (98.668s). See evidence/row-lock-regression.log.
+Ruff checks for all changed Python files and git diff --check passed.
+
+Remaining limitations
+This verifies only cooperating workspace creators using this User lock under
+READ COMMITTED. Direct SQL/CLI writers that bypass the protocol can violate the
+cap. SQLite does not implement this row-lock protection. Other isolation levels,
+deadlock/connection-loss/crash schedules, fairness and throughput were not tested.
+Database failures are rolled back and re-raised; no new retry/HTTP mapping or
+production lock timeout was introduced. A commit followed by response failure
+can still create client retry ambiguity. A full User FOR UPDATE lock can also
+contend with updates or foreign-key checks involving that same user; this was
+not broadened into a concurrency redesign.
+These results do NOT make indexing, chat or recovery safe across workers and
+do NOT remove Asteria's existing single-worker deployment restriction.

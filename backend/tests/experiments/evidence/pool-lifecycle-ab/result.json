@@ -1,0 +1,412 @@
+{
+  "head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "events": [
+    {
+      "event": "checkout",
+      "time": 0.03423079999993206,
+      "run": null,
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 0.27035740000064834,
+      "run": null,
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkout",
+      "time": 0.2748823000001721,
+      "run": null,
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 0.2927780999998504,
+      "run": null,
+      "connection": "2919055413552"
+    },
+    {
+      "event": "http_start",
+      "time": 0.8218184000033943,
+      "run": "A"
+    },
+    {
+      "event": "checkout",
+      "time": 0.8410022000025492,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 0.8667276000014681,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkout",
+      "time": 0.8669888000003994,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 0.8709168000023055,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "worker_start",
+      "time": 0.8710587000023224,
+      "run": "A",
+      "active_connections": [],
+      "pool_checked_out": 0
+    },
+    {
+      "event": "worker_end",
+      "time": 0.8710722000032547,
+      "run": "A",
+      "active_connections": [],
+      "pool_checked_out": 0
+    },
+    {
+      "event": "checkout",
+      "time": 0.8711833000015758,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 0.8789784000000509,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkout",
+      "time": 0.8791986000032921,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "http_end",
+      "time": 0.8812425000032817,
+      "run": "A",
+      "status": 200
+    },
+    {
+      "event": "checkin",
+      "time": 0.8823157000006177,
+      "run": "A",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "session_closed",
+      "time": 0.8823296000009577,
+      "run": "A"
+    },
+    {
+      "event": "http_start",
+      "time": 1.3187548000023526,
+      "run": "B"
+    },
+    {
+      "event": "checkout",
+      "time": 1.3252776000008453,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 1.347163800000999,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkout",
+      "time": 1.3474804000034055,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 1.3527655000034429,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "worker_start",
+      "time": 1.3530154000000039,
+      "run": "B",
+      "active_connections": [],
+      "pool_checked_out": 0
+    },
+    {
+      "event": "worker_end",
+      "time": 6.356301600000734,
+      "run": "B",
+      "active_connections": [],
+      "pool_checked_out": 0
+    },
+    {
+      "event": "checkout",
+      "time": 6.356588000002375,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkin",
+      "time": 6.364083400003437,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "checkout",
+      "time": 6.364296600000671,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "http_end",
+      "time": 6.367767700001423,
+      "run": "B",
+      "status": 200
+    },
+    {
+      "event": "checkin",
+      "time": 6.368538400001853,
+      "run": "B",
+      "connection": "2919055413552"
+    },
+    {
+      "event": "session_closed",
+      "time": 6.368558300000586,
+      "run": "B"
+    }
+  ],
+  "runs": [
+    {
+      "run": "A",
+      "delay": 0,
+      "http_duration": 0.0594240999998874,
+      "status": 200,
+      "body": {
+        "id": "3cb06d3d-2b56-4ca8-998c-905d8a1b3470",
+        "name": "synthetic.txt",
+        "status": "ready",
+        "error": null,
+        "chunk_count": 1,
+        "size_bytes": 63,
+        "embedding_model": "test:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        "created_at": "2026-10-17T01:08:11.544618+11:00"
+      },
+      "persisted": {
+        "status": "ready",
+        "chunk_count": 1,
+        "chunks": [
+          {
+            "content": "Synthetic indexing lifecycle document. One deterministic chunk.",
+            "vector": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "page": null
+          }
+        ]
+      },
+      "worker_duration": 1.3500000932253897e-05,
+      "checkouts": [
+        {
+          "run": "A",
+          "connection": "2919055413552",
+          "start": 0.8410022000025492,
+          "end": 0.8667276000014681,
+          "duration": 0.025725399998918874
+        },
+        {
+          "run": "A",
+          "connection": "2919055413552",
+          "start": 0.8669888000003994,
+          "end": 0.8709168000023055,
+          "duration": 0.0039280000019061845
+        },
+        {
+          "run": "A",
+          "connection": "2919055413552",
+          "start": 0.8711833000015758,
+          "end": 0.8789784000000509,
+          "duration": 0.007795099998475052
+        },
+        {
+          "run": "A",
+          "connection": "2919055413552",
+          "start": 0.8791986000032921,
+          "end": 0.8823157000006177,
+          "duration": 0.0031170999973255675
+        }
+      ],
+      "checkout_total": 0.04056559999662568,
+      "checkout_max": 0.025725399998918874,
+      "worker_overlap": [],
+      "unreturned_connections": []
+    },
+    {
+      "run": "B",
+      "delay": 5,
+      "http_duration": 5.04901289999907,
+      "status": 200,
+      "body": {
+        "id": "aa392dda-2814-4e5c-9154-6c8ac1c8c8d2",
+        "name": "synthetic.txt",
+        "status": "ready",
+        "error": null,
+        "chunk_count": 1,
+        "size_bytes": 63,
+        "embedding_model": "test:sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        "created_at": "2026-10-17T01:08:12.028444+11:00"
+      },
+      "persisted": {
+        "status": "ready",
+        "chunk_count": 1,
+        "chunks": [
+          {
+            "content": "Synthetic indexing lifecycle document. One deterministic chunk.",
+            "vector": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "page": null
+          }
+        ]
+      },
+      "worker_duration": 5.00328620000073,
+      "checkouts": [
+        {
+          "run": "B",
+          "connection": "2919055413552",
+          "start": 1.3252776000008453,
+          "end": 1.347163800000999,
+          "duration": 0.02188620000015362
+        },
+        {
+          "run": "B",
+          "connection": "2919055413552",
+          "start": 1.3474804000034055,
+          "end": 1.3527655000034429,
+          "duration": 0.005285100000037346
+        },
+        {
+          "run": "B",
+          "connection": "2919055413552",
+          "start": 6.356588000002375,
+          "end": 6.364083400003437,
+          "duration": 0.00749540000106208
+        },
+        {
+          "run": "B",
+          "connection": "2919055413552",
+          "start": 6.364296600000671,
+          "end": 6.368538400001853,
+          "duration": 0.004241800001182128
+        }
+      ],
+      "checkout_total": 0.038908500002435176,
+      "checkout_max": 0.02188620000015362,
+      "worker_overlap": [],
+      "unreturned_connections": []
+    }
+  ],
+  "pool_wait_time": "not measured",
+  "passed": true,
+  "source_sha256": {
+    "app/api/routes/knowledge.py": "46c9e27303ef9e03f05a5cc62b3d9e8d0120f7c0e014facd0255d24cb8dcbc4e",
+    "app/db/session.py": "40b777739d675747b8bb6050d49683de2183d05f46ff5a2431501931ed718c89"
+  },
+  "pool": {
+    "class": "QueuePool",
+    "size": 5,
+    "max_overflow": 10,
+    "timeout_seconds": 30.0,
+    "recycle_seconds": -1,
+    "pre_ping": false,
+    "reset_on_return": "ResetStyle.reset_rollback",
+    "sqlalchemy": "2.0.49",
+    "dialect": "postgresql",
+    "driver": "psycopg"
+  },
+  "postgres_version": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit",
+  "isolation": "read committed",
+  "api_stopped": true,
+  "intervals": [
+    {
+      "run": null,
+      "connection": "2919055413552",
+      "start": 0.03423079999993206,
+      "end": 0.27035740000064834,
+      "duration": 0.23612660000071628
+    },
+    {
+      "run": null,
+      "connection": "2919055413552",
+      "start": 0.2748823000001721,
+      "end": 0.2927780999998504,
+      "duration": 0.017895799999678275
+    },
+    {
+      "run": "A",
+      "connection": "2919055413552",
+      "start": 0.8410022000025492,
+      "end": 0.8667276000014681,
+      "duration": 0.025725399998918874
+    },
+    {
+      "run": "A",
+      "connection": "2919055413552",
+      "start": 0.8669888000003994,
+      "end": 0.8709168000023055,
+      "duration": 0.0039280000019061845
+    },
+    {
+      "run": "A",
+      "connection": "2919055413552",
+      "start": 0.8711833000015758,
+      "end": 0.8789784000000509,
+      "duration": 0.007795099998475052
+    },
+    {
+      "run": "A",
+      "connection": "2919055413552",
+      "start": 0.8791986000032921,
+      "end": 0.8823157000006177,
+      "duration": 0.0031170999973255675
+    },
+    {
+      "run": "B",
+      "connection": "2919055413552",
+      "start": 1.3252776000008453,
+      "end": 1.347163800000999,
+      "duration": 0.02188620000015362
+    },
+    {
+      "run": "B",
+      "connection": "2919055413552",
+      "start": 1.3474804000034055,
+      "end": 1.3527655000034429,
+      "duration": 0.005285100000037346
+    },
+    {
+      "run": "B",
+      "connection": "2919055413552",
+      "start": 6.356588000002375,
+      "end": 6.364083400003437,
+      "duration": 0.00749540000106208
+    },
+    {
+      "run": "B",
+      "connection": "2919055413552",
+      "start": 6.364296600000671,
+      "end": 6.368538400001853,
+      "duration": 0.004241800001182128
+    }
+  ]
+}

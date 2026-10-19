@@ -1,0 +1,1946 @@
+{
+  "passed": true,
+  "http": [
+    {
+      "label": "ready",
+      "start": 290918.468,
+      "end": 290918.859,
+      "status": 200,
+      "body": {
+        "ready": true,
+        "maintenance": false
+      }
+    },
+    {
+      "label": "batch0B",
+      "start": 290921.125,
+      "end": 290921.468,
+      "status": 429,
+      "body": {
+        "detail": "A chat is already running locally. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-workspace",
+      "start": 290921.5,
+      "end": 290921.843,
+      "status": 409,
+      "body": {
+        "detail": "Wait for the current answer to finish"
+      }
+    },
+    {
+      "label": "batch0A",
+      "start": 290919.281,
+      "end": 290924.093,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "c7187d91-88c4-491c-bd9b-b2082d09e574",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "third",
+      "start": 290927.859,
+      "end": 290928.203,
+      "status": 429,
+      "body": {
+        "detail": "Local chat capacity is busy. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-workspace",
+      "start": 290928.296,
+      "end": 290928.625,
+      "status": 409,
+      "body": {
+        "detail": "Wait for the current answer to finish"
+      }
+    },
+    {
+      "label": "batch1B",
+      "start": 290926.046,
+      "end": 290930.859,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "bfc0b938-0c1a-4901-aa1f-1f2957679844",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "batch1A",
+      "start": 290924.218,
+      "end": 290930.859,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "991d0f36-c9bc-4fca-a990-75b4abc9ff9b",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "third",
+      "start": 290934.5,
+      "end": 290934.796,
+      "status": 429,
+      "body": {
+        "detail": "Local chat capacity is busy. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-workspace",
+      "start": 290934.906,
+      "end": 290935.343,
+      "status": 409,
+      "body": {
+        "detail": "Wait for the current answer to finish"
+      }
+    },
+    {
+      "label": "batch2A",
+      "start": 290931.015,
+      "end": 290937.593,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "8b2f67ff-d992-48b4-adb5-7ac696c9e152",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "batch2B",
+      "start": 290932.703,
+      "end": 290937.593,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "9702f022-d848-4912-828a-b86f4b6a879c",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "batch3B",
+      "start": 290939.421,
+      "end": 290939.781,
+      "status": 429,
+      "body": {
+        "detail": "A chat is already running locally. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-workspace",
+      "start": 290939.828,
+      "end": 290940.187,
+      "status": 409,
+      "body": {
+        "detail": "Wait for the current answer to finish"
+      }
+    },
+    {
+      "label": "batch3A",
+      "start": 290937.718,
+      "end": 290942.406,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "5d7583dd-dae5-4f2a-b786-e7f1f6d265d4",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "batch4B",
+      "start": 290944.218,
+      "end": 290944.546,
+      "status": 429,
+      "body": {
+        "detail": "A chat is already running locally. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-workspace",
+      "start": 290944.593,
+      "end": 290944.921,
+      "status": 409,
+      "body": {
+        "detail": "Wait for the current answer to finish"
+      }
+    },
+    {
+      "label": "batch4A",
+      "start": 290942.531,
+      "end": 290947.14,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "e97d890b-034e-4afb-9d0b-ee62a33fa4a2",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "third",
+      "start": 290950.796,
+      "end": 290951.156,
+      "status": 429,
+      "body": {
+        "detail": "Local chat capacity is busy. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-workspace",
+      "start": 290951.25,
+      "end": 290951.593,
+      "status": 409,
+      "body": {
+        "detail": "Wait for the current answer to finish"
+      }
+    },
+    {
+      "label": "batch5A",
+      "start": 290947.281,
+      "end": 290953.843,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "7e94c9eb-01be-4489-b841-a57f6fdba697",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "batch5B",
+      "start": 290949.015,
+      "end": 290953.843,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "bbc4b037-52c8-42c2-b556-b6f8dfb25854",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "same",
+      "start": 290955.625,
+      "end": 290956.203,
+      "status": 409,
+      "body": {
+        "detail": "Session update is still in progress. Please try again shortly."
+      }
+    },
+    {
+      "label": "new-denied",
+      "start": 290956.203,
+      "end": 290956.546,
+      "status": 429,
+      "body": {
+        "detail": "A chat is already running locally. Please try again shortly."
+      }
+    },
+    {
+      "label": "delete-session",
+      "start": 290956.546,
+      "end": 290957.078,
+      "status": 409,
+      "body": {
+        "detail": "Session update is still in progress. Please try again shortly."
+      }
+    },
+    {
+      "label": "held",
+      "start": 290953.906,
+      "end": 290959.609,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "8fd21f1f-e045-415d-9c34-fa2528bb1575",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "same-id",
+      "start": 290957.078,
+      "end": 290959.609,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "8fd21f1f-e045-415d-9c34-fa2528bb1575",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "failed-same",
+      "start": 290963.64,
+      "end": 290964.171,
+      "status": 409,
+      "body": {
+        "detail": "Session update is still in progress. Please try again shortly."
+      }
+    },
+    {
+      "label": "failed-delete",
+      "start": 290964.171,
+      "end": 290964.5,
+      "status": 409,
+      "body": {
+        "detail": "Wait for active chat transactions to finish"
+      }
+    },
+    {
+      "label": "failA",
+      "start": 290959.671,
+      "end": 290964.562,
+      "status": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "label": "existing-denied",
+      "start": 290966.375,
+      "end": 290966.734,
+      "status": 429,
+      "body": {
+        "detail": "Local chat capacity is busy. Please try again shortly."
+      }
+    },
+    {
+      "label": "new-owner",
+      "start": 290964.562,
+      "end": 290968.968,
+      "status": 200,
+      "body": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "294297ea-437a-46ca-9ae9-a6b29ce4dc2e",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "d2685fd1-6d89-4f71-a0c0-f845ebff633e",
+            "document_id": "beed5a5f-7a4c-4e77-a0b9-6f0d37f786fd",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "document",
+        "learning_mode": "direct"
+      }
+    },
+    {
+      "label": "final-ready",
+      "start": 290968.968,
+      "end": 290969.312,
+      "status": 200,
+      "body": {
+        "ready": true,
+        "maintenance": false
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "embedding_done",
+      "label": "batch0A",
+      "at": 290919.671,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch0A",
+      "at": 290919.703,
+      "pid": 16100
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290921.125,
+      "request": "batch0A",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290923.843,
+      "request": "batch0A"
+    },
+    {
+      "event": "provider_close",
+      "label": "batch0A",
+      "at": 290924.031,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "batch0A",
+      "at": 290924.078
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290924.109,
+      "sid": "c7187d91-88c4-491c-bd9b-b2082d09e574",
+      "success": true
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290924.109,
+      "sid": "2c956ba8-512b-4703-97ec-f18255fc8a99",
+      "success": false
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch1A",
+      "at": 290924.593,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch1A",
+      "at": 290924.609,
+      "pid": 27872
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290926.046,
+      "request": "batch1A",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch1B",
+      "at": 290926.39,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch1B",
+      "at": 290926.406,
+      "pid": 37548
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290927.812,
+      "request": "batch1B",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290930.64,
+      "request": "batch1B"
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290930.64,
+      "request": "batch1A"
+    },
+    {
+      "event": "provider_close",
+      "label": "batch1B",
+      "at": 290930.812,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "provider_close",
+      "label": "batch1A",
+      "at": 290930.812,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "batch1B",
+      "at": 290930.859
+    },
+    {
+      "event": "commit",
+      "label": "batch1A",
+      "at": 290930.859
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290930.875,
+      "sid": "991d0f36-c9bc-4fca-a990-75b4abc9ff9b",
+      "success": true
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290930.906,
+      "sid": "bfc0b938-0c1a-4901-aa1f-1f2957679844",
+      "success": true
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch2A",
+      "at": 290931.375,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch2A",
+      "at": 290931.39,
+      "pid": 28856
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290932.703,
+      "request": "batch2A",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch2B",
+      "at": 290933.093,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch2B",
+      "at": 290933.109,
+      "pid": 16556
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290934.437,
+      "request": "batch2B",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290937.359,
+      "request": "batch2B"
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290937.359,
+      "request": "batch2A"
+    },
+    {
+      "event": "provider_close",
+      "label": "batch2A",
+      "at": 290937.531,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "provider_close",
+      "label": "batch2B",
+      "at": 290937.531,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "batch2A",
+      "at": 290937.593
+    },
+    {
+      "event": "commit",
+      "label": "batch2B",
+      "at": 290937.593
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290937.609,
+      "sid": "8b2f67ff-d992-48b4-adb5-7ac696c9e152",
+      "success": true
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290937.609,
+      "sid": "9702f022-d848-4912-828a-b86f4b6a879c",
+      "success": true
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch3A",
+      "at": 290938.109,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch3A",
+      "at": 290938.125,
+      "pid": 43444
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290939.421,
+      "request": "batch3A",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290942.203,
+      "request": "batch3A"
+    },
+    {
+      "event": "provider_close",
+      "label": "batch3A",
+      "at": 290942.359,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "batch3A",
+      "at": 290942.406
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290942.437,
+      "sid": "5d7583dd-dae5-4f2a-b786-e7f1f6d265d4",
+      "success": true
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290942.437,
+      "sid": "a00035c4-cece-4f7e-8762-bca1716906ab",
+      "success": false
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch4A",
+      "at": 290942.906,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch4A",
+      "at": 290942.921,
+      "pid": 23836
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290944.218,
+      "request": "batch4A",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290946.937,
+      "request": "batch4A"
+    },
+    {
+      "event": "provider_close",
+      "label": "batch4A",
+      "at": 290947.078,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "batch4A",
+      "at": 290947.125
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290947.156,
+      "sid": "e97d890b-034e-4afb-9d0b-ee62a33fa4a2",
+      "success": true
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290947.187,
+      "sid": "348a40a9-f29f-4b0c-a010-f4c270db861a",
+      "success": false
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch5A",
+      "at": 290947.671,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch5A",
+      "at": 290947.687,
+      "pid": 7712
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290949.015,
+      "request": "batch5A",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "embedding_done",
+      "label": "batch5B",
+      "at": 290949.39,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "batch5B",
+      "at": 290949.406,
+      "pid": 44132
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290950.734,
+      "request": "batch5B",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290953.609,
+      "request": "batch5B"
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290953.609,
+      "request": "batch5A"
+    },
+    {
+      "event": "provider_close",
+      "label": "batch5B",
+      "at": 290953.765,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "provider_close",
+      "label": "batch5A",
+      "at": 290953.765,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "batch5A",
+      "at": 290953.828
+    },
+    {
+      "event": "commit",
+      "label": "batch5B",
+      "at": 290953.843
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290953.859,
+      "sid": "7e94c9eb-01be-4489-b841-a57f6fdba697",
+      "success": true
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290953.859,
+      "sid": "bbc4b037-52c8-42c2-b556-b6f8dfb25854",
+      "success": true
+    },
+    {
+      "event": "embedding_done",
+      "label": "held",
+      "at": 290954.296,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "held",
+      "at": 290954.312,
+      "pid": 44104
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290955.625,
+      "request": "held",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290959.421,
+      "request": "held"
+    },
+    {
+      "event": "provider_close",
+      "label": "held",
+      "at": 290959.546,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "held",
+      "at": 290959.609
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290959.625,
+      "sid": "8fd21f1f-e045-415d-9c34-fa2528bb1575",
+      "success": true
+    },
+    {
+      "event": "embedding_done",
+      "label": "failA",
+      "at": 290960.062,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "failA",
+      "at": 290960.078,
+      "pid": 40076
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290961.421,
+      "request": "failA",
+      "history": [
+        {
+          "role": "user",
+          "content": "I am studying database transactions."
+        },
+        {
+          "role": "assistant",
+          "content": "We can examine their guarantees using your document."
+        }
+      ]
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290963.421,
+      "request": "failA"
+    },
+    {
+      "event": "provider_close",
+      "label": "failA",
+      "at": 290963.593,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "integrity",
+      "label": "setup",
+      "at": 290964.562,
+      "sid": "91d2ef75-316d-4514-9377-8dc6cfc4bdf2",
+      "success": false
+    },
+    {
+      "event": "embedding_done",
+      "label": "new-owner",
+      "at": 290964.968,
+      "pid": 35312
+    },
+    {
+      "event": "provider_launch",
+      "label": "new-owner",
+      "at": 290964.984,
+      "pid": 31360
+    },
+    {
+      "event": "llm_start",
+      "label": "setup",
+      "at": 290966.328,
+      "request": "new-owner",
+      "history": []
+    },
+    {
+      "event": "llm_end",
+      "label": "setup",
+      "at": 290968.75,
+      "request": "new-owner"
+    },
+    {
+      "event": "provider_close",
+      "label": "new-owner",
+      "at": 290968.906,
+      "accounting": {
+        "total_processes": 3,
+        "active_processes": 0,
+        "terminated_processes": 0
+      }
+    },
+    {
+      "event": "commit",
+      "label": "new-owner",
+      "at": 290968.968
+    }
+  ],
+  "batches": [
+    {
+      "index": 0,
+      "enabled": false,
+      "labels": [
+        "batch0A",
+        "batch0B"
+      ],
+      "seconds": 4.827999999979511,
+      "statuses": [
+        200,
+        429
+      ]
+    },
+    {
+      "index": 1,
+      "enabled": true,
+      "labels": [
+        "batch1A",
+        "batch1B"
+      ],
+      "seconds": 6.688000000023749,
+      "statuses": [
+        200,
+        200
+      ]
+    },
+    {
+      "index": 2,
+      "enabled": true,
+      "labels": [
+        "batch2A",
+        "batch2B"
+      ],
+      "seconds": 6.5939999999827705,
+      "statuses": [
+        200,
+        200
+      ]
+    },
+    {
+      "index": 3,
+      "enabled": false,
+      "labels": [
+        "batch3A",
+        "batch3B"
+      ],
+      "seconds": 4.7189999999827705,
+      "statuses": [
+        200,
+        429
+      ]
+    },
+    {
+      "index": 4,
+      "enabled": false,
+      "labels": [
+        "batch4A",
+        "batch4B"
+      ],
+      "seconds": 4.655999999959022,
+      "statuses": [
+        200,
+        429
+      ]
+    },
+    {
+      "index": 5,
+      "enabled": true,
+      "labels": [
+        "batch5A",
+        "batch5B"
+      ],
+      "seconds": 6.577999999979511,
+      "statuses": [
+        200,
+        200
+      ]
+    }
+  ],
+  "resource_samples": [
+    {
+      "at": 290921.5,
+      "providers": [
+        {
+          "pid": 16100,
+          "ppid": 39888,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 290921.484,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8822784,
+          "peak_rss": 8822784,
+          "private_bytes": 2478080,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 44092,
+          "ppid": 16100,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290921.484,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10878976,
+          "peak_rss": 10915840,
+          "private_bytes": 2441216,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 44268,
+          "ppid": 16100,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290921.5,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74358784,
+          "peak_rss": 75063296,
+          "private_bytes": 57856000,
+          "cpu_seconds": 1.25
+        }
+      ],
+      "api": {
+        "pid": 39888,
+        "rss_bytes": 120614912,
+        "peak_rss_bytes": 121786368
+      },
+      "embedding": [
+        {
+          "pid": 43064,
+          "rss_bytes": 8798208,
+          "peak_rss_bytes": 8798208
+        },
+        {
+          "pid": 44668,
+          "rss_bytes": 10960896,
+          "peak_rss_bytes": 10997760
+        },
+        {
+          "pid": 35312,
+          "rss_bytes": 635129856,
+          "peak_rss_bytes": 650670080
+        }
+      ]
+    },
+    {
+      "at": 290928.296,
+      "providers": [
+        {
+          "pid": 27872,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290928.218,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8810496,
+          "peak_rss": 8810496,
+          "private_bytes": 2453504,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 11664,
+          "ppid": 27872,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290928.234,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10883072,
+          "peak_rss": 10919936,
+          "private_bytes": 2445312,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 5524,
+          "ppid": 27872,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290928.25,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74031104,
+          "peak_rss": 74661888,
+          "private_bytes": 57507840,
+          "cpu_seconds": 1.25
+        },
+        {
+          "pid": 37548,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290928.265,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8810496,
+          "peak_rss": 8810496,
+          "private_bytes": 2457600,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 12216,
+          "ppid": 37548,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290928.281,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10887168,
+          "peak_rss": 10924032,
+          "private_bytes": 2449408,
+          "cpu_seconds": 0.0
+        },
+        {
+          "pid": 40876,
+          "ppid": 37548,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290928.296,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74260480,
+          "peak_rss": 74924032,
+          "private_bytes": 57753600,
+          "cpu_seconds": 1.296875
+        }
+      ],
+      "api": {
+        "pid": 39888,
+        "rss_bytes": 125337600,
+        "peak_rss_bytes": 126496768
+      },
+      "embedding": [
+        {
+          "pid": 43064,
+          "rss_bytes": 8798208,
+          "peak_rss_bytes": 8798208
+        },
+        {
+          "pid": 44668,
+          "rss_bytes": 10960896,
+          "peak_rss_bytes": 10997760
+        },
+        {
+          "pid": 35312,
+          "rss_bytes": 635195392,
+          "peak_rss_bytes": 650670080
+        }
+      ]
+    },
+    {
+      "at": 290934.906,
+      "providers": [
+        {
+          "pid": 28856,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290934.812,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8810496,
+          "peak_rss": 8810496,
+          "private_bytes": 2445312,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 16804,
+          "ppid": 28856,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290934.828,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10887168,
+          "peak_rss": 10924032,
+          "private_bytes": 2441216,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 14400,
+          "ppid": 28856,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290934.843,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74215424,
+          "peak_rss": 74874880,
+          "private_bytes": 57708544,
+          "cpu_seconds": 1.078125
+        },
+        {
+          "pid": 16556,
+          "ppid": 39888,
+          "threads": 4,
+          "exe": "python.exe",
+          "at": 290934.859,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8822784,
+          "peak_rss": 8822784,
+          "private_bytes": 2482176,
+          "cpu_seconds": 0.0
+        },
+        {
+          "pid": 31488,
+          "ppid": 16556,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290934.89,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10883072,
+          "peak_rss": 10915840,
+          "private_bytes": 2441216,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 18172,
+          "ppid": 16556,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290934.906,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74219520,
+          "peak_rss": 74883072,
+          "private_bytes": 57704448,
+          "cpu_seconds": 1.15625
+        }
+      ],
+      "api": {
+        "pid": 39888,
+        "rss_bytes": 127275008,
+        "peak_rss_bytes": 128425984
+      },
+      "embedding": [
+        {
+          "pid": 43064,
+          "rss_bytes": 8798208,
+          "peak_rss_bytes": 8798208
+        },
+        {
+          "pid": 44668,
+          "rss_bytes": 10960896,
+          "peak_rss_bytes": 10997760
+        },
+        {
+          "pid": 35312,
+          "rss_bytes": 635199488,
+          "peak_rss_bytes": 650670080
+        }
+      ]
+    },
+    {
+      "at": 290939.828,
+      "providers": [
+        {
+          "pid": 43444,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290939.796,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8806400,
+          "peak_rss": 8806400,
+          "private_bytes": 2445312,
+          "cpu_seconds": 0.046875
+        },
+        {
+          "pid": 20576,
+          "ppid": 43444,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290939.812,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10891264,
+          "peak_rss": 10928128,
+          "private_bytes": 2449408,
+          "cpu_seconds": 0.0
+        },
+        {
+          "pid": 26168,
+          "ppid": 43444,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290939.828,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74498048,
+          "peak_rss": 75210752,
+          "private_bytes": 58019840,
+          "cpu_seconds": 1.140625
+        }
+      ],
+      "api": {
+        "pid": 39888,
+        "rss_bytes": 126197760,
+        "peak_rss_bytes": 128425984
+      },
+      "embedding": [
+        {
+          "pid": 43064,
+          "rss_bytes": 8798208,
+          "peak_rss_bytes": 8798208
+        },
+        {
+          "pid": 44668,
+          "rss_bytes": 10960896,
+          "peak_rss_bytes": 10997760
+        },
+        {
+          "pid": 35312,
+          "rss_bytes": 635199488,
+          "peak_rss_bytes": 650670080
+        }
+      ]
+    },
+    {
+      "at": 290944.593,
+      "providers": [
+        {
+          "pid": 23836,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290944.546,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8806400,
+          "peak_rss": 8806400,
+          "private_bytes": 2445312,
+          "cpu_seconds": 0.03125
+        },
+        {
+          "pid": 34408,
+          "ppid": 23836,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290944.562,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10952704,
+          "peak_rss": 10989568,
+          "private_bytes": 2523136,
+          "cpu_seconds": 0.03125
+        },
+        {
+          "pid": 34832,
+          "ppid": 23836,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290944.593,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74379264,
+          "peak_rss": 75104256,
+          "private_bytes": 57847808,
+          "cpu_seconds": 1.15625
+        }
+      ],
+      "api": {
+        "pid": 39888,
+        "rss_bytes": 126971904,
+        "peak_rss_bytes": 128425984
+      },
+      "embedding": [
+        {
+          "pid": 43064,
+          "rss_bytes": 8798208,
+          "peak_rss_bytes": 8798208
+        },
+        {
+          "pid": 44668,
+          "rss_bytes": 10960896,
+          "peak_rss_bytes": 10997760
+        },
+        {
+          "pid": 35312,
+          "rss_bytes": 635199488,
+          "peak_rss_bytes": 650670080
+        }
+      ]
+    },
+    {
+      "at": 290951.25,
+      "providers": [
+        {
+          "pid": 7712,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290951.171,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8810496,
+          "peak_rss": 8810496,
+          "private_bytes": 2457600,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 18712,
+          "ppid": 7712,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290951.187,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10887168,
+          "peak_rss": 10919936,
+          "private_bytes": 2449408,
+          "cpu_seconds": 0.0
+        },
+        {
+          "pid": 29440,
+          "ppid": 7712,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290951.203,
+          "handles": 211,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74403840,
+          "peak_rss": 74981376,
+          "private_bytes": 58036224,
+          "cpu_seconds": 1.15625
+        },
+        {
+          "pid": 44132,
+          "ppid": 39888,
+          "threads": 3,
+          "exe": "python.exe",
+          "at": 290951.218,
+          "handles": 81,
+          "image": "D:\\Lunacia\\Asteria\\backend\\.venv\\Scripts\\python.exe",
+          "rss": 8810496,
+          "peak_rss": 8810496,
+          "private_bytes": 2453504,
+          "cpu_seconds": 0.015625
+        },
+        {
+          "pid": 26500,
+          "ppid": 44132,
+          "threads": 3,
+          "exe": "conhost.exe",
+          "at": 290951.234,
+          "handles": 106,
+          "image": "C:\\Windows\\System32\\conhost.exe",
+          "rss": 10887168,
+          "peak_rss": 10919936,
+          "private_bytes": 2453504,
+          "cpu_seconds": 0.03125
+        },
+        {
+          "pid": 26428,
+          "ppid": 44132,
+          "threads": 8,
+          "exe": "python.exe",
+          "at": 290951.25,
+          "handles": 213,
+          "image": "C:\\Users\\Lunacia\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+          "rss": 74354688,
+          "peak_rss": 75018240,
+          "private_bytes": 57823232,
+          "cpu_seconds": 1.109375
+        }
+      ],
+      "api": {
+        "pid": 39888,
+        "rss_bytes": 131276800,
+        "peak_rss_bytes": 132362240
+      },
+      "embedding": [
+        {
+          "pid": 43064,
+          "rss_bytes": 8769536,
+          "peak_rss_bytes": 8798208
+        },
+        {
+          "pid": 44668,
+          "rss_bytes": 10960896,
+          "peak_rss_bytes": 10997760
+        },
+        {
+          "pid": 35312,
+          "rss_bytes": 635199488,
+          "peak_rss_bytes": 650670080
+        }
+      ]
+    }
+  ],
+  "postgres": {
+    "version": "16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+    "isolation": "read committed"
+  },
+  "model_pid": 35312,
+  "supervisor": {
+    "state": "READY",
+    "restarts": 0,
+    "exhausted": false,
+    "inflight": false,
+    "window_restarts": 0,
+    "failed_cycles": 0,
+    "cooldown_until": null,
+    "retry_at": null,
+    "pid": 35312
+  },
+  "worker_exits": [
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    }
+  ],
+  "provider_exits": [
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 91
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    },
+    {
+      "wait_result": 0,
+      "exited": true,
+      "exit_code": 0
+    }
+  ],
+  "api_stopped": true
+}

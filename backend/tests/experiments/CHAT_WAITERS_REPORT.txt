@@ -1,0 +1,92 @@
+Chat Single-flight Step 2 — Bounded Waiters, 2026-10-19
+
+Design and audit
+HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b plus existing uncommitted work.
+Production changes are restricted to follower admission/release and configuration.
+app/cli/local.py:81–89 configures workers=1 and limit_concurrency=16.
+Installed Starlette concurrency.py:32 delegates synchronous work to AnyIO;
+AnyIO _asyncio.py:2957 defaults to CapacityLimiter(40). No application override
+was found. Installed Uvicorn h11_impl.py:223–225 checks both connections and
+tasks and may return 503 before Chat runs. Alternate launch commands may differ.
+
+Untuned defaults: CHAT_SINGLEFLIGHT_PER_REQUEST_LIMIT=4 and
+CHAT_SINGLEFLIGHT_GLOBAL_LIMIT=8. These are below the local HTTP concurrency and
+default thread limits, and prevent one flight consuming the entire follower budget.
+They do not reserve capacity for unrelated requests or establish optimal sizing.
+Nonnegative configuration is validated; zero disables new follower admission.
+The process registry reads limits at construction, so changes require restart.
+
+app/services/chat/singleflight.py: one lock checks parameter conflict then both
+limits and reserves both counters atomically. Matching overflow returns 429;
+parameter conflicts still return 409 even at capacity. Every accepted follower
+has its own reservation referencing its exact flight. The request-ID budget
+spans generations until old followers finish cleanup, so a new
+leader cannot bypass their occupied per-request budget. release() under the same
+lock is idempotent, including concurrent duplicate cleanup. Leader completion
+does not reset follower counters: waking followers release their own reservations.
+app/api/routes/chat.py: finally releases both counters after auth/read rollback
+and waiting, including exceptions or timeout, before reading the persisted result.
+Waiting never holds the registry lock. 504 and persisted replay semantics remain.
+chat_slot stays 1; no queue, retry, Session lock, Worker or Recovery changes.
+
+Verified deterministic tests
+tests/test_chat_waiters.py and experiments/chat_waiters.py:
+- Per-request limit rejects excess followers and preserves conflict priority.
+- Twelve threads racing on one ID: limit 2 admits exactly 2, rejects 10.
+- Twelve threads across three IDs: global limit 5 admits exactly 5, rejects 7;
+  checked for 20 rounds, with concurrent repeated release calls and zero leftovers.
+- Timeout returns 504, releases both slots and allows a new follower while the
+  original leader remains active.
+- Success, HTTP generation error and unexpected failure wake all followers;
+  all per-flight/global counts return to zero.
+- Old reservations do not decrement a replacement flight's counters.
+- Route rollback/wait/replay exceptions leave no follower capacity allocated.
+- Zero capacity still allows leaders and preserves 409 conflicts.
+Final dedicated runner: 31 tests passed; evidence/chat-waiters-step2-final-v2/result.json.
+These are real-thread registry and route fault-injection tests, not HTTP load tests.
+Multiple simultaneous executing Chat leaders are not fabricated by bypassing chat_slot.
+
+Verified real HTTP/PostgreSQL regression
+experiments/chat_singleflight.py was extended with four waiting followers and a
+fifth overflow request, synchronized using Events before releasing the leader.
+PostgreSQL 16.15, READ COMMITTED, fresh owned WSL cluster; Windows Python 3.12.10;
+real single-worker Uvicorn TCP, authentication, FastEmbed, RAG and persistence;
+only external LLM mocked. The four followers and leader returned identical 200
+results with one LLM invocation. Fifth follower returned 429 while all four prior
+reservations remained allocated and the leader remained paused. No work/persistence
+was performed by rejected or follower requests. Final follower count was zero.
+Previous success, conflict 409, timeout 504, busy leader 429, generation failure
+502 and actual PostgreSQL deferred COMMIT failure (leader 500/followers 503) all
+passed, with no leaked registry entries or capacity. Independent database snapshots
+confirmed expected totals: 7 Sessions, 7 ChatTurns, 14 Messages, 7 Evidence rows,
+including explicit retries and the unrelated slot-holder control request.
+Evidence: evidence/chat-waiters-http-step2-v2/result.json and adjacent .log.
+The deferred COMMIT exception in the log is expected fault injection.
+
+Final regression and resource cleanup
+Full Backend: 286 tests in 191.113 seconds, OK (1 SQLite-rejection test skipped
+because this run uses PostgreSQL). Final log: evidence/chat-waiters-regression-final.log.
+The 31-test dedicated runner includes repeated contention checks, not 31 additional
+distinct regression cases. Full backend Ruff and git diff --check passed.
+The API stopped, temporary model/files and schema/function were removed. The owned
+PostgreSQL cluster (including both experiment and recovery_protocol databases)
+was stopped and removed with exit code 0. Cleanup evidence is stored in
+evidence/chat-waiters-http-step2-v2/cleanup.json.
+
+Reproduction
+From repository root:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_waiters.py --output backend/tests/experiments/evidence/waiters-NEW
+For HTTP/PG, use the Step 1 report's isolated-cluster commands with fresh names;
+run chat_singleflight.py against its exact PGDATA, then workspace_cross_cleanup.sh.
+The HTTP script now additionally verifies the default per-request capacity of 4.
+Historical Step 1 JSON remains immutable. No development database or paid provider
+was used. No Git commit was created; previous worktree modifications are preserved.
+
+Limitations
+Process-local capacity only. It bounds admitted waiting followers, not requests
+before authentication, leader attempts, HTTP connections or replay reads after
+wait completion. Client disconnect does not necessarily stop a synchronous route;
+its capacity is retained until wait completion or bounded timeout. There is no
+fairness/queue guarantee. The global cross-ID bound is verified at the Registry
+level; HTTP tests preserve the existing single Chat leader policy. No stress test,
+multi-worker support or optimal capacity claim is made.

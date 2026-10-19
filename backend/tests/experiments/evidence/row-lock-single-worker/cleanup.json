@@ -1,0 +1,6 @@
+{
+  "cluster": "/tmp/asteria-concurrency-cross-single-8ca74cfd19324f639e51f70812ab4e9a",
+  "returncode": 0,
+  "output": "waiting for server to shut down.... done\nserver stopped\nisolated_cluster_removed\n",
+  "sql_log_archived": true
+}

@@ -1,0 +1,13 @@
+{
+  "cluster": "/tmp/asteria-concurrency-cross-session-20261019",
+  "exit_code": 0,
+  "removed": true,
+  "output": "waiting for server to shut down...... done\nserver stopped\nisolated_cluster_removed",
+  "regression": {
+    "log": "session-coordination-regression.log",
+    "passed": true,
+    "tests": 295,
+    "seconds": 140.306,
+    "skipped": 1
+  }
+}

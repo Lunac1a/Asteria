@@ -1,0 +1,98 @@
+Asteria Phase 3 — End-to-End Chat Performance Validation
+2026-10-19 | HEAD 925c8bd6a91444fb63d8403c9a642775e67b658b + preserved working changes
+
+实验环境与控制
+Windows 11 / Python 3.12.10，32 logical CPUs，Intel Family 6 Model 183。
+独立 WSL PostgreSQL 16.15，127.0.0.1:55489，READ COMMITTED；精确校验 PGDATA
+/tmp/asteria-concurrency-cross-chat-ab-20261019/pgdata 后才创建表。没有读取开发配置。
+PostgreSQL fsync=on、synchronous_commit=on、shared_buffers=128 MiB、max_connections=100、
+log_statement=all。SQLAlchemy 2.0.49 QueuePool：size=5，max_overflow=10，timeout=30s，
+recycle=-1，pre_ping=false，reset=rollback。未改生产 Pool 配置。
+FastAPI 0.136.0、Uvicorn 0.44.0、FastEmbed 0.9.0、ONNX Runtime 1.30.0。
+模型 sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2，离线缓存副本；
+固定 atomicity 文档（1 Chunk）、固定问题、2 条初始历史；真实索引子进程生成文档向量。
+每个请求使用新 Session 和 request_id。块之间重建相同 UUID、内容与配置的合成
+Workspace/Document/Chunk，Session 始终等价且独立；查询结果和 Prompt 完全一致。
+
+seed=20261019 随机选定首组，平衡顺序为 B A A B；任意时刻仅一个 API 服务。
+每块独立 Python 进程运行 Uvicorn 单 Worker，真实 loopback TCP HTTP；5 次 warm-up
+后 25 次测量，每组共 50 个正式样本、10 个 warm-up。每块停服、确认 Job 退出后再切换。
+API 与客户端在同一测试进程、不同线程，通过真实 TCP 通信；模型始终是独立子进程。
+每次均保留 JWT/用户校验、RAG、上下文准备、真实引用/响应校验、SQLAlchemy 提交。
+仅在外部 generate_response 边界替换确定性 Mock；provider wrapper/凭据解密仍执行。
+与旧 Baseline 一致：smart 问答、explicit_evidence 正常检索路径，citation_audit=false。
+未调用真实或付费 Provider。默认 Feature Flag 未改，启用只限测试运行时覆盖。
+
+Verified performance（毫秒；每组 N=50，nearest-rank）
+指标                              Disposable A       Persistent B
+HTTP Mean                         1441.27              68.97
+HTTP P50                          1435.03              67.77
+HTTP P95                          1502.47              73.92
+HTTP P99                          1529.60              94.60
+Retrieval Mean                    1372.75               7.13
+Retrieval P50 / P95 / P99          1367.19/1429.11/1458.89  7.09/7.56/8.12
+Embedding Worker Mean             1371.50               5.88
+Worker P50 / P95 / P99             1366.04/1427.65/1457.74  5.86/6.29/6.39
+Post-generation/Persistence Mean     56.77              49.81
+  Commit（嵌套）Mean                 11.05               4.81
+
+HTTP 平均减少 1372.31 ms（95.21%，20.90 倍）；Retrieval 减少 1365.61 ms（99.48%）；
+Worker 减少 1365.62 ms（99.57%，233.34 倍）。Worker 加速不等于 HTTP 加速。
+块均值 A：1443.45/1439.10 ms（差约 0.30%），B：69.97/67.96 ms（差约 2.95%）。
+本轮未因这些均值波动追加样本；50 样本 P99 等于最大值，不能作为可靠生产尾延迟 SLO。
+
+顺序成功吞吐：A 0.686 req/s，B 11.474 req/s。分母含每次独立连接持久化校验等
+测试间隙；不是并发容量。仅按 HTTP 总耗时归一化则为 A 0.694、B 14.500 req/s。
+两个指标都不含 warm-up、启动、建库和索引准备。
+
+资源成本
+B 预热后 Job 成员 RSS 总和：624.80 / 624.61 MiB；平均约 624.71 MiB，模型进程
+约 606 MiB，其余为启动辅助进程。RSS 总和可能重复计算共享页，不是独占物理内存。
+API RSS 两组均约 111 MiB。每块末尾模型 RSS 相比预热仅增加 20 KiB / 4 KiB；
+这不是长期稳定性或内存泄漏测试。A 临时 Worker 峰值未在本轮采样。
+Lifespan 启动耗时 A 16.91/16.40 ms，B 1242.94/1201.41 ms；模型初始化成本前移到启动。
+这些是已缓存文件系统下的服务启动时间，不是首次下载或冷磁盘启动时间。
+
+Correctness
+100/100 正式请求 HTTP 200 且业务校验通过；20 个 warm-up 同样通过。
+每次只有 1 次 Mock LLM 调用，route=retrieve、answer_basis=grounded、答案与来源符合预期。
+100 个唯一 request_id、100 个唯一 Session；每个 Session 最终 4 条 Message。
+独立 NullPool 连接逐次检查 ChatTurn.response、Message 和 MessageEvidence.sources/ai_mode。
+Query 向量（384 维）逐元素 JSON 的 SHA256 全部相同；所有 Prompt 相同，响应除了
+必须唯一的 session_id 之外完全相同；session_id 分别核对所属请求。未走幂等重放或回退。
+两块 B 都保持同一模型 PID、无重启；所有捕获 Job 成员句柄在正常关闭后确认退出。
+每块 /api/ready=200；无 Bearer Token 的资源访问被拒绝；停服正常、测试表清除。
+所有 backend/app Python 源码 SHA256 在测量前后相同。
+完整 Backend 回归：274 项，273 通过，1 项 SQLite 拒绝测试因使用真实 PostgreSQL 跳过，
+耗时 131.194 秒；原 PostgreSQL Recovery/Startup Readiness 用例本轮实际执行。
+回归在性能测量结束后运行，不与 Benchmark 争用资源。Ruff、git diff --check 通过。
+整个独立集群（含 workspace_concurrency_test 和 recovery_protocol）停止并删除，
+正式运行临时模型副本及试运行残留目录清理完成，详见 cleanup.json。
+
+试运行与工具问题（不计入有效样本）
+pilot 1 被沙箱 TCP 权限阻止；授权隔离连接后继续。
+pilot 2–4 尝试同时启用 Startup Recovery/维护模式，资源请求按既有保护返回 503。
+因此正式性能实验采用正常服务配置（Startup Recovery/maintenance=false），不绕过保护。
+pilot 2 暴露测试临时目录清理顺序问题，已改为先关闭 API；残留测试目录已清除。
+首次汇总错误地比较了唯一 session_id，四块测量本身均通过；保留 initial-summary.json
+和原日志，修正为先核对归属、再排除 session_id 比较业务响应，重新校验原始数据成功。
+
+收益与限制
+实测：复用模型显著减少本负载的 HTTP 延迟，代价是额外约 625 MiB 常驻 Job RSS。
+实测：B 的 Post-generation/Persistence 区间约占 HTTP 均值 72%；该区间还包含
+生成后编排和 ORM 操作，不能直接认定全部是 PostgreSQL 执行耗时。
+推断：真实外部 LLM 耗时加入后，整体百分比收益可能更小；本轮没有测量真实 Provider。
+只有单文档、固定短问题、顺序请求及缓存已预热条件；没有并发压力、队列、容量或长期故障实验。
+父进程测试埋点/向量哈希的微小开销没有单独消除，两组采用相同方式；嵌套阶段不能相加。
+持续 PostgreSQL SQL 日志、Windows↔WSL TCP、系统页缓存均可能影响绝对延迟。
+本轮不修改生产代码、Supervisor、数据库配额机制或默认开关，没有 Git 提交。
+
+证据与复现（仓库根；每次必须使用新的专属目录）
+1. wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_concurrency_pg.sh /tmp/asteria-concurrency-cross-chat-NEW start
+2. backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_worker_ab.py --url postgresql+psycopg://concurrency_test@127.0.0.1:55489/workspace_concurrency_test --pgdata /tmp/asteria-concurrency-cross-chat-NEW/pgdata --output backend/tests/experiments/evidence/chat-worker-ab-NEW
+3. 无论成功失败，最后执行：wsl -e sh /mnt/d/Lunacia/Asteria/backend/tests/experiments/workspace_cross_cleanup.sh /tmp/asteria-concurrency-cross-chat-NEW
+需要 WSL PostgreSQL 16 安装包下载能力、测试端口空闲、Windows Job 支持和既有离线模型。
+每块有请求/Worker/启动/关闭期限，外层子进程限制 240 秒；不重试失败请求。
+主证据：evidence/chat-worker-ab-50/result.json，包含原始样本、分布、源文件/模型哈希。
+额外配置：evidence/chat-worker-ab-50/environment-extra.json。
+回归日志：evidence/chat-worker-ab-regression.log；清理证据见同目录 cleanup.json。

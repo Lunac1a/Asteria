@@ -1,0 +1,4358 @@
+{
+  "samples": [
+    {
+      "index": 0,
+      "warmup": true,
+      "request_id": "483b27e2-4790-4233-9615-8a618e4660a2",
+      "session_id": "4ff426c6-d970-4cb6-8248-2ecf3022cc78",
+      "timestamps": {
+        "http_start": 95483.4664557,
+        "routing_start": 95483.5506063,
+        "routing_end": 95483.5508277,
+        "retrieval_start": 95483.550839,
+        "embedding_worker_start": 95483.5541572,
+        "embedding_worker_end": 95485.7031833,
+        "retrieval_end": 95485.7053058,
+        "answer_pipeline_start": 95485.7079359,
+        "provider_wrapper_start": 95485.7079856,
+        "llm_mock_start": 95485.7309165,
+        "llm_mock_end": 95485.7310424,
+        "provider_wrapper_end": 95485.7310705,
+        "answer_pipeline_end": 95485.732911,
+        "commit_start": 95485.7820712,
+        "commit_end": 95485.7904852,
+        "http_end": 95485.7935613
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "4ff426c6-d970-4cb6-8248-2ecf3022cc78",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2327.1055999939563,
+        "routing": 0.22139999782666564,
+        "retrieval": 2154.4667999987723,
+        "embedding_worker_nested": 2149.026099999901,
+        "prompt_preparation": 0.049700000090524554,
+        "provider_wrapper": 23.08489999268204,
+        "llm_mock_nested": 0.12589999823831022,
+        "answer_validation_composition": 1.8405000009806827,
+        "post_generation_persistence": 57.57420000736602,
+        "commit_nested": 8.41400001081638,
+        "other_http": 89.86809999623802
+      }
+    },
+    {
+      "index": 1,
+      "warmup": true,
+      "request_id": "386211df-cebb-4ab6-a68e-59931f043402",
+      "session_id": "7336b43c-81bf-46cd-b4cf-3e5b6fa3ecca",
+      "timestamps": {
+        "http_start": 95485.8096285,
+        "routing_start": 95485.8244108,
+        "routing_end": 95485.8244382,
+        "retrieval_start": 95485.8244494,
+        "embedding_worker_start": 95485.8262759,
+        "embedding_worker_end": 95487.894433,
+        "retrieval_end": 95487.8946011,
+        "answer_pipeline_start": 95487.8960213,
+        "provider_wrapper_start": 95487.8960658,
+        "llm_mock_start": 95487.8982907,
+        "llm_mock_end": 95487.8984106,
+        "provider_wrapper_end": 95487.8984256,
+        "answer_pipeline_end": 95487.8984849,
+        "commit_start": 95487.9450599,
+        "commit_end": 95487.9495825,
+        "http_end": 95487.9515416
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "7336b43c-81bf-46cd-b4cf-3e5b6fa3ecca",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2141.913100000238,
+        "routing": 0.027399990358389914,
+        "retrieval": 2070.1516999979503,
+        "embedding_worker_nested": 2068.1570999877295,
+        "prompt_preparation": 0.044500004150904715,
+        "provider_wrapper": 2.3597999970661476,
+        "llm_mock_nested": 0.11989999620709568,
+        "answer_validation_composition": 0.059300000430084765,
+        "post_generation_persistence": 51.097600007778965,
+        "commit_nested": 4.522600007476285,
+        "other_http": 18.17280000250321
+      }
+    },
+    {
+      "index": 2,
+      "warmup": true,
+      "request_id": "952a2b41-18a1-4a8a-beaf-e0492e851aa4",
+      "session_id": "16999d0c-6a60-48e2-bc3b-bfc790f6af2a",
+      "timestamps": {
+        "http_start": 95487.9617592,
+        "routing_start": 95487.9755595,
+        "routing_end": 95487.975583,
+        "retrieval_start": 95487.9755928,
+        "embedding_worker_start": 95487.9769206,
+        "embedding_worker_end": 95490.0139377,
+        "retrieval_end": 95490.0141802,
+        "answer_pipeline_start": 95490.0160439,
+        "provider_wrapper_start": 95490.0160897,
+        "llm_mock_start": 95490.0183217,
+        "llm_mock_end": 95490.0184008,
+        "provider_wrapper_end": 95490.0184196,
+        "answer_pipeline_end": 95490.0184688,
+        "commit_start": 95490.0651874,
+        "commit_end": 95490.0715933,
+        "http_end": 95490.0737833
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "16999d0c-6a60-48e2-bc3b-bfc790f6af2a",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2112.0241000026,
+        "routing": 0.023500004317611456,
+        "retrieval": 2038.587400005781,
+        "embedding_worker_nested": 2037.0170999958646,
+        "prompt_preparation": 0.04579999949783087,
+        "provider_wrapper": 2.3299000022234395,
+        "llm_mock_nested": 0.07910000567790121,
+        "answer_validation_composition": 0.04919999628327787,
+        "post_generation_persistence": 53.12450000201352,
+        "commit_nested": 6.405899999663234,
+        "other_http": 17.86379999248311
+      }
+    },
+    {
+      "index": 3,
+      "warmup": true,
+      "request_id": "60ed5593-c106-43ca-a727-81ba0f68aae5",
+      "session_id": "12507c2e-27da-4533-82aa-2259b06faeb9",
+      "timestamps": {
+        "http_start": 95490.0849841,
+        "routing_start": 95490.0996323,
+        "routing_end": 95490.0996638,
+        "retrieval_start": 95490.099674,
+        "embedding_worker_start": 95490.1011961,
+        "embedding_worker_end": 95492.0418521,
+        "retrieval_end": 95492.0420121,
+        "answer_pipeline_start": 95492.0430844,
+        "provider_wrapper_start": 95492.0431273,
+        "llm_mock_start": 95492.0450684,
+        "llm_mock_end": 95492.0451394,
+        "provider_wrapper_end": 95492.0451502,
+        "answer_pipeline_end": 95492.0451914,
+        "commit_start": 95492.0912806,
+        "commit_end": 95492.0958639,
+        "http_end": 95492.098222
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "12507c2e-27da-4533-82aa-2259b06faeb9",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2013.237899998785,
+        "routing": 0.0315000070258975,
+        "retrieval": 1942.338100008783,
+        "embedding_worker_nested": 1940.6559999915771,
+        "prompt_preparation": 0.04290000651963055,
+        "provider_wrapper": 2.0229000074323267,
+        "llm_mock_nested": 0.07100000220816582,
+        "answer_validation_composition": 0.04119999357499182,
+        "post_generation_persistence": 50.672500001383014,
+        "commit_nested": 4.583300004014745,
+        "other_http": 18.088799974066205
+      }
+    },
+    {
+      "index": 4,
+      "warmup": true,
+      "request_id": "bd7e003f-928c-4ad4-a138-27f3328a8703",
+      "session_id": "a121956d-40d7-4a5b-8dc4-28c3432139cf",
+      "timestamps": {
+        "http_start": 95492.108529,
+        "routing_start": 95492.1225257,
+        "routing_end": 95492.1225499,
+        "retrieval_start": 95492.12256,
+        "embedding_worker_start": 95492.1243596,
+        "embedding_worker_end": 95494.0445292,
+        "retrieval_end": 95494.0446929,
+        "answer_pipeline_start": 95494.0459205,
+        "provider_wrapper_start": 95494.045966,
+        "llm_mock_start": 95494.0485378,
+        "llm_mock_end": 95494.0486195,
+        "provider_wrapper_end": 95494.0486314,
+        "answer_pipeline_end": 95494.0486808,
+        "commit_start": 95494.0980021,
+        "commit_end": 95494.1031106,
+        "http_end": 95494.1045128
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "a121956d-40d7-4a5b-8dc4-28c3432139cf",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1995.9837999922456,
+        "routing": 0.024199995095841587,
+        "retrieval": 1922.1328999992693,
+        "embedding_worker_nested": 1920.1695999945514,
+        "prompt_preparation": 0.045500011765398085,
+        "provider_wrapper": 2.665399995748885,
+        "llm_mock_nested": 0.08169999637175351,
+        "answer_validation_composition": 0.04939999780617654,
+        "post_generation_persistence": 54.429800002253614,
+        "commit_nested": 5.1085000013699755,
+        "other_http": 16.636599990306422
+      }
+    },
+    {
+      "index": 5,
+      "warmup": false,
+      "request_id": "882692fe-c6dd-46f1-bebf-a12eb0cfdc2d",
+      "session_id": "19872a09-0c23-4ed4-8961-45b3799e3f55",
+      "timestamps": {
+        "http_start": 95494.117117,
+        "routing_start": 95494.1313065,
+        "routing_end": 95494.131378,
+        "retrieval_start": 95494.1313957,
+        "embedding_worker_start": 95494.1330694,
+        "embedding_worker_end": 95496.0789469,
+        "retrieval_end": 95496.0790982,
+        "answer_pipeline_start": 95496.0803713,
+        "provider_wrapper_start": 95496.0804156,
+        "llm_mock_start": 95496.0826704,
+        "llm_mock_end": 95496.0827504,
+        "provider_wrapper_end": 95496.082763,
+        "answer_pipeline_end": 95496.0828161,
+        "commit_start": 95496.1309344,
+        "commit_end": 95496.1368419,
+        "http_end": 95496.13875
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "19872a09-0c23-4ed4-8961-45b3799e3f55",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2021.6329999966547,
+        "routing": 0.07150000601541251,
+        "retrieval": 1947.7025000087451,
+        "embedding_worker_nested": 1945.8774999948218,
+        "prompt_preparation": 0.04429998807609081,
+        "provider_wrapper": 2.3474000045098364,
+        "llm_mock_nested": 0.07999999797903001,
+        "answer_validation_composition": 0.053099996875971556,
+        "post_generation_persistence": 54.02580001100432,
+        "commit_nested": 5.907500002649613,
+        "other_http": 17.388399981427938
+      }
+    },
+    {
+      "index": 6,
+      "warmup": false,
+      "request_id": "79d6efdb-484c-4875-9a7e-d9491600a4a4",
+      "session_id": "9b4740f2-e20d-45ed-b9a7-b30bded3f9f9",
+      "timestamps": {
+        "http_start": 95496.1481737,
+        "routing_start": 95496.1619167,
+        "routing_end": 95496.1619411,
+        "retrieval_start": 95496.1619507,
+        "embedding_worker_start": 95496.1637999,
+        "embedding_worker_end": 95498.1735657,
+        "retrieval_end": 95498.173732,
+        "answer_pipeline_start": 95498.1750069,
+        "provider_wrapper_start": 95498.1750522,
+        "llm_mock_start": 95498.1771069,
+        "llm_mock_end": 95498.1771817,
+        "provider_wrapper_end": 95498.177193,
+        "answer_pipeline_end": 95498.1772364,
+        "commit_start": 95498.2242011,
+        "commit_end": 95498.2295071,
+        "http_end": 95498.2314994
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "9b4740f2-e20d-45ed-b9a7-b30bded3f9f9",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2083.3257000049343,
+        "routing": 0.02439999661874026,
+        "retrieval": 2011.7812999960734,
+        "embedding_worker_nested": 2009.7658000013325,
+        "prompt_preparation": 0.04529999569058418,
+        "provider_wrapper": 2.140800002962351,
+        "llm_mock_nested": 0.07480000203941017,
+        "answer_validation_composition": 0.043400010326877236,
+        "post_generation_persistence": 52.27069999091327,
+        "commit_nested": 5.305999991833232,
+        "other_http": 17.01980001234915
+      }
+    },
+    {
+      "index": 7,
+      "warmup": false,
+      "request_id": "473780cd-4777-4389-b5b1-6673d578189e",
+      "session_id": "71856551-77b6-4487-a9e3-a2826e15c3c2",
+      "timestamps": {
+        "http_start": 95498.2399755,
+        "routing_start": 95498.2530825,
+        "routing_end": 95498.2531053,
+        "retrieval_start": 95498.2531151,
+        "embedding_worker_start": 95498.2545531,
+        "embedding_worker_end": 95500.2188078,
+        "retrieval_end": 95500.2189691,
+        "answer_pipeline_start": 95500.2200811,
+        "provider_wrapper_start": 95500.2201249,
+        "llm_mock_start": 95500.2221025,
+        "llm_mock_end": 95500.2221731,
+        "provider_wrapper_end": 95500.2221843,
+        "answer_pipeline_end": 95500.2222268,
+        "commit_start": 95500.2673527,
+        "commit_end": 95500.2743541,
+        "http_end": 95500.2759865
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "71856551-77b6-4487-a9e3-a2826e15c3c2",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2036.011000003782,
+        "routing": 0.022799998987466097,
+        "retrieval": 1965.8539999945788,
+        "embedding_worker_nested": 1964.2546999966726,
+        "prompt_preparation": 0.043800013372674584,
+        "provider_wrapper": 2.05939999432303,
+        "llm_mock_nested": 0.07059999916236848,
+        "answer_validation_composition": 0.0425000034738332,
+        "post_generation_persistence": 52.127299990388565,
+        "commit_nested": 7.001399993896484,
+        "other_http": 15.861200008657761
+      }
+    },
+    {
+      "index": 8,
+      "warmup": false,
+      "request_id": "1a337416-efad-4249-82c4-df9247ae5408",
+      "session_id": "4645e4bb-d21f-49c8-984b-f14963aea1bd",
+      "timestamps": {
+        "http_start": 95500.2866,
+        "routing_start": 95500.3007889,
+        "routing_end": 95500.3008129,
+        "retrieval_start": 95500.3008226,
+        "embedding_worker_start": 95500.3024219,
+        "embedding_worker_end": 95502.1557737,
+        "retrieval_end": 95502.1559244,
+        "answer_pipeline_start": 95502.1572314,
+        "provider_wrapper_start": 95502.1572735,
+        "llm_mock_start": 95502.1599959,
+        "llm_mock_end": 95502.1600774,
+        "provider_wrapper_end": 95502.1600896,
+        "answer_pipeline_end": 95502.1601432,
+        "commit_start": 95502.2091628,
+        "commit_end": 95502.2157294,
+        "http_end": 95502.2183332
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "4645e4bb-d21f-49c8-984b-f14963aea1bd",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1931.7331999918679,
+        "routing": 0.023999993572942913,
+        "retrieval": 1855.1017999998294,
+        "embedding_worker_nested": 1853.3517999894684,
+        "prompt_preparation": 0.042100000428035855,
+        "provider_wrapper": 2.816100008203648,
+        "llm_mock_nested": 0.08149999484885484,
+        "answer_validation_composition": 0.05360000068321824,
+        "post_generation_persistence": 55.586200003745034,
+        "commit_nested": 6.566600000951439,
+        "other_http": 18.109399985405616
+      }
+    },
+    {
+      "index": 9,
+      "warmup": false,
+      "request_id": "edb91b37-f128-4459-88de-947a1de4e10a",
+      "session_id": "1d00a7ca-1dff-45ac-af5d-8643cf3b8694",
+      "timestamps": {
+        "http_start": 95502.2377892,
+        "routing_start": 95502.2535725,
+        "routing_end": 95502.2535964,
+        "retrieval_start": 95502.2536062,
+        "embedding_worker_start": 95502.2550445,
+        "embedding_worker_end": 95504.1561968,
+        "retrieval_end": 95504.1563578,
+        "answer_pipeline_start": 95504.1583317,
+        "provider_wrapper_start": 95504.1583753,
+        "llm_mock_start": 95504.1617989,
+        "llm_mock_end": 95504.1618745,
+        "provider_wrapper_end": 95504.1618869,
+        "answer_pipeline_end": 95504.1619298,
+        "commit_start": 95504.2113523,
+        "commit_end": 95504.2208568,
+        "http_end": 95504.2225723
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "1d00a7ca-1dff-45ac-af5d-8643cf3b8694",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1984.7831000079168,
+        "routing": 0.023899992811493576,
+        "retrieval": 1902.7516000060132,
+        "embedding_worker_nested": 1901.152300008107,
+        "prompt_preparation": 0.04359999729786068,
+        "provider_wrapper": 3.5115999926347286,
+        "llm_mock_nested": 0.07560000813100487,
+        "answer_validation_composition": 0.04290000651963055,
+        "post_generation_persistence": 58.927000005496666,
+        "commit_nested": 9.504500005277805,
+        "other_http": 19.482500007143244
+      }
+    },
+    {
+      "index": 10,
+      "warmup": false,
+      "request_id": "02855ec8-c87a-4bbc-b2ea-1630f570b45c",
+      "session_id": "356bad8c-a36f-4bf8-a463-023025efa63e",
+      "timestamps": {
+        "http_start": 95504.2482945,
+        "routing_start": 95504.2633892,
+        "routing_end": 95504.2634121,
+        "retrieval_start": 95504.263422,
+        "embedding_worker_start": 95504.2651959,
+        "embedding_worker_end": 95506.1164532,
+        "retrieval_end": 95506.1166209,
+        "answer_pipeline_start": 95506.1181157,
+        "provider_wrapper_start": 95506.1181601,
+        "llm_mock_start": 95506.1203755,
+        "llm_mock_end": 95506.120473,
+        "provider_wrapper_end": 95506.1204856,
+        "answer_pipeline_end": 95506.1205363,
+        "commit_start": 95506.1699625,
+        "commit_end": 95506.1745989,
+        "http_end": 95506.1761272
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "356bad8c-a36f-4bf8-a463-023025efa63e",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1927.8327000065474,
+        "routing": 0.022899999748915434,
+        "retrieval": 1853.1988999893656,
+        "embedding_worker_nested": 1851.2572999898111,
+        "prompt_preparation": 0.04440000338945538,
+        "provider_wrapper": 2.325499997823499,
+        "llm_mock_nested": 0.09750000026542693,
+        "answer_validation_composition": 0.050700007705017924,
+        "post_generation_persistence": 54.06260000017937,
+        "commit_nested": 4.636400000890717,
+        "other_http": 18.127700008335523
+      }
+    },
+    {
+      "index": 11,
+      "warmup": false,
+      "request_id": "1a82d6ae-9cad-4da7-9abe-fc232e89fdd8",
+      "session_id": "879da6dd-3ec9-4a53-a983-9b59369397b6",
+      "timestamps": {
+        "http_start": 95506.1857383,
+        "routing_start": 95506.1989183,
+        "routing_end": 95506.1989419,
+        "retrieval_start": 95506.1989525,
+        "embedding_worker_start": 95506.2004666,
+        "embedding_worker_end": 95508.1023388,
+        "retrieval_end": 95508.1025053,
+        "answer_pipeline_start": 95508.1038573,
+        "provider_wrapper_start": 95508.1039028,
+        "llm_mock_start": 95508.105978,
+        "llm_mock_end": 95508.1060559,
+        "provider_wrapper_end": 95508.1060677,
+        "answer_pipeline_end": 95508.1061123,
+        "commit_start": 95508.1526909,
+        "commit_end": 95508.167084,
+        "http_end": 95508.169489
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "879da6dd-3ec9-4a53-a983-9b59369397b6",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1983.750700004748,
+        "routing": 0.023600005079060793,
+        "retrieval": 1903.5528000094928,
+        "embedding_worker_nested": 1901.8722000037087,
+        "prompt_preparation": 0.04549999721348286,
+        "provider_wrapper": 2.1649000118486583,
+        "llm_mock_nested": 0.07789999654050916,
+        "answer_validation_composition": 0.044599990360438824,
+        "post_generation_persistence": 60.971700004301965,
+        "commit_nested": 14.39310000569094,
+        "other_http": 16.947599986451678
+      }
+    },
+    {
+      "index": 12,
+      "warmup": false,
+      "request_id": "957467ad-fed0-4ddf-9d07-b47a3a65e276",
+      "session_id": "30715e8a-3805-4134-8bdd-b6503c107736",
+      "timestamps": {
+        "http_start": 95508.1795164,
+        "routing_start": 95508.1932737,
+        "routing_end": 95508.193297,
+        "retrieval_start": 95508.193307,
+        "embedding_worker_start": 95508.1956692,
+        "embedding_worker_end": 95510.2423691,
+        "retrieval_end": 95510.2425318,
+        "answer_pipeline_start": 95510.2440284,
+        "provider_wrapper_start": 95510.2440687,
+        "llm_mock_start": 95510.246014,
+        "llm_mock_end": 95510.2460717,
+        "provider_wrapper_end": 95510.2460806,
+        "answer_pipeline_end": 95510.2461115,
+        "commit_start": 95510.2937185,
+        "commit_end": 95510.3016449,
+        "http_end": 95510.3026534
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "30715e8a-3805-4134-8bdd-b6503c107736",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2123.1369999877643,
+        "routing": 0.023300002794712782,
+        "retrieval": 2049.2248000082327,
+        "embedding_worker_nested": 2046.6999000054784,
+        "prompt_preparation": 0.04030000127386302,
+        "provider_wrapper": 2.0118999964324757,
+        "llm_mock_nested": 0.0577000027988106,
+        "answer_validation_composition": 0.03090000245720148,
+        "post_generation_persistence": 55.533399994601496,
+        "commit_nested": 7.926399994175881,
+        "other_http": 16.27239998197183
+      }
+    },
+    {
+      "index": 13,
+      "warmup": false,
+      "request_id": "a07e19c7-e209-4218-811d-b879dfc3036b",
+      "session_id": "0431d81a-fb6c-418a-a925-09e1b6c22336",
+      "timestamps": {
+        "http_start": 95510.3101183,
+        "routing_start": 95510.3184659,
+        "routing_end": 95510.3184795,
+        "retrieval_start": 95510.3184855,
+        "embedding_worker_start": 95510.3195621,
+        "embedding_worker_end": 95511.8480352,
+        "retrieval_end": 95511.8481205,
+        "answer_pipeline_start": 95511.8489818,
+        "provider_wrapper_start": 95511.8490069,
+        "llm_mock_start": 95511.8503044,
+        "llm_mock_end": 95511.850347,
+        "provider_wrapper_end": 95511.8503542,
+        "answer_pipeline_end": 95511.8503783,
+        "commit_start": 95511.8944836,
+        "commit_end": 95511.8986809,
+        "http_end": 95511.8995865
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "0431d81a-fb6c-418a-a925-09e1b6c22336",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1589.4682000071043,
+        "routing": 0.013600001693703234,
+        "retrieval": 1529.6349999989616,
+        "embedding_worker_nested": 1528.4730999992462,
+        "prompt_preparation": 0.02510000194888562,
+        "provider_wrapper": 1.3472999999066815,
+        "llm_mock_nested": 0.04260000423528254,
+        "answer_validation_composition": 0.024100008886307478,
+        "post_generation_persistence": 48.30260000017006,
+        "commit_nested": 4.197300004307181,
+        "other_http": 10.120499995537102
+      }
+    },
+    {
+      "index": 14,
+      "warmup": false,
+      "request_id": "1ebd7fd1-9632-4c81-8512-9881cd1ae8de",
+      "session_id": "e1f5cd4c-9d6e-4482-8b8c-68283868b395",
+      "timestamps": {
+        "http_start": 95511.9284024,
+        "routing_start": 95511.9372139,
+        "routing_end": 95511.9372256,
+        "retrieval_start": 95511.9372308,
+        "embedding_worker_start": 95511.9382046,
+        "embedding_worker_end": 95513.3740476,
+        "retrieval_end": 95513.374133,
+        "answer_pipeline_start": 95513.3751278,
+        "provider_wrapper_start": 95513.3751539,
+        "llm_mock_start": 95513.3765206,
+        "llm_mock_end": 95513.3765639,
+        "provider_wrapper_end": 95513.3765713,
+        "answer_pipeline_end": 95513.3765973,
+        "commit_start": 95513.4205399,
+        "commit_end": 95513.4243053,
+        "http_end": 95513.4251582
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "e1f5cd4c-9d6e-4482-8b8c-68283868b395",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1496.7558000062127,
+        "routing": 0.01170000177808106,
+        "retrieval": 1436.9022000028053,
+        "embedding_worker_nested": 1435.842999999295,
+        "prompt_preparation": 0.02609999501146376,
+        "provider_wrapper": 1.4174000098137185,
+        "llm_mock_nested": 0.0433000095654279,
+        "answer_validation_composition": 0.025999994250014424,
+        "post_generation_persistence": 47.70799999823794,
+        "commit_nested": 3.7653999897884205,
+        "other_http": 10.664400004316121
+      }
+    },
+    {
+      "index": 15,
+      "warmup": false,
+      "request_id": "09f96993-d36d-4e70-8cdf-792ca662b784",
+      "session_id": "66dbda85-c334-43cc-9008-dadc42397e80",
+      "timestamps": {
+        "http_start": 95513.4314575,
+        "routing_start": 95513.4393803,
+        "routing_end": 95513.4393918,
+        "retrieval_start": 95513.4393972,
+        "embedding_worker_start": 95513.4402626,
+        "embedding_worker_end": 95514.8268243,
+        "retrieval_end": 95514.8269096,
+        "answer_pipeline_start": 95514.8278449,
+        "provider_wrapper_start": 95514.8278744,
+        "llm_mock_start": 95514.8295926,
+        "llm_mock_end": 95514.8296361,
+        "provider_wrapper_end": 95514.8296435,
+        "answer_pipeline_end": 95514.8296692,
+        "commit_start": 95514.8736642,
+        "commit_end": 95514.8868465,
+        "http_end": 95514.8876975
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "66dbda85-c334-43cc-9008-dadc42397e80",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1456.239999999525,
+        "routing": 0.011500000255182385,
+        "retrieval": 1387.5124000041978,
+        "embedding_worker_nested": 1386.5617000119528,
+        "prompt_preparation": 0.029499991796910763,
+        "provider_wrapper": 1.7690999957267195,
+        "llm_mock_nested": 0.043499996536411345,
+        "answer_validation_composition": 0.02570000651758164,
+        "post_generation_persistence": 57.17729999742005,
+        "commit_nested": 13.182299997424707,
+        "other_http": 9.714500003610738
+      }
+    },
+    {
+      "index": 16,
+      "warmup": false,
+      "request_id": "842db170-1961-40fa-bec7-83054233c5b7",
+      "session_id": "e1e62db5-e294-4e88-8431-39fe6998fd34",
+      "timestamps": {
+        "http_start": 95514.9134816,
+        "routing_start": 95514.9220879,
+        "routing_end": 95514.9220992,
+        "retrieval_start": 95514.9221043,
+        "embedding_worker_start": 95514.9231988,
+        "embedding_worker_end": 95516.3430306,
+        "retrieval_end": 95516.3431157,
+        "answer_pipeline_start": 95516.3439403,
+        "provider_wrapper_start": 95516.3439654,
+        "llm_mock_start": 95516.3452718,
+        "llm_mock_end": 95516.3453153,
+        "provider_wrapper_end": 95516.3453224,
+        "answer_pipeline_end": 95516.3453477,
+        "commit_start": 95516.3905847,
+        "commit_end": 95516.394862,
+        "http_end": 95516.395637
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "e1e62db5-e294-4e88-8431-39fe6998fd34",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1482.155399993644,
+        "routing": 0.011299998732283711,
+        "retrieval": 1421.0114000015892,
+        "embedding_worker_nested": 1419.8317999980645,
+        "prompt_preparation": 0.02510000194888562,
+        "provider_wrapper": 1.357000001007691,
+        "llm_mock_nested": 0.043499996536411345,
+        "answer_validation_composition": 0.025300003471784294,
+        "post_generation_persistence": 49.51430000073742,
+        "commit_nested": 4.277300002286211,
+        "other_http": 10.210999986156821
+      }
+    },
+    {
+      "index": 17,
+      "warmup": false,
+      "request_id": "e9e7c9ce-6dce-4caf-b144-809759b26e53",
+      "session_id": "5e744158-dbb9-4f56-860b-21675121668b",
+      "timestamps": {
+        "http_start": 95516.4025262,
+        "routing_start": 95516.4104786,
+        "routing_end": 95516.4104897,
+        "retrieval_start": 95516.4104948,
+        "embedding_worker_start": 95516.4113063,
+        "embedding_worker_end": 95517.7878622,
+        "retrieval_end": 95517.787948,
+        "answer_pipeline_start": 95517.7887445,
+        "provider_wrapper_start": 95517.7887707,
+        "llm_mock_start": 95517.7900494,
+        "llm_mock_end": 95517.7900933,
+        "provider_wrapper_end": 95517.7901008,
+        "answer_pipeline_end": 95517.7901268,
+        "commit_start": 95517.834459,
+        "commit_end": 95517.8482154,
+        "http_end": 95517.8493403
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "5e744158-dbb9-4f56-860b-21675121668b",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1446.8140999961179,
+        "routing": 0.011100011761300266,
+        "retrieval": 1377.453199995216,
+        "embedding_worker_nested": 1376.5559000021312,
+        "prompt_preparation": 0.026200010324828327,
+        "provider_wrapper": 1.3300999999046326,
+        "llm_mock_nested": 0.04389999958220869,
+        "answer_validation_composition": 0.025999994250014424,
+        "post_generation_persistence": 58.088599995244294,
+        "commit_nested": 13.756399988778867,
+        "other_http": 9.878899989416823
+      }
+    },
+    {
+      "index": 18,
+      "warmup": false,
+      "request_id": "aa265ba3-8bb9-4565-a8a6-44beb40aa952",
+      "session_id": "52ebf366-6197-4a9b-921c-b5da0330fac9",
+      "timestamps": {
+        "http_start": 95517.8654901,
+        "routing_start": 95517.873147,
+        "routing_end": 95517.8731585,
+        "retrieval_start": 95517.8731638,
+        "embedding_worker_start": 95517.8741852,
+        "embedding_worker_end": 95519.3545314,
+        "retrieval_end": 95519.3546177,
+        "answer_pipeline_start": 95519.3554447,
+        "provider_wrapper_start": 95519.355471,
+        "llm_mock_start": 95519.3567685,
+        "llm_mock_end": 95519.3568126,
+        "provider_wrapper_end": 95519.3568198,
+        "answer_pipeline_end": 95519.3568451,
+        "commit_start": 95519.4032152,
+        "commit_end": 95519.408117,
+        "http_end": 95519.4088444
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "52ebf366-6197-4a9b-921c-b5da0330fac9",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1543.354299996281,
+        "routing": 0.011500000255182385,
+        "retrieval": 1481.4538999926299,
+        "embedding_worker_nested": 1480.3461999981664,
+        "prompt_preparation": 0.026299996534362435,
+        "provider_wrapper": 1.3487999967765063,
+        "llm_mock_nested": 0.04410000110510737,
+        "answer_validation_composition": 0.025300003471784294,
+        "post_generation_persistence": 51.27189999620896,
+        "commit_nested": 4.901799999061041,
+        "other_http": 9.216600010404363
+      }
+    },
+    {
+      "index": 19,
+      "warmup": false,
+      "request_id": "8091af81-dea8-4d52-abba-cec3618cf62e",
+      "session_id": "2f19dedf-c354-43b8-a86b-41b9dcfa8bcd",
+      "timestamps": {
+        "http_start": 95519.4149767,
+        "routing_start": 95519.4227105,
+        "routing_end": 95519.4227226,
+        "retrieval_start": 95519.4227293,
+        "embedding_worker_start": 95519.4236473,
+        "embedding_worker_end": 95520.903031,
+        "retrieval_end": 95520.9031161,
+        "answer_pipeline_start": 95520.9041478,
+        "provider_wrapper_start": 95520.904173,
+        "llm_mock_start": 95520.905506,
+        "llm_mock_end": 95520.9055491,
+        "provider_wrapper_end": 95520.9055563,
+        "answer_pipeline_end": 95520.9055819,
+        "commit_start": 95520.9507189,
+        "commit_end": 95520.9553176,
+        "http_end": 95520.9563801
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "2f19dedf-c354-43b8-a86b-41b9dcfa8bcd",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1541.4033999986714,
+        "routing": 0.012099990271963179,
+        "retrieval": 1480.3868000017246,
+        "embedding_worker_nested": 1479.38369998883,
+        "prompt_preparation": 0.025200002710334957,
+        "provider_wrapper": 1.3832999975420535,
+        "llm_mock_nested": 0.043100008042529225,
+        "answer_validation_composition": 0.025600005756132305,
+        "post_generation_persistence": 49.73569999856409,
+        "commit_nested": 4.598700004862621,
+        "other_http": 9.834700002102181
+      }
+    },
+    {
+      "index": 20,
+      "warmup": false,
+      "request_id": "207f59de-b37e-42d4-a2b7-0d9121cdf3fb",
+      "session_id": "83afb408-bd61-4c24-95bf-e7553ae1b136",
+      "timestamps": {
+        "http_start": 95520.963017,
+        "routing_start": 95520.971424,
+        "routing_end": 95520.9714393,
+        "retrieval_start": 95520.9714452,
+        "embedding_worker_start": 95520.9724757,
+        "embedding_worker_end": 95522.406251,
+        "retrieval_end": 95522.4063366,
+        "answer_pipeline_start": 95522.4072351,
+        "provider_wrapper_start": 95522.4072616,
+        "llm_mock_start": 95522.4086211,
+        "llm_mock_end": 95522.408665,
+        "provider_wrapper_end": 95522.4086722,
+        "answer_pipeline_end": 95522.4086979,
+        "commit_start": 95522.4516626,
+        "commit_end": 95522.4653254,
+        "http_end": 95522.466288
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "83afb408-bd61-4c24-95bf-e7553ae1b136",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1503.270999994129,
+        "routing": 0.015300000086426735,
+        "retrieval": 1434.8914000001969,
+        "embedding_worker_nested": 1433.7752999999793,
+        "prompt_preparation": 0.02649999805726111,
+        "provider_wrapper": 1.4106000016909093,
+        "llm_mock_nested": 0.04389999958220869,
+        "answer_validation_composition": 0.025699991965666413,
+        "post_generation_persistence": 56.62750000192318,
+        "commit_nested": 13.662800003658049,
+        "other_http": 10.274000000208616
+      }
+    },
+    {
+      "index": 21,
+      "warmup": false,
+      "request_id": "82fedfad-0046-47ec-9e9c-260d0b017aab",
+      "session_id": "a431c67c-9dc1-4bdd-a947-0f636aea6ab5",
+      "timestamps": {
+        "http_start": 95522.4854001,
+        "routing_start": 95522.4932302,
+        "routing_end": 95522.4932414,
+        "retrieval_start": 95522.493247,
+        "embedding_worker_start": 95522.4941761,
+        "embedding_worker_end": 95523.9019719,
+        "retrieval_end": 95523.9020585,
+        "answer_pipeline_start": 95523.9028841,
+        "provider_wrapper_start": 95523.902911,
+        "llm_mock_start": 95523.904256,
+        "llm_mock_end": 95523.9042978,
+        "provider_wrapper_end": 95523.9043053,
+        "answer_pipeline_end": 95523.9043304,
+        "commit_start": 95523.9498705,
+        "commit_end": 95523.9631889,
+        "http_end": 95523.9641011
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "a431c67c-9dc1-4bdd-a947-0f636aea6ab5",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1478.701000000001,
+        "routing": 0.011200012522749603,
+        "retrieval": 1408.8114999904064,
+        "embedding_worker_nested": 1407.7958000125363,
+        "prompt_preparation": 0.026900001103058457,
+        "provider_wrapper": 1.3943000085419044,
+        "llm_mock_nested": 0.04180001269560307,
+        "answer_validation_composition": 0.02509998739697039,
+        "post_generation_persistence": 58.85850000777282,
+        "commit_nested": 13.318400000571273,
+        "other_http": 9.573499992256984
+      }
+    },
+    {
+      "index": 22,
+      "warmup": false,
+      "request_id": "a4212368-3a7c-4ba7-8bb8-ffec2b12a2e9",
+      "session_id": "37d48aed-be16-44f7-9890-912c28c57ec2",
+      "timestamps": {
+        "http_start": 95523.9705386,
+        "routing_start": 95523.9781781,
+        "routing_end": 95523.9781895,
+        "retrieval_start": 95523.9781951,
+        "embedding_worker_start": 95523.9792065,
+        "embedding_worker_end": 95525.4066502,
+        "retrieval_end": 95525.4067362,
+        "answer_pipeline_start": 95525.4075964,
+        "provider_wrapper_start": 95525.4076218,
+        "llm_mock_start": 95525.4088311,
+        "llm_mock_end": 95525.4088745,
+        "provider_wrapper_end": 95525.4088818,
+        "answer_pipeline_end": 95525.4089074,
+        "commit_start": 95525.456819,
+        "commit_end": 95525.4721491,
+        "http_end": 95525.4729047
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "37d48aed-be16-44f7-9890-912c28c57ec2",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1502.3661000013817,
+        "routing": 0.011399999493733048,
+        "retrieval": 1428.541100001894,
+        "embedding_worker_nested": 1427.4437000131002,
+        "prompt_preparation": 0.02540000423323363,
+        "provider_wrapper": 1.2600000045495108,
+        "llm_mock_nested": 0.043400010326877236,
+        "answer_validation_composition": 0.025599991204217076,
+        "post_generation_persistence": 63.241700001526624,
+        "commit_nested": 15.33009999548085,
+        "other_http": 9.260899998480454
+      }
+    },
+    {
+      "index": 23,
+      "warmup": false,
+      "request_id": "9d5c2dc0-9fd9-4a9f-b2fc-c8e3616af52b",
+      "session_id": "954e2353-fd97-4642-9db3-339d47939bae",
+      "timestamps": {
+        "http_start": 95525.5023191,
+        "routing_start": 95525.511333,
+        "routing_end": 95525.5113505,
+        "retrieval_start": 95525.5113744,
+        "embedding_worker_start": 95525.5124297,
+        "embedding_worker_end": 95526.8830495,
+        "retrieval_end": 95526.8831337,
+        "answer_pipeline_start": 95526.8839456,
+        "provider_wrapper_start": 95526.8839714,
+        "llm_mock_start": 95526.8852725,
+        "llm_mock_end": 95526.8853163,
+        "provider_wrapper_end": 95526.8853243,
+        "answer_pipeline_end": 95526.8853509,
+        "commit_start": 95526.9292896,
+        "commit_end": 95526.9431818,
+        "http_end": 95526.9439156
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "954e2353-fd97-4642-9db3-339d47939bae",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1441.5965000080178,
+        "routing": 0.01750000228639692,
+        "retrieval": 1371.7593000037596,
+        "embedding_worker_nested": 1370.6197999999858,
+        "prompt_preparation": 0.02580000727903098,
+        "provider_wrapper": 1.3528999988920987,
+        "llm_mock_nested": 0.043799998820759356,
+        "answer_validation_composition": 0.026599998818710446,
+        "post_generation_persistence": 57.83089999749791,
+        "commit_nested": 13.892200004193,
+        "other_http": 10.583499999484047
+      }
+    },
+    {
+      "index": 24,
+      "warmup": false,
+      "request_id": "f039048d-772c-4851-97eb-dc82648e9b19",
+      "session_id": "74e777b6-9fb4-47e1-86ac-4fae566d0658",
+      "timestamps": {
+        "http_start": 95526.9502168,
+        "routing_start": 95526.9575498,
+        "routing_end": 95526.957561,
+        "retrieval_start": 95526.9575659,
+        "embedding_worker_start": 95526.9586361,
+        "embedding_worker_end": 95528.3541916,
+        "retrieval_end": 95528.3542777,
+        "answer_pipeline_start": 95528.355149,
+        "provider_wrapper_start": 95528.3551753,
+        "llm_mock_start": 95528.3565593,
+        "llm_mock_end": 95528.3566021,
+        "provider_wrapper_end": 95528.3566096,
+        "answer_pipeline_end": 95528.3566349,
+        "commit_start": 95528.4027391,
+        "commit_end": 95528.4171071,
+        "http_end": 95528.4179526
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "74e777b6-9fb4-47e1-86ac-4fae566d0658",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1467.735799989896,
+        "routing": 0.011199997970834374,
+        "retrieval": 1396.7118000000482,
+        "embedding_worker_nested": 1395.5554999993183,
+        "prompt_preparation": 0.026300011086277664,
+        "provider_wrapper": 1.4342999929795042,
+        "llm_mock_nested": 0.042800005758181214,
+        "answer_validation_composition": 0.025300003471784294,
+        "post_generation_persistence": 60.4721999989124,
+        "commit_nested": 14.368000003742054,
+        "other_http": 9.05469998542685
+      }
+    },
+    {
+      "index": 25,
+      "warmup": false,
+      "request_id": "1ccac837-57b3-444f-8b30-943afc74074c",
+      "session_id": "fd6f670e-16d7-4309-826d-af598ac2df02",
+      "timestamps": {
+        "http_start": 95528.4460458,
+        "routing_start": 95528.4542869,
+        "routing_end": 95528.4542983,
+        "retrieval_start": 95528.4543033,
+        "embedding_worker_start": 95528.4552309,
+        "embedding_worker_end": 95529.8444195,
+        "retrieval_end": 95529.8445056,
+        "answer_pipeline_start": 95529.8453787,
+        "provider_wrapper_start": 95529.8454056,
+        "llm_mock_start": 95529.8467292,
+        "llm_mock_end": 95529.8467724,
+        "provider_wrapper_end": 95529.8467799,
+        "answer_pipeline_end": 95529.8468068,
+        "commit_start": 95529.8918671,
+        "commit_end": 95529.8967946,
+        "http_end": 95529.8977721
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "fd6f670e-16d7-4309-826d-af598ac2df02",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1451.72630000161,
+        "routing": 0.011399999493733048,
+        "retrieval": 1390.2023000118788,
+        "embedding_worker_nested": 1389.188600005582,
+        "prompt_preparation": 0.026900001103058457,
+        "provider_wrapper": 1.3743000017711893,
+        "llm_mock_nested": 0.043199994252063334,
+        "answer_validation_composition": 0.02689998655114323,
+        "post_generation_persistence": 49.98780001187697,
+        "commit_nested": 4.927500005578622,
+        "other_http": 10.096699988935143
+      }
+    },
+    {
+      "index": 26,
+      "warmup": false,
+      "request_id": "ddb8b824-bcc5-474c-b75d-b59326b23c7b",
+      "session_id": "33c45659-eaf8-4b6a-8821-0c3661e3bab7",
+      "timestamps": {
+        "http_start": 95529.9200695,
+        "routing_start": 95529.9281812,
+        "routing_end": 95529.9281924,
+        "retrieval_start": 95529.9281981,
+        "embedding_worker_start": 95529.9291432,
+        "embedding_worker_end": 95531.3282304,
+        "retrieval_end": 95531.3283177,
+        "answer_pipeline_start": 95531.3292198,
+        "provider_wrapper_start": 95531.3292475,
+        "llm_mock_start": 95531.3307263,
+        "llm_mock_end": 95531.3307714,
+        "provider_wrapper_end": 95531.3307791,
+        "answer_pipeline_end": 95531.3308072,
+        "commit_start": 95531.3753011,
+        "commit_end": 95531.3791802,
+        "http_end": 95531.3800459
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "33c45659-eaf8-4b6a-8821-0c3661e3bab7",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1459.9764000013238,
+        "routing": 0.011199997970834374,
+        "retrieval": 1400.119600002654,
+        "embedding_worker_nested": 1399.0871999994852,
+        "prompt_preparation": 0.027700007194653153,
+        "provider_wrapper": 1.5315999917220324,
+        "llm_mock_nested": 0.04509999416768551,
+        "answer_validation_composition": 0.0281000102404505,
+        "post_generation_persistence": 48.37299999780953,
+        "commit_nested": 3.8791000115452334,
+        "other_http": 9.885199993732385
+      }
+    },
+    {
+      "index": 27,
+      "warmup": false,
+      "request_id": "8ec4f5a2-13c5-4208-b0f2-37a426082783",
+      "session_id": "23a012f0-ad89-4bff-acfe-d436b2bdec0c",
+      "timestamps": {
+        "http_start": 95531.3986258,
+        "routing_start": 95531.4302499,
+        "routing_end": 95531.4302614,
+        "retrieval_start": 95531.4302673,
+        "embedding_worker_start": 95531.431324,
+        "embedding_worker_end": 95532.8435216,
+        "retrieval_end": 95532.8436056,
+        "answer_pipeline_start": 95532.8445364,
+        "provider_wrapper_start": 95532.8445625,
+        "llm_mock_start": 95532.8458256,
+        "llm_mock_end": 95532.8458679,
+        "provider_wrapper_end": 95532.8458753,
+        "answer_pipeline_end": 95532.8459007,
+        "commit_start": 95532.8925574,
+        "commit_end": 95532.9069214,
+        "http_end": 95532.9077505
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "23a012f0-ad89-4bff-acfe-d436b2bdec0c",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1509.1247000091244,
+        "routing": 0.011500000255182385,
+        "retrieval": 1413.3383000007598,
+        "embedding_worker_nested": 1412.1976000024006,
+        "prompt_preparation": 0.02609999501146376,
+        "provider_wrapper": 1.3127999991411343,
+        "llm_mock_nested": 0.04230000195093453,
+        "answer_validation_composition": 0.02540000423323363,
+        "post_generation_persistence": 61.020699999062344,
+        "commit_nested": 14.364000002387911,
+        "other_http": 33.38990001066122
+      }
+    },
+    {
+      "index": 28,
+      "warmup": false,
+      "request_id": "2921d8dd-f4b6-4b99-85c3-50c134d056b0",
+      "session_id": "77d6b13d-47df-410f-a0e2-74a075ed1e25",
+      "timestamps": {
+        "http_start": 95532.9347032,
+        "routing_start": 95532.9421296,
+        "routing_end": 95532.9421412,
+        "retrieval_start": 95532.9421466,
+        "embedding_worker_start": 95532.9430251,
+        "embedding_worker_end": 95534.3244178,
+        "retrieval_end": 95534.3245796,
+        "answer_pipeline_start": 95534.3259237,
+        "provider_wrapper_start": 95534.325953,
+        "llm_mock_start": 95534.3281928,
+        "llm_mock_end": 95534.3282423,
+        "provider_wrapper_end": 95534.3282503,
+        "answer_pipeline_end": 95534.3282778,
+        "commit_start": 95534.3742732,
+        "commit_end": 95534.385612,
+        "http_end": 95534.3866328
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "77d6b13d-47df-410f-a0e2-74a075ed1e25",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1451.9296000071336,
+        "routing": 0.011600001016631722,
+        "retrieval": 1382.432999991579,
+        "embedding_worker_nested": 1381.3927000010153,
+        "prompt_preparation": 0.029300004825927317,
+        "provider_wrapper": 2.2972999868215993,
+        "llm_mock_nested": 0.04949999856762588,
+        "answer_validation_composition": 0.02750000567175448,
+        "post_generation_persistence": 57.33419999887701,
+        "commit_nested": 11.338800002704374,
+        "other_http": 9.796700018341653
+      }
+    },
+    {
+      "index": 29,
+      "warmup": false,
+      "request_id": "f475a81f-76ad-4eea-ab81-d57ac982e4ee",
+      "session_id": "e40978ca-e657-42ba-adc7-1915936f8e72",
+      "timestamps": {
+        "http_start": 95534.3948156,
+        "routing_start": 95534.4070197,
+        "routing_end": 95534.4070329,
+        "retrieval_start": 95534.4070396,
+        "embedding_worker_start": 95534.4089549,
+        "embedding_worker_end": 95535.8451029,
+        "retrieval_end": 95535.8451979,
+        "answer_pipeline_start": 95535.8460845,
+        "provider_wrapper_start": 95535.8461118,
+        "llm_mock_start": 95535.8474718,
+        "llm_mock_end": 95535.8475604,
+        "provider_wrapper_end": 95535.8475689,
+        "answer_pipeline_end": 95535.8475975,
+        "commit_start": 95535.8934683,
+        "commit_end": 95535.8974443,
+        "http_end": 95535.8982263
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "e40978ca-e657-42ba-adc7-1915936f8e72",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1503.4107000101358,
+        "routing": 0.013199998647905886,
+        "retrieval": 1438.1582999922102,
+        "embedding_worker_nested": 1436.147999993409,
+        "prompt_preparation": 0.027300004148855805,
+        "provider_wrapper": 1.4571000065188855,
+        "llm_mock_nested": 0.08859999070409685,
+        "answer_validation_composition": 0.028599999495781958,
+        "post_generation_persistence": 49.84680000052322,
+        "commit_nested": 3.9760000072419643,
+        "other_http": 13.879400008590892
+      }
+    },
+    {
+      "index": 30,
+      "warmup": false,
+      "request_id": "9dc8da71-07ef-46f3-bb3a-8adc8ae57992",
+      "session_id": "aabcc34c-642a-4fc4-a8b0-5560029b638d",
+      "timestamps": {
+        "http_start": 95535.9055661,
+        "routing_start": 95535.9138603,
+        "routing_end": 95535.9138717,
+        "retrieval_start": 95535.9138771,
+        "embedding_worker_start": 95535.9147642,
+        "embedding_worker_end": 95537.3326674,
+        "retrieval_end": 95537.3327569,
+        "answer_pipeline_start": 95537.3340334,
+        "provider_wrapper_start": 95537.3340613,
+        "llm_mock_start": 95537.3356513,
+        "llm_mock_end": 95537.3356962,
+        "provider_wrapper_end": 95537.3357039,
+        "answer_pipeline_end": 95537.3357292,
+        "commit_start": 95537.381188,
+        "commit_end": 95537.3850596,
+        "http_end": 95537.3859439
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "aabcc34c-642a-4fc4-a8b0-5560029b638d",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1480.3777999914018,
+        "routing": 0.011399999493733048,
+        "retrieval": 1418.8797999959206,
+        "embedding_worker_nested": 1417.903199995635,
+        "prompt_preparation": 0.027900008717551827,
+        "provider_wrapper": 1.6425999929197133,
+        "llm_mock_nested": 0.044899992644786835,
+        "answer_validation_composition": 0.025300003471784294,
+        "post_generation_persistence": 49.33039999741595,
+        "commit_nested": 3.871599998092279,
+        "other_http": 10.460399993462488
+      }
+    },
+    {
+      "index": 31,
+      "warmup": false,
+      "request_id": "fd188a79-0e7d-4090-bf6d-a9fa63d339a7",
+      "session_id": "1b490e5a-8f5f-45bd-8eb2-e2b746b121f2",
+      "timestamps": {
+        "http_start": 95537.4061679,
+        "routing_start": 95537.4137945,
+        "routing_end": 95537.4138059,
+        "retrieval_start": 95537.4138113,
+        "embedding_worker_start": 95537.4147827,
+        "embedding_worker_end": 95538.8388289,
+        "retrieval_end": 95538.838914,
+        "answer_pipeline_start": 95538.8397506,
+        "provider_wrapper_start": 95538.8397792,
+        "llm_mock_start": 95538.8410226,
+        "llm_mock_end": 95538.8410658,
+        "provider_wrapper_end": 95538.8410736,
+        "answer_pipeline_end": 95538.8410992,
+        "commit_start": 95538.8852336,
+        "commit_end": 95538.8999918,
+        "http_end": 95538.9009835
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "1b490e5a-8f5f-45bd-8eb2-e2b746b121f2",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1494.8156000027666,
+        "routing": 0.011399999493733048,
+        "retrieval": 1425.1027000136673,
+        "embedding_worker_nested": 1424.0462000016123,
+        "prompt_preparation": 0.028599999495781958,
+        "provider_wrapper": 1.2943999900016934,
+        "llm_mock_nested": 0.04320000880397856,
+        "answer_validation_composition": 0.025600005756132305,
+        "post_generation_persistence": 58.89260000549257,
+        "commit_nested": 14.75820000632666,
+        "other_http": 9.460299988859333
+      }
+    },
+    {
+      "index": 32,
+      "warmup": false,
+      "request_id": "28e9ef7b-dd11-4a9d-a2a1-b044113c35e1",
+      "session_id": "40c449cc-27d6-48a1-9712-cbb2815f55d5",
+      "timestamps": {
+        "http_start": 95538.9093097,
+        "routing_start": 95538.9178038,
+        "routing_end": 95538.9178151,
+        "retrieval_start": 95538.9178204,
+        "embedding_worker_start": 95538.9187609,
+        "embedding_worker_end": 95540.3102899,
+        "retrieval_end": 95540.3103764,
+        "answer_pipeline_start": 95540.3113314,
+        "provider_wrapper_start": 95540.3113578,
+        "llm_mock_start": 95540.3127781,
+        "llm_mock_end": 95540.3128205,
+        "provider_wrapper_end": 95540.3128277,
+        "answer_pipeline_end": 95540.3128534,
+        "commit_start": 95540.3562356,
+        "commit_end": 95540.3693308,
+        "http_end": 95540.3704392
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "40c449cc-27d6-48a1-9712-cbb2815f55d5",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1461.1295000067912,
+        "routing": 0.011299998732283711,
+        "retrieval": 1392.5559999916004,
+        "embedding_worker_nested": 1391.529000000446,
+        "prompt_preparation": 0.026400011847727,
+        "provider_wrapper": 1.469900002120994,
+        "llm_mock_nested": 0.042400002712383866,
+        "answer_validation_composition": 0.025699991965666413,
+        "post_generation_persistence": 56.477399994037114,
+        "commit_nested": 13.09519998903852,
+        "other_http": 10.562800016487017
+      }
+    },
+    {
+      "index": 33,
+      "warmup": false,
+      "request_id": "88771859-abd5-4bfe-af13-cee03924856a",
+      "session_id": "74533bae-d834-4bb5-a65e-11f2be8ae73b",
+      "timestamps": {
+        "http_start": 95540.3887482,
+        "routing_start": 95540.3964767,
+        "routing_end": 95540.3964883,
+        "retrieval_start": 95540.3964935,
+        "embedding_worker_start": 95540.3975017,
+        "embedding_worker_end": 95541.8140477,
+        "retrieval_end": 95541.8141345,
+        "answer_pipeline_start": 95541.8149388,
+        "provider_wrapper_start": 95541.8149664,
+        "llm_mock_start": 95541.8162644,
+        "llm_mock_end": 95541.8163071,
+        "provider_wrapper_end": 95541.816315,
+        "answer_pipeline_end": 95541.8163418,
+        "commit_start": 95541.8615187,
+        "commit_end": 95541.8746346,
+        "http_end": 95541.8755844
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "74533bae-d834-4bb5-a65e-11f2be8ae73b",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1486.8361999979243,
+        "routing": 0.011600001016631722,
+        "retrieval": 1417.6410000072792,
+        "embedding_worker_nested": 1416.5459999931045,
+        "prompt_preparation": 0.027599991881288588,
+        "provider_wrapper": 1.3486000098055229,
+        "llm_mock_nested": 0.04270000499673188,
+        "answer_validation_composition": 0.02680000034160912,
+        "post_generation_persistence": 58.29279999306891,
+        "commit_nested": 13.11590000113938,
+        "other_http": 9.487799994531088
+      }
+    },
+    {
+      "index": 34,
+      "warmup": false,
+      "request_id": "5031a73b-f77a-4d02-803c-fb7d1899b959",
+      "session_id": "150c655d-e97a-4f0e-b389-22a258812e09",
+      "timestamps": {
+        "http_start": 95541.8815405,
+        "routing_start": 95541.8888751,
+        "routing_end": 95541.8888867,
+        "retrieval_start": 95541.8888924,
+        "embedding_worker_start": 95541.8897588,
+        "embedding_worker_end": 95543.3147612,
+        "retrieval_end": 95543.3148469,
+        "answer_pipeline_start": 95543.3156706,
+        "provider_wrapper_start": 95543.3156964,
+        "llm_mock_start": 95543.3169689,
+        "llm_mock_end": 95543.317012,
+        "provider_wrapper_end": 95543.3170195,
+        "answer_pipeline_end": 95543.3170453,
+        "commit_start": 95543.3623473,
+        "commit_end": 95543.3670373,
+        "http_end": 95543.3679123
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "150c655d-e97a-4f0e-b389-22a258812e09",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1486.371799997869,
+        "routing": 0.011600001016631722,
+        "retrieval": 1425.9544999949867,
+        "embedding_worker_nested": 1425.0024000066333,
+        "prompt_preparation": 0.02579999272711575,
+        "provider_wrapper": 1.32310000481084,
+        "llm_mock_nested": 0.043099993490614,
+        "answer_validation_composition": 0.02580000727903098,
+        "post_generation_persistence": 49.9920000002021,
+        "commit_nested": 4.690000001573935,
+        "other_http": 9.038999996846542
+      }
+    },
+    {
+      "index": 35,
+      "warmup": false,
+      "request_id": "1d6aa708-7c69-4c87-aac4-2caf42914f4e",
+      "session_id": "eb6c9467-9348-4ff3-af62-c28ca56ae041",
+      "timestamps": {
+        "http_start": 95543.3947783,
+        "routing_start": 95543.4031743,
+        "routing_end": 95543.4031863,
+        "retrieval_start": 95543.4031919,
+        "embedding_worker_start": 95543.4042853,
+        "embedding_worker_end": 95544.8248178,
+        "retrieval_end": 95544.8249023,
+        "answer_pipeline_start": 95544.825737,
+        "provider_wrapper_start": 95544.8257641,
+        "llm_mock_start": 95544.8270132,
+        "llm_mock_end": 95544.8270562,
+        "provider_wrapper_end": 95544.8270637,
+        "answer_pipeline_end": 95544.8270898,
+        "commit_start": 95544.8729915,
+        "commit_end": 95544.8791899,
+        "http_end": 95544.8799615
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "eb6c9467-9348-4ff3-af62-c28ca56ae041",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1485.1831999985734,
+        "routing": 0.01200000406242907,
+        "retrieval": 1421.710399998119,
+        "embedding_worker_nested": 1420.532500007539,
+        "prompt_preparation": 0.027099988074041903,
+        "provider_wrapper": 1.2996000004932284,
+        "llm_mock_nested": 0.04299999272916466,
+        "answer_validation_composition": 0.02610000956337899,
+        "post_generation_persistence": 52.10010000155307,
+        "commit_nested": 6.198400005814619,
+        "other_http": 10.007899996708147
+      }
+    },
+    {
+      "index": 36,
+      "warmup": false,
+      "request_id": "72dd3b16-9637-4d90-854c-5e999601cc50",
+      "session_id": "ea13f7d8-13ee-481a-95d7-4c644f9b0b85",
+      "timestamps": {
+        "http_start": 95544.9016443,
+        "routing_start": 95544.9093469,
+        "routing_end": 95544.9093583,
+        "retrieval_start": 95544.9093637,
+        "embedding_worker_start": 95544.9102136,
+        "embedding_worker_end": 95546.3248532,
+        "retrieval_end": 95546.3249359,
+        "answer_pipeline_start": 95546.3257109,
+        "provider_wrapper_start": 95546.3257371,
+        "llm_mock_start": 95546.3269552,
+        "llm_mock_end": 95546.326998,
+        "provider_wrapper_end": 95546.3270054,
+        "answer_pipeline_end": 95546.3270307,
+        "commit_start": 95546.3735315,
+        "commit_end": 95546.3779635,
+        "http_end": 95546.3788768
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "ea13f7d8-13ee-481a-95d7-4c644f9b0b85",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1477.2324999939883,
+        "routing": 0.011399999493733048,
+        "retrieval": 1415.5721999995876,
+        "embedding_worker_nested": 1414.6395999996457,
+        "prompt_preparation": 0.026200010324828327,
+        "provider_wrapper": 1.2682999949902296,
+        "llm_mock_nested": 0.042800005758181214,
+        "answer_validation_composition": 0.025300003471784294,
+        "post_generation_persistence": 50.93279998982325,
+        "commit_nested": 4.4320000015432015,
+        "other_http": 9.396299996296875
+      }
+    },
+    {
+      "index": 37,
+      "warmup": false,
+      "request_id": "c42bf2fc-d139-47ce-9dfd-024b139e3f16",
+      "session_id": "7bce92f2-a589-4577-8270-8fd1bf639f0d",
+      "timestamps": {
+        "http_start": 95546.3852193,
+        "routing_start": 95546.3935688,
+        "routing_end": 95546.3935799,
+        "retrieval_start": 95546.3935856,
+        "embedding_worker_start": 95546.3946354,
+        "embedding_worker_end": 95548.2749207,
+        "retrieval_end": 95548.2750925,
+        "answer_pipeline_start": 95548.2763779,
+        "provider_wrapper_start": 95548.2764211,
+        "llm_mock_start": 95548.2784556,
+        "llm_mock_end": 95548.2785352,
+        "provider_wrapper_end": 95548.2785472,
+        "answer_pipeline_end": 95548.2785963,
+        "commit_start": 95548.325708,
+        "commit_end": 95548.3303693,
+        "http_end": 95548.3317194
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "7bce92f2-a589-4577-8270-8fd1bf639f0d",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1946.500099991681,
+        "routing": 0.011099997209385037,
+        "retrieval": 1881.5068999974756,
+        "embedding_worker_nested": 1880.2852999942843,
+        "prompt_preparation": 0.04320000880397856,
+        "provider_wrapper": 2.126099992892705,
+        "llm_mock_nested": 0.0796000094851479,
+        "answer_validation_composition": 0.04910001007374376,
+        "post_generation_persistence": 51.772999999229796,
+        "commit_nested": 4.661300001316704,
+        "other_http": 10.990699985995889
+      }
+    },
+    {
+      "index": 38,
+      "warmup": false,
+      "request_id": "4de4cc36-750b-4e6b-9f24-3b1bc4a7f6ca",
+      "session_id": "023b51ec-2456-4343-82e9-1cb42c58633a",
+      "timestamps": {
+        "http_start": 95548.3402914,
+        "routing_start": 95548.3529675,
+        "routing_end": 95548.3529905,
+        "retrieval_start": 95548.3529997,
+        "embedding_worker_start": 95548.3542961,
+        "embedding_worker_end": 95550.3170866,
+        "retrieval_end": 95550.3172537,
+        "answer_pipeline_start": 95550.318226,
+        "provider_wrapper_start": 95550.3182676,
+        "llm_mock_start": 95550.3200819,
+        "llm_mock_end": 95550.3201586,
+        "provider_wrapper_end": 95550.3201691,
+        "answer_pipeline_end": 95550.3202113,
+        "commit_start": 95550.366737,
+        "commit_end": 95550.3718535,
+        "http_end": 95550.373503
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "023b51ec-2456-4343-82e9-1cb42c58633a",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2033.2115999917733,
+        "routing": 0.02300000051036477,
+        "retrieval": 1964.2540000058943,
+        "embedding_worker_nested": 1962.7904999942984,
+        "prompt_preparation": 0.04159999662078917,
+        "provider_wrapper": 1.901499999803491,
+        "llm_mock_nested": 0.07670000195503235,
+        "answer_validation_composition": 0.04220000118948519,
+        "post_generation_persistence": 51.6421999927843,
+        "commit_nested": 5.116499989526346,
+        "other_http": 15.307099994970486
+      }
+    },
+    {
+      "index": 39,
+      "warmup": false,
+      "request_id": "f22184e6-b8dd-466f-8b32-9190085ba3a5",
+      "session_id": "b51b1556-def8-4155-be63-e358506ce13d",
+      "timestamps": {
+        "http_start": 95550.3827411,
+        "routing_start": 95550.3960094,
+        "routing_end": 95550.3960332,
+        "retrieval_start": 95550.3960439,
+        "embedding_worker_start": 95550.3979171,
+        "embedding_worker_end": 95552.4228411,
+        "retrieval_end": 95552.4233137,
+        "answer_pipeline_start": 95552.4250582,
+        "provider_wrapper_start": 95552.4251012,
+        "llm_mock_start": 95552.4272668,
+        "llm_mock_end": 95552.4273382,
+        "provider_wrapper_end": 95552.4273493,
+        "answer_pipeline_end": 95552.4273946,
+        "commit_start": 95552.47628,
+        "commit_end": 95552.4819068,
+        "http_end": 95552.484735
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "b51b1556-def8-4155-be63-e358506ce13d",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2101.9939000107115,
+        "routing": 0.02379999205004424,
+        "retrieval": 2027.269800004433,
+        "embedding_worker_nested": 2024.9239999975543,
+        "prompt_preparation": 0.04300000728107989,
+        "provider_wrapper": 2.2480999905383214,
+        "llm_mock_nested": 0.07139999070204794,
+        "answer_validation_composition": 0.04530001024249941,
+        "post_generation_persistence": 54.51220000395551,
+        "commit_nested": 5.626800004392862,
+        "other_http": 17.851700002211146
+      }
+    },
+    {
+      "index": 40,
+      "warmup": false,
+      "request_id": "14768f0b-a7d2-4b11-8356-1654674c99a7",
+      "session_id": "5789d5e6-f698-4ad2-bbef-8ddf9e6d1aad",
+      "timestamps": {
+        "http_start": 95552.4945238,
+        "routing_start": 95552.5104029,
+        "routing_end": 95552.5104264,
+        "retrieval_start": 95552.5104361,
+        "embedding_worker_start": 95552.5121798,
+        "embedding_worker_end": 95554.4649335,
+        "retrieval_end": 95554.4650903,
+        "answer_pipeline_start": 95554.4666061,
+        "provider_wrapper_start": 95554.4666544,
+        "llm_mock_start": 95554.4689935,
+        "llm_mock_end": 95554.4690679,
+        "provider_wrapper_end": 95554.4690798,
+        "answer_pipeline_end": 95554.4691228,
+        "commit_start": 95554.5149318,
+        "commit_end": 95554.5200805,
+        "http_end": 95554.5214773
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "5789d5e6-f698-4ad2-bbef-8ddf9e6d1aad",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2026.9535000115866,
+        "routing": 0.023499989765696228,
+        "retrieval": 1954.654200002551,
+        "embedding_worker_nested": 1952.7536999958102,
+        "prompt_preparation": 0.048300003982149065,
+        "provider_wrapper": 2.4253999872598797,
+        "llm_mock_nested": 0.07439999899361283,
+        "answer_validation_composition": 0.04300000728107989,
+        "post_generation_persistence": 50.957700004801154,
+        "commit_nested": 5.148700001882389,
+        "other_http": 18.801400015945546
+      }
+    },
+    {
+      "index": 41,
+      "warmup": false,
+      "request_id": "08b7e726-a308-4298-9e8d-8b89fddf7f2c",
+      "session_id": "c308408d-8edd-4f9f-9849-125664ae6df0",
+      "timestamps": {
+        "http_start": 95554.5311006,
+        "routing_start": 95554.5440803,
+        "routing_end": 95554.5441045,
+        "retrieval_start": 95554.5441149,
+        "embedding_worker_start": 95554.5461358,
+        "embedding_worker_end": 95556.4639554,
+        "retrieval_end": 95556.4641108,
+        "answer_pipeline_start": 95556.4656631,
+        "provider_wrapper_start": 95556.4657098,
+        "llm_mock_start": 95556.4680747,
+        "llm_mock_end": 95556.4681523,
+        "provider_wrapper_end": 95556.4681644,
+        "answer_pipeline_end": 95556.4682089,
+        "commit_start": 95556.5154681,
+        "commit_end": 95556.5243666,
+        "http_end": 95556.525807
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "c308408d-8edd-4f9f-9849-125664ae6df0",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1994.706400000723,
+        "routing": 0.024200009647756815,
+        "retrieval": 1919.99590001069,
+        "embedding_worker_nested": 1917.8195999993477,
+        "prompt_preparation": 0.0467000063508749,
+        "provider_wrapper": 2.4545999913243577,
+        "llm_mock_nested": 0.07760000880807638,
+        "answer_validation_composition": 0.044500004150904715,
+        "post_generation_persistence": 56.15770000440534,
+        "commit_nested": 8.89850000385195,
+        "other_http": 15.98279997415375
+      }
+    },
+    {
+      "index": 42,
+      "warmup": false,
+      "request_id": "71aec65f-a17a-48cd-b888-b4e2a9cb5041",
+      "session_id": "231f8e79-dc25-4aa1-b259-daf1ad5cac2f",
+      "timestamps": {
+        "http_start": 95556.5354872,
+        "routing_start": 95556.5482501,
+        "routing_end": 95556.5484052,
+        "retrieval_start": 95556.5484187,
+        "embedding_worker_start": 95556.5504006,
+        "embedding_worker_end": 95558.4402257,
+        "retrieval_end": 95558.4405595,
+        "answer_pipeline_start": 95558.4422624,
+        "provider_wrapper_start": 95558.4423086,
+        "llm_mock_start": 95558.4440747,
+        "llm_mock_end": 95558.4441462,
+        "provider_wrapper_end": 95558.4441567,
+        "answer_pipeline_end": 95558.4441977,
+        "commit_start": 95558.4920814,
+        "commit_end": 95558.4974986,
+        "http_end": 95558.5005951
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "231f8e79-dc25-4aa1-b259-daf1ad5cac2f",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1965.1079000032041,
+        "routing": 0.1551000023027882,
+        "retrieval": 1892.1408000023803,
+        "embedding_worker_nested": 1889.8251000064192,
+        "prompt_preparation": 0.046200002543628216,
+        "provider_wrapper": 1.8481000006431714,
+        "llm_mock_nested": 0.07149999146349728,
+        "answer_validation_composition": 0.04099999205209315,
+        "post_generation_persistence": 53.30090000643395,
+        "commit_nested": 5.417199994553812,
+        "other_http": 17.575799996848218
+      }
+    },
+    {
+      "index": 43,
+      "warmup": false,
+      "request_id": "99d3a9e6-0327-400d-a4bf-0ba0e6a7af38",
+      "session_id": "11d435e7-2eab-4712-81e1-30e40010cc17",
+      "timestamps": {
+        "http_start": 95558.5297405,
+        "routing_start": 95558.5444656,
+        "routing_end": 95558.5444882,
+        "retrieval_start": 95558.5444978,
+        "embedding_worker_start": 95558.5462136,
+        "embedding_worker_end": 95560.462029,
+        "retrieval_end": 95560.4621786,
+        "answer_pipeline_start": 95560.4633829,
+        "provider_wrapper_start": 95560.4634229,
+        "llm_mock_start": 95560.4657616,
+        "llm_mock_end": 95560.465845,
+        "provider_wrapper_end": 95560.4659533,
+        "answer_pipeline_end": 95560.4660075,
+        "commit_start": 95560.512901,
+        "commit_end": 95560.5181746,
+        "http_end": 95560.5194379
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "11d435e7-2eab-4712-81e1-30e40010cc17",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1989.6974000002956,
+        "routing": 0.022599997464567423,
+        "retrieval": 1917.6808000047458,
+        "embedding_worker_nested": 1915.8154000033392,
+        "prompt_preparation": 0.03999999898951501,
+        "provider_wrapper": 2.5304000009782612,
+        "llm_mock_nested": 0.08339999476447701,
+        "answer_validation_composition": 0.05420000525191426,
+        "post_generation_persistence": 52.167100002407096,
+        "commit_nested": 5.273600007058121,
+        "other_http": 17.202299990458414
+      }
+    },
+    {
+      "index": 44,
+      "warmup": false,
+      "request_id": "f5e66389-f596-40f2-b92c-091f5e5a97a1",
+      "session_id": "73d5aa20-a382-46e2-99e1-663dc9e7a8b9",
+      "timestamps": {
+        "http_start": 95560.5455467,
+        "routing_start": 95560.560835,
+        "routing_end": 95560.5608584,
+        "retrieval_start": 95560.5608681,
+        "embedding_worker_start": 95560.5623675,
+        "embedding_worker_end": 95562.4268797,
+        "retrieval_end": 95562.4270391,
+        "answer_pipeline_start": 95562.4283312,
+        "provider_wrapper_start": 95562.4283757,
+        "llm_mock_start": 95562.4303965,
+        "llm_mock_end": 95562.4304704,
+        "provider_wrapper_end": 95562.4304816,
+        "answer_pipeline_end": 95562.4305246,
+        "commit_start": 95562.4778557,
+        "commit_end": 95562.483417,
+        "http_end": 95562.4853172
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "73d5aa20-a382-46e2-99e1-663dc9e7a8b9",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1939.770500001032,
+        "routing": 0.02340000355616212,
+        "retrieval": 1866.1710000014864,
+        "embedding_worker_nested": 1864.5122000016272,
+        "prompt_preparation": 0.04449998959898949,
+        "provider_wrapper": 2.1058999991510063,
+        "llm_mock_nested": 0.07389999518636614,
+        "answer_validation_composition": 0.04300000728107989,
+        "post_generation_persistence": 52.89239999547135,
+        "commit_nested": 5.561300000408664,
+        "other_http": 18.490300004486926
+      }
+    },
+    {
+      "index": 45,
+      "warmup": false,
+      "request_id": "457bd874-6468-4f64-a58f-24e620944594",
+      "session_id": "149372a4-3cc9-4d20-ab2e-0b6b11d938ec",
+      "timestamps": {
+        "http_start": 95562.4941917,
+        "routing_start": 95562.5083331,
+        "routing_end": 95562.5083582,
+        "retrieval_start": 95562.5083691,
+        "embedding_worker_start": 95562.5102862,
+        "embedding_worker_end": 95564.4157531,
+        "retrieval_end": 95564.4159117,
+        "answer_pipeline_start": 95564.4171191,
+        "provider_wrapper_start": 95564.4171641,
+        "llm_mock_start": 95564.4197994,
+        "llm_mock_end": 95564.4198814,
+        "provider_wrapper_end": 95564.4198978,
+        "answer_pipeline_end": 95564.4199431,
+        "commit_start": 95564.4648933,
+        "commit_end": 95564.4796085,
+        "http_end": 95564.4812852
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "149372a4-3cc9-4d20-ab2e-0b6b11d938ec",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1987.0935000071768,
+        "routing": 0.02509998739697039,
+        "retrieval": 1907.5425999908475,
+        "embedding_worker_nested": 1905.4668999888236,
+        "prompt_preparation": 0.04499999340623617,
+        "provider_wrapper": 2.733700006501749,
+        "llm_mock_nested": 0.08199999865610152,
+        "answer_validation_composition": 0.04529999569058418,
+        "post_generation_persistence": 59.66539999644738,
+        "commit_nested": 14.71519999904558,
+        "other_http": 17.036400036886334
+      }
+    },
+    {
+      "index": 46,
+      "warmup": false,
+      "request_id": "231a4206-fb0e-4de7-a6c6-8300accbca45",
+      "session_id": "184cc135-d23b-42ea-a3ed-024aab3819a2",
+      "timestamps": {
+        "http_start": 95564.4902417,
+        "routing_start": 95564.5035163,
+        "routing_end": 95564.5036155,
+        "retrieval_start": 95564.503626,
+        "embedding_worker_start": 95564.5052464,
+        "embedding_worker_end": 95566.4582662,
+        "retrieval_end": 95566.4584235,
+        "answer_pipeline_start": 95566.4601318,
+        "provider_wrapper_start": 95566.460173,
+        "llm_mock_start": 95566.4627395,
+        "llm_mock_end": 95566.4629679,
+        "provider_wrapper_end": 95566.4629846,
+        "answer_pipeline_end": 95566.4630421,
+        "commit_start": 95566.5128149,
+        "commit_end": 95566.5188382,
+        "http_end": 95566.5212396
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "184cc135-d23b-42ea-a3ed-024aab3819a2",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2030.997900001239,
+        "routing": 0.09919999865815043,
+        "retrieval": 1954.7974999877624,
+        "embedding_worker_nested": 1953.0197999993106,
+        "prompt_preparation": 0.04119999357499182,
+        "provider_wrapper": 2.8116000030422583,
+        "llm_mock_nested": 0.22840000747237355,
+        "answer_validation_composition": 0.05750000127591193,
+        "post_generation_persistence": 55.79610000131652,
+        "commit_nested": 6.023300011293031,
+        "other_http": 17.39480001560878
+      }
+    },
+    {
+      "index": 47,
+      "warmup": false,
+      "request_id": "d11db495-c28d-4c72-b205-3a4512f18d07",
+      "session_id": "ff5cc400-e8ff-44a6-a8fb-aa88421f9be7",
+      "timestamps": {
+        "http_start": 95566.5447286,
+        "routing_start": 95566.5578994,
+        "routing_end": 95566.5579225,
+        "retrieval_start": 95566.5579317,
+        "embedding_worker_start": 95566.5594593,
+        "embedding_worker_end": 95568.4602024,
+        "retrieval_end": 95568.4603686,
+        "answer_pipeline_start": 95568.4617228,
+        "provider_wrapper_start": 95568.461774,
+        "llm_mock_start": 95568.4640724,
+        "llm_mock_end": 95568.4641521,
+        "provider_wrapper_end": 95568.4641862,
+        "answer_pipeline_end": 95568.4642499,
+        "commit_start": 95568.514146,
+        "commit_end": 95568.5196853,
+        "http_end": 95568.5213395
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "ff5cc400-e8ff-44a6-a8fb-aa88421f9be7",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1976.6109000047436,
+        "routing": 0.023100001271814108,
+        "retrieval": 1902.4369000107981,
+        "embedding_worker_nested": 1900.7431000063661,
+        "prompt_preparation": 0.05119999696034938,
+        "provider_wrapper": 2.412200003163889,
+        "llm_mock_nested": 0.079699995694682,
+        "answer_validation_composition": 0.06370000483002514,
+        "post_generation_persistence": 55.43539999052882,
+        "commit_nested": 5.539299992960878,
+        "other_http": 16.188399997190572
+      }
+    },
+    {
+      "index": 48,
+      "warmup": false,
+      "request_id": "a144871b-d8f3-4873-bb75-6d25fd83e954",
+      "session_id": "fb5b092c-1adc-45d9-92b5-29f759617cd0",
+      "timestamps": {
+        "http_start": 95568.530774,
+        "routing_start": 95568.5441027,
+        "routing_end": 95568.544126,
+        "retrieval_start": 95568.5441356,
+        "embedding_worker_start": 95568.5456007,
+        "embedding_worker_end": 95570.4925521,
+        "retrieval_end": 95570.4927179,
+        "answer_pipeline_start": 95570.4939453,
+        "provider_wrapper_start": 95570.4939932,
+        "llm_mock_start": 95570.4965101,
+        "llm_mock_end": 95570.4967157,
+        "provider_wrapper_end": 95570.4967311,
+        "answer_pipeline_end": 95570.4967814,
+        "commit_start": 95570.5437277,
+        "commit_end": 95570.5499924,
+        "http_end": 95570.5515664
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "fb5b092c-1adc-45d9-92b5-29f759617cd0",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2020.7923999987543,
+        "routing": 0.023299988242797554,
+        "retrieval": 1948.5822999995435,
+        "embedding_worker_nested": 1946.95139999385,
+        "prompt_preparation": 0.047900000936351717,
+        "provider_wrapper": 2.7378999948268756,
+        "llm_mock_nested": 0.20560000848490745,
+        "answer_validation_composition": 0.050300004659220576,
+        "post_generation_persistence": 53.21100000583101,
+        "commit_nested": 6.264700001338497,
+        "other_http": 16.13970000471454
+      }
+    },
+    {
+      "index": 49,
+      "warmup": false,
+      "request_id": "ce9b2f7e-0dc2-4d8d-b41e-6236d4ed62da",
+      "session_id": "30a15dbd-1385-47fc-a37c-613f5928569d",
+      "timestamps": {
+        "http_start": 95570.569526,
+        "routing_start": 95570.5836047,
+        "routing_end": 95570.5836289,
+        "retrieval_start": 95570.5836426,
+        "embedding_worker_start": 95570.5853957,
+        "embedding_worker_end": 95572.5618325,
+        "retrieval_end": 95572.5619975,
+        "answer_pipeline_start": 95572.5633264,
+        "provider_wrapper_start": 95572.5633718,
+        "llm_mock_start": 95572.5655696,
+        "llm_mock_end": 95572.565659,
+        "provider_wrapper_end": 95572.5656713,
+        "answer_pipeline_end": 95572.5657201,
+        "commit_start": 95572.610995,
+        "commit_end": 95572.6167945,
+        "http_end": 95572.6180639
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "30a15dbd-1385-47fc-a37c-613f5928569d",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2048.537899987423,
+        "routing": 0.024199995095841587,
+        "retrieval": 1978.3548999985214,
+        "embedding_worker_nested": 1976.4367999887327,
+        "prompt_preparation": 0.04539999645203352,
+        "provider_wrapper": 2.2995000035734847,
+        "llm_mock_nested": 0.08939999679569155,
+        "answer_validation_composition": 0.04879999323748052,
+        "post_generation_persistence": 51.0744000057457,
+        "commit_nested": 5.799500009743497,
+        "other_http": 16.690699994796887
+      }
+    },
+    {
+      "index": 50,
+      "warmup": false,
+      "request_id": "31ef707e-2ae1-48aa-9741-aef7db15ea53",
+      "session_id": "59f7bf89-583d-46b7-81ff-c72104010666",
+      "timestamps": {
+        "http_start": 95572.6270475,
+        "routing_start": 95572.6397766,
+        "routing_end": 95572.6398095,
+        "retrieval_start": 95572.6398208,
+        "embedding_worker_start": 95572.6414246,
+        "embedding_worker_end": 95574.6029942,
+        "retrieval_end": 95574.603152,
+        "answer_pipeline_start": 95574.6042779,
+        "provider_wrapper_start": 95574.6043205,
+        "llm_mock_start": 95574.6060276,
+        "llm_mock_end": 95574.6060972,
+        "provider_wrapper_end": 95574.606108,
+        "answer_pipeline_end": 95574.6061506,
+        "commit_start": 95574.6518376,
+        "commit_end": 95574.6574563,
+        "http_end": 95574.6590383
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "59f7bf89-583d-46b7-81ff-c72104010666",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2031.9907999946736,
+        "routing": 0.03290000313427299,
+        "retrieval": 1963.331199993263,
+        "embedding_worker_nested": 1961.5695999964373,
+        "prompt_preparation": 0.04260000423528254,
+        "provider_wrapper": 1.7875000048661605,
+        "llm_mock_nested": 0.0695999915478751,
+        "answer_validation_composition": 0.04259998968336731,
+        "post_generation_persistence": 51.305700006196275,
+        "commit_nested": 5.618700000923127,
+        "other_http": 15.448299993295223
+      }
+    },
+    {
+      "index": 51,
+      "warmup": false,
+      "request_id": "897b6d55-8b46-4d8b-852f-d5df8b289b41",
+      "session_id": "07a5ad75-84d0-494a-a643-421293776669",
+      "timestamps": {
+        "http_start": 95574.6679845,
+        "routing_start": 95574.6804447,
+        "routing_end": 95574.6804685,
+        "retrieval_start": 95574.6804787,
+        "embedding_worker_start": 95574.6825447,
+        "embedding_worker_end": 95576.7344625,
+        "retrieval_end": 95576.7346403,
+        "answer_pipeline_start": 95576.7359802,
+        "provider_wrapper_start": 95576.736028,
+        "llm_mock_start": 95576.7380225,
+        "llm_mock_end": 95576.7380956,
+        "provider_wrapper_end": 95576.7381066,
+        "answer_pipeline_end": 95576.7381496,
+        "commit_start": 95576.7873088,
+        "commit_end": 95576.7925548,
+        "http_end": 95576.7943973
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "07a5ad75-84d0-494a-a643-421293776669",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2126.412799989339,
+        "routing": 0.02379999205004424,
+        "retrieval": 2054.1615999973146,
+        "embedding_worker_nested": 2051.917799995863,
+        "prompt_preparation": 0.04780000017490238,
+        "provider_wrapper": 2.0785999950021505,
+        "llm_mock_nested": 0.07310000364668667,
+        "answer_validation_composition": 0.04300000728107989,
+        "post_generation_persistence": 54.405200004111975,
+        "commit_nested": 5.2460000006249174,
+        "other_http": 15.652799993404187
+      }
+    },
+    {
+      "index": 52,
+      "warmup": false,
+      "request_id": "2fcaab3a-838d-4ff9-9034-3c9f04b719f6",
+      "session_id": "124ace57-aecc-4135-adbe-ea153e75de93",
+      "timestamps": {
+        "http_start": 95576.8042893,
+        "routing_start": 95576.8172722,
+        "routing_end": 95576.8172967,
+        "retrieval_start": 95576.8173073,
+        "embedding_worker_start": 95576.8191216,
+        "embedding_worker_end": 95578.4928988,
+        "retrieval_end": 95578.493061,
+        "answer_pipeline_start": 95578.494608,
+        "provider_wrapper_start": 95578.494691,
+        "llm_mock_start": 95578.4968506,
+        "llm_mock_end": 95578.496905,
+        "provider_wrapper_end": 95578.4969154,
+        "answer_pipeline_end": 95578.4969496,
+        "commit_start": 95578.5434502,
+        "commit_end": 95578.5482603,
+        "http_end": 95578.5496743
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "124ace57-aecc-4135-adbe-ea153e75de93",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1745.3850000019884,
+        "routing": 0.024499997380189598,
+        "retrieval": 1675.7536999939475,
+        "embedding_worker_nested": 1673.7772000051336,
+        "prompt_preparation": 0.0830000062705949,
+        "provider_wrapper": 2.2243999992497265,
+        "llm_mock_nested": 0.05440000677481294,
+        "answer_validation_composition": 0.034199998481199145,
+        "post_generation_persistence": 51.310700000613,
+        "commit_nested": 4.8100999993039295,
+        "other_http": 15.954500006046146
+      }
+    },
+    {
+      "index": 53,
+      "warmup": false,
+      "request_id": "4d8f8a24-b8f9-4254-82c9-d46bf2e9dcde",
+      "session_id": "aae425e1-8a58-49d8-ac87-d96c6cb535dc",
+      "timestamps": {
+        "http_start": 95578.5577345,
+        "routing_start": 95578.5678483,
+        "routing_end": 95578.5678619,
+        "retrieval_start": 95578.5678675,
+        "embedding_worker_start": 95578.5689188,
+        "embedding_worker_end": 95580.6026853,
+        "retrieval_end": 95580.6027757,
+        "answer_pipeline_start": 95580.603879,
+        "provider_wrapper_start": 95580.6039068,
+        "llm_mock_start": 95580.605852,
+        "llm_mock_end": 95580.6058985,
+        "provider_wrapper_end": 95580.6059062,
+        "answer_pipeline_end": 95580.6059329,
+        "commit_start": 95580.6554173,
+        "commit_end": 95580.6598245,
+        "http_end": 95580.6608699
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "aae425e1-8a58-49d8-ac87-d96c6cb535dc",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 2103.1354000006104,
+        "routing": 0.013600001693703234,
+        "retrieval": 2034.908200002974,
+        "embedding_worker_nested": 2033.7664999970002,
+        "prompt_preparation": 0.027799993404187262,
+        "provider_wrapper": 1.9994000031147152,
+        "llm_mock_nested": 0.04650000482797623,
+        "answer_validation_composition": 0.026699999580159783,
+        "post_generation_persistence": 53.89160000777338,
+        "commit_nested": 4.407200001878664,
+        "other_http": 12.268099992070347
+      }
+    },
+    {
+      "index": 54,
+      "warmup": false,
+      "request_id": "037fac4b-28f1-408c-a0b4-2536ffde3fb9",
+      "session_id": "af5d846d-5c19-4f11-ac74-63dd36264c4e",
+      "timestamps": {
+        "http_start": 95580.6679112,
+        "routing_start": 95580.6758371,
+        "routing_end": 95580.6758482,
+        "retrieval_start": 95580.6758537,
+        "embedding_worker_start": 95580.6767319,
+        "embedding_worker_end": 95582.4307809,
+        "retrieval_end": 95582.4309642,
+        "answer_pipeline_start": 95582.4322793,
+        "provider_wrapper_start": 95582.4323095,
+        "llm_mock_start": 95582.434813,
+        "llm_mock_end": 95582.434921,
+        "provider_wrapper_end": 95582.4349437,
+        "answer_pipeline_end": 95582.4350016,
+        "commit_start": 95582.4819244,
+        "commit_end": 95582.487772,
+        "http_end": 95582.489886
+      },
+      "decision": {
+        "action": "retrieve",
+        "reason": "explicit_evidence",
+        "origin": "guard"
+      },
+      "retrieved": [
+        {
+          "number": 1,
+          "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+          "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+          "document_name": "transactions.txt",
+          "page": null,
+          "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+        }
+      ],
+      "llm_calls": 1,
+      "prompt_hash": "59786617bf0eb9b1fa3907601e6775216560d9d3cf03159f6c7f67ddf354acaa",
+      "status": 200,
+      "response": {
+        "answer": "A database transaction guarantees atomicity: either all changes commit, or none are applied. [1]",
+        "session_id": "af5d846d-5c19-4f11-ac74-63dd36264c4e",
+        "session_type": "questioning",
+        "learning_goal": null,
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "765d71c8-d787-4943-aecf-ea386b294b38",
+            "document_id": "f2b113ce-fce8-4116-876f-56e6435621ad",
+            "document_name": "transactions.txt",
+            "page": null,
+            "content": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied."
+          }
+        ],
+        "ai_mode": "embedding=fastembed;llm=provider",
+        "answer_basis": "grounded",
+        "answer_mode": "smart",
+        "learning_mode": "direct"
+      },
+      "valid": true,
+      "ms": {
+        "http": 1821.974799997406,
+        "routing": 0.011099997209385037,
+        "retrieval": 1755.110500002047,
+        "embedding_worker_nested": 1754.0489999955753,
+        "prompt_preparation": 0.030199997127056122,
+        "provider_wrapper": 2.6342000055592507,
+        "llm_mock_nested": 0.10799999290611595,
+        "answer_validation_composition": 0.05789998976979405,
+        "post_generation_persistence": 52.770399997825734,
+        "commit_nested": 5.847599997650832,
+        "other_http": 11.360500007867813
+      }
+    }
+  ],
+  "passed": true,
+  "warmups": 5,
+  "measured": 50,
+  "percentiles": "nearest rank; P99 with 50 samples is the maximum",
+  "head": "925c8bd6a91444fb63d8403c9a642775e67b658b",
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "sqlalchemy": "2.0.49",
+    "uvicorn": "0.44.0",
+    "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cpus": 32,
+    "postgres": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit",
+    "isolation": "read committed"
+  },
+  "workload": {
+    "question": "According to the document, what does a database transaction guarantee?",
+    "document": "A database transaction guarantees atomicity: either all changes commit, or none of the changes are applied.",
+    "history": [
+      {
+        "role": "user",
+        "content": "I am studying database transactions."
+      },
+      {
+        "role": "assistant",
+        "content": "We can examine their guarantees using your document."
+      }
+    ],
+    "answer_mode": "smart",
+    "session_type": "questioning",
+    "learning_mode": "direct",
+    "citation_audit": false,
+    "embedding": "fastembed",
+    "llm_backend": "provider",
+    "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "retrieval_min_score": 0.35,
+    "lexical_rescue": true,
+    "runtime_metrics": false
+  },
+  "source_hashes": {
+    "app/api/routes/chat.py": "4d0845f908329417948ab23d2084507627dd687aa8321d9ada32d35286e0cf3a",
+    "app/services/chat/answers.py": "539f63fb4de8a95f9c6e72ede595faf554e24663c6ac2a873b2238871f767f40",
+    "app/services/knowledge/retrieval.py": "ad88d544f823a4282892ee7b83833d4d957589dd43038ee94cd79f3c8edcb3df",
+    "app/db/session.py": "40b777739d675747b8bb6050d49683de2183d05f46ff5a2431501931ed718c89",
+    "app/api/routes/knowledge.py": "46c9e27303ef9e03f05a5cc62b3d9e8d0120f7c0e014facd0255d24cb8dcbc4e"
+  },
+  "pool": {
+    "class": "QueuePool",
+    "size": 5,
+    "max_overflow": 10,
+    "timeout": 30.0,
+    "recycle": -1,
+    "pre_ping": false,
+    "reset_on_return": "ResetStyle.reset_rollback"
+  },
+  "model_hashes": {
+    "files_metadata.json": "e47fe8b189dade1f9e0f777fade2d0bab566278d7c7fbb6fef93b8c7f6fb6b98",
+    "trees\\faf4aa4225822f3bc6376869cb1164e8e3feedd0.json": "292c0104b22e003fa965c11359baa62dff4ac112eebf8daab679cc9c41d33258",
+    "snapshots\\faf4aa4225822f3bc6376869cb1164e8e3feedd0\\config.json": "c8ec081fdad2df991bf5abbf18418fec7a5cdaa421f60ffb060a30040b8c376f",
+    "snapshots\\faf4aa4225822f3bc6376869cb1164e8e3feedd0\\model_optimized.onnx": "634d0f66c29dc934c8fa72b8a4fe91dd4d420a22f1d82a241058d4316e659a99",
+    "snapshots\\faf4aa4225822f3bc6376869cb1164e8e3feedd0\\special_tokens_map.json": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+    "snapshots\\faf4aa4225822f3bc6376869cb1164e8e3feedd0\\tokenizer.json": "fa685fc160bbdbab64058d4fc91b60e62d207e8dc60b9af5c002c5ab946ded00",
+    "snapshots\\faf4aa4225822f3bc6376869cb1164e8e3feedd0\\tokenizer_config.json": "0666eebf692422757e1dddf3c9fb1ded73ba3dc726c5828671fc89e45bf3609f"
+  },
+  "summary": {
+    "http": {
+      "n": 50,
+      "mean_ms": 1753.621100000164,
+      "p50_ms": 1745.3850000019884,
+      "p95_ms": 2103.1354000006104,
+      "p99_ms": 2126.412799989339,
+      "min_ms": 1441.5965000080178,
+      "max_ms": 2126.412799989339
+    },
+    "routing": {
+      "n": 50,
+      "mean_ms": 0.02265799936139956,
+      "p50_ms": 0.013600001693703234,
+      "p95_ms": 0.07150000601541251,
+      "p99_ms": 0.1551000023027882,
+      "min_ms": 0.011099997209385037,
+      "max_ms": 0.1551000023027882
+    },
+    "retrieval": {
+      "n": 50,
+      "mean_ms": 1683.6911720002536,
+      "p50_ms": 1675.7536999939475,
+      "p95_ms": 2034.908200002974,
+      "p99_ms": 2054.1615999973146,
+      "min_ms": 1371.7593000037596,
+      "max_ms": 2054.1615999973146
+    },
+    "embedding_worker_nested": {
+      "n": 50,
+      "mean_ms": 1682.2210779995658,
+      "p50_ms": 1673.7772000051336,
+      "p95_ms": 2033.7664999970002,
+      "p99_ms": 2051.917799995863,
+      "min_ms": 1370.6197999999858,
+      "max_ms": 2051.917799995863
+    },
+    "prompt_preparation": {
+      "n": 50,
+      "mean_ms": 0.03612400061683729,
+      "p50_ms": 0.029499991796910763,
+      "p95_ms": 0.048300003982149065,
+      "p99_ms": 0.0830000062705949,
+      "min_ms": 0.02510000194888562,
+      "max_ms": 0.0830000062705949
+    },
+    "provider_wrapper": {
+      "n": 50,
+      "mean_ms": 1.9032279995735735,
+      "p50_ms": 1.8481000006431714,
+      "p95_ms": 2.8116000030422583,
+      "p99_ms": 3.5115999926347286,
+      "min_ms": 1.2600000045495108,
+      "max_ms": 3.5115999926347286
+    },
+    "llm_mock_nested": {
+      "n": 50,
+      "mean_ms": 0.06702600046992302,
+      "p50_ms": 0.05440000677481294,
+      "p95_ms": 0.10799999290611595,
+      "p99_ms": 0.22840000747237355,
+      "min_ms": 0.04180001269560307,
+      "max_ms": 0.22840000747237355
+    },
+    "answer_validation_composition": {
+      "n": 50,
+      "mean_ms": 0.03634800115833059,
+      "p50_ms": 0.028599999495781958,
+      "p95_ms": 0.05750000127591193,
+      "p99_ms": 0.06370000483002514,
+      "min_ms": 0.024100008886307478,
+      "max_ms": 0.06370000483002514
+    },
+    "post_generation_persistence": {
+      "n": 50,
+      "mean_ms": 54.143672000209335,
+      "p50_ms": 53.30090000643395,
+      "p95_ms": 60.971700004301965,
+      "p99_ms": 63.241700001526624,
+      "min_ms": 47.70799999823794,
+      "max_ms": 63.241700001526624
+    },
+    "commit_nested": {
+      "n": 50,
+      "mean_ms": 7.782296000805218,
+      "p50_ms": 5.626800004392862,
+      "p95_ms": 14.71519999904558,
+      "p99_ms": 15.33009999548085,
+      "min_ms": 3.7653999897884205,
+      "max_ms": 15.33009999548085
+    },
+    "other_http": {
+      "n": 50,
+      "mean_ms": 13.787897998990957,
+      "p50_ms": 12.268099992070347,
+      "p95_ms": 18.801400015945546,
+      "p99_ms": 33.38990001066122,
+      "min_ms": 9.038999996846542,
+      "max_ms": 33.38990001066122
+    }
+  },
+  "batch_means_ms": [
+    1917.8430400017533,
+    1486.3637599977665,
+    1478.569860002608,
+    1896.0357000003569,
+    1989.2931399983354
+  ],
+  "success_rate": 1.0,
+  "api_stopped": true
+}
