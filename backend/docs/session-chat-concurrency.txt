@@ -1,0 +1,40 @@
+Session-level Chat Concurrency — opt-in two-session stage
+
+SESSION_CHAT_CONCURRENCY_ENABLED=false by default. Enable only on the supported
+single API worker deployment. This does not enable multi-worker coordination.
+
+Admission order remains Authentication/Recovery Gate -> request Single-flight ->
+Workspace lifecycle permit -> Session lock -> Chat admission -> reads/generation/
+Commit. A follower waits before these locks and replays the persisted ChatTurn.
+
+With the flag disabled, Chat acquires/releases the original chat_slot(1).
+With the flag enabled, only requests with a nonempty session_id can share that
+slot, at most two. Ownership and Workspace binding are still checked before
+generation. The first shared Chat acquires chat_slot; the last releases it.
+An internal short mutex protects only shared admission/refcounts, never SQL,
+Session waiting, provider work or cleanup. The admission decision is retained
+for release; it does not reread the flag during cleanup.
+
+The existing Session lock means two requests for one Session cannot join the
+generation phase simultaneously. Its finite wait still returns409 on timeout.
+Third shared request returns429. No queue or automatic retry is added.
+
+Legacy entrants (new-session Chat, Learning mutations, Session Delete) still
+acquire the SAME chat_slot exclusively. They cannot overlap a shared cohort.
+Learning reads and Session Delete still have session_operation protection.
+This deliberately retains some cross-session409 responses for Learning/Delete.
+Do not replace the shared slot with a distinct semaphore: that would let legacy
+operations enter alongside the two shared Chats and break this capacity boundary.
+
+Workspace Delete/Recovery retains document_slot -> chat_slot -> lifecycle exclusion.
+Every admitted Chat holds a lifecycle permit through Commit or exception Rollback;
+the Session lock is also held through Rollback. Shared admission can release before
+Rollback as the old global slot did, but a deletion is still refused by the active
+lifecycle permit. Pending/uncertain recovery state remains fail closed.
+
+Query Embedding capacity remains1, Provider memory/time/process isolation unchanged.
+The tested overlap stages Embedding A before starting B while A is in LLM generation.
+Simultaneous Embedding arrivals may still return429; this feature does not promise
+that any two arbitrary concurrent HTTP requests both succeed.
+
+Verification: tests/experiments/SESSION_CHAT_CONCURRENCY_REPORT.txt.

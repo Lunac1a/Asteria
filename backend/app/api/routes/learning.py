@@ -20,6 +20,7 @@ from app.services.learning.state import (
 )
 from app.services.knowledge.retrieval import owned_workspace
 from app.api.routes.chat import chat_slot
+from app.services.workspace_lifecycle import session_operation
 
 router = APIRouter(prefix="/chat/sessions/{session_id}/learning")
 
@@ -67,6 +68,7 @@ def recap_data(row):
 
 
 @router.get("")
+@session_operation
 def read(
     session_id: str, user_id=Depends(get_current_user_id), db: Session = Depends(get_db)
 ):
@@ -102,6 +104,7 @@ def read(
 
 
 @router.put("/notes")
+@session_operation
 def notes(
     session_id: str,
     payload: NotesEdit,
@@ -139,6 +142,7 @@ def notes(
 
 
 @router.post("/recap-draft")
+@session_operation
 def draft(
     session_id: str,
     payload: GenerateRecap,
@@ -205,6 +209,7 @@ def draft(
 
 
 @router.post("/finish")
+@session_operation
 def finish(
     session_id: str,
     payload: Finish,
@@ -265,6 +270,7 @@ def finish(
 
 
 @router.post("/resume")
+@session_operation
 def resume(
     session_id: str,
     payload: Revision,
@@ -290,6 +296,7 @@ def resume(
 
 
 @router.put("/recaps/{recap_id}")
+@session_operation
 def edit_recap(
     session_id: str,
     recap_id: str,

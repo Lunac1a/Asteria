@@ -12,6 +12,7 @@ from app.services.llm.protocol import GenerationError, GenerationText
 from httpx import Client
 from openai import OpenAI, APIConnectionError, APIStatusError, RateLimitError, APITimeoutError
 from app.services.runtime_metrics import provider_call
+from app.services.llm.process import run_provider
 
 
 @provider_call
@@ -39,7 +40,7 @@ def generate_response(
         }
     }
     try:
-        result = subprocess.run(
+        result = run_provider(
             [sys.executable, str(Path(__file__).resolve())],
             input=json.dumps(
                 {
@@ -51,9 +52,6 @@ def generate_response(
                     "timeout_seconds": timeout_seconds,
                 }
             ),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
             env=env,
             timeout=timeout_seconds,
         )

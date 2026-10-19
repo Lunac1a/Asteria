@@ -1,0 +1,92 @@
+Persistent Query Embedding Worker — Step 2.5: Rolling Restart Policy
+
+默认 PERSISTENT_QUERY_WORKER_ENABLED=false，保持原 Disposable Worker 路径。
+显式启用需 Windows 10 / Server 2016+，EMBEDDING_BACKEND=fastembed，以及
+已准备的 LOCAL_DATA_DIR/models 离线模型缓存。不支持的平台、Job 组合或
+配置直接失败，不回退到无进程隔离方案。没有更改本地 .env 或部署配置。
+
+生命周期
+FastAPI Lifespan 先完成原 Startup Recovery 检查（若启用），然后创建模型
+Worker，等待带模型名称和实际 PID 的 READY。初始化默认 30 秒，设置项
+PERSISTENT_QUERY_STARTUP_TIMEOUT_SECONDS 范围 1–90 秒。超时或初始化失败
+终止已创建的进程树并阻止应用启动；不会先向业务请求开放 Readiness。
+
+app.state.query_worker 现在持有 Supervisor，保持 embed(question, timeout) 接口。
+Chat 路由显式传递该接口到普通检索及学习资料检索，无需更改 Chat 业务逻辑。
+只替换 Query Embedding；Document Indexing 继续使用原 run_worker。
+独立进程初始化一次 FastEmbed，threads=2、local_files_only=True，继续
+使用 query_embed(batch_size=16) 和原 1536 MiB 内存限制。
+父进程不加载 FastEmbed，不传递数据库、JWT 或 Provider 凭据给 Worker。
+
+单任务，不排队。沿用 retrieval.worker_slot(1)，与 Disposable Indexing
+保持原互斥；忙时返回 429。UUID Task ID 必须匹配，IPC 响应帧大小受限，
+向量检查有限值和结构。Query 使用现有 QUERY_TIMEOUT_SECONDS（最多 30 秒）
+和调用方更短预算；失败请求不等待模型重启，也不会自动重试。
+写管道也在受超时约束的 IPC 线程中，避免卡死 Worker 使调用方无限等待。
+
+运行中 Worker 失败返回 503，不修改 recovery_ready，不自动重试请求或
+回退 Disposable。查询端原有 HTTP 错误处理继续生效：文档问答失败，不
+保存回答；学习模式可选资料检索仍遵守原有显式失败提示/教学降级策略。
+无资料、不需要 Query Embedding 的路径仍按原行为处理。
+
+正常关闭先发送 stop，再清理整个 Job。只在实际模型/启动器及已观察到的 Job 成员句柄退出、
+Job ActiveProcesses=0、IPC 线程退出后释放资源。非继承 KILL_ON_JOB_CLOSE
+Job 通过 JOB_LIST 在 CreateProcessW 时绑定，父进程退出也触发树级终止。
+若清理未确认，保持 DEGRADED 并保留已占用的 worker_slot 和 Job 所有权；
+日志明确报告，不能自动启动替代 Worker。普通健康/Recovery Readiness
+不因运行中模型故障翻转；这不是模型专用健康探针。
+
+Supervisor Recovery
+一个后台线程独占实例创建、初始化、清理和替换。Condition 锁保护状态、
+当前实例及 inflight 标志；模型初始化和进程清理都在锁外执行。请求不创建
+Worker，失败后保持已占用 Slot，将清理交给 Supervisor。没有用户任务队列。
+空闲时约每 100 ms 非阻塞检查实际模型进程；请求也可以首先发现死亡。
+旧请求执行结束后，先进入 TERMINATING 并确认旧 Job 完全退出，才释放
+原 Slot、执行退避和创建替代进程。只有 READY 验证成功才发布新实例。
+STARTING、FAILED（退避）、TERMINATING、COOLDOWN、MANUAL_REQUIRED、DEGRADED 均立即 503。
+READY 下普通任务互斥仍为 429；不改变 Semaphore 容量或原 Indexing 协议。
+
+PERSISTENT_QUERY_RESTART_LIMIT 默认 3，范围 0–5，按滚动窗口限制实际重启次数。
+PERSISTENT_QUERY_RESTART_WINDOW_SECONDS 默认 600，范围 1–86400 秒。
+窗口为 (now-window, now]，使用 time.monotonic；系统时间调整不影响策略。
+0 表示不重启，故障清理后进入 MANUAL_REQUIRED；首次启动失败仍阻止应用启动。
+PERSISTENT_QUERY_FAILED_CYCLE_LIMIT 默认 3，范围 1–10。
+这些是待调优默认值，不是已验证的最优运行参数。
+
+窗口预算耗尽后计一次失败恢复周期，进入 COOLDOWN，等待最早重启时间戳过期。
+后台线程在期限到达后主动恢复，不需要请求触发；仍需完成退避和 READY 验证。
+每个不稳定周期也最多尝试 restart_limit 次，避免单次失败初始化长于窗口时
+不断过期而绕过停止机制；若时间戳已全部过期，则冷却一个完整窗口。
+连续失败周期达到上限进入 MANUAL_REQUIRED，不再自动恢复。
+只有连续 READY 满一个完整窗口，才清除失败周期和周期尝试计数；短暂 READY
+或单次 Query 成功不重置。滚动时间戳独立过期，累计 restarts 仅用于诊断。
+
+PERSISTENT_QUERY_RESTART_BACKOFF_SECONDS 默认 1，范围 0.1–30 秒。
+每周期第 n 次替代尝试前退避 min(30, base * 2^(n-1)) 秒；默认 1、2、4 秒。
+退避用单调期限并可由关闭唤醒；计数在实际开始初始化时递增，取消预留不收费。
+清理未确认则保持 DEGRADED，保留实例、Job 和已占用 Slot；不自动尝试恢复。
+窗口过期不能解除 DEGRADED 或 MANUAL_REQUIRED。
+关闭应用时允许再次尝试清理，但不会创建新 Worker。修复环境后需由操作者
+重新启动应用；没有新增运行时 reset/recovery 管理接口。
+
+限制
+仍只支持现有单 API 进程/单 Worker 部署；没有新增多 Worker 支持。
+没有 Queue、请求重试、复杂取消、模型热更新或独立 Worker 健康端点。
+常驻模型约 606 MiB 的前轮观测不能视为本轮内存压测结果；闲置模型与
+Disposable Indexer 可能同时驻留，虽不会同时执行任务，需评估总内存。
+Lifespan 关闭先拒绝新任务、唤醒 Supervisor 并等待当前有限时任务完成。
+不会与模型初始化或任务执行并发关闭同一实例。关闭等待有界；若仍无法
+确认退出则报告 DEGRADED，不实现取消协议。应用进程退出仍由 Job 负责清理。
+
+验证与复现
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/query_supervisor_recovery.py --output backend/tests/experiments/evidence/supervisor-NEW
+从仓库根目录执行，输出目录必须不存在。使用复制的离线模型、临时 SQLite、
+真实 FastAPI ASGI HTTP 认证/Chat/检索/持久化和显式测试 LLM；不连接开发
+数据库、不调用付费 Provider。不是 PostgreSQL 或真实 TCP/部署性能证据。
+从 backend 运行 .venv/Scripts/python.exe -B -m unittest discover -s tests -v。
+PostgreSQL 专用 Recovery 用例须用原隔离 PostgreSQL 配置才能执行。
+Step 2.5 策略及真实模型恢复实验（无数据库）：
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/restart_policy.py --output backend/tests/experiments/evidence/restart-policy-NEW
+使用可控单调时钟推进期限、确定性故障注入以及真实 Windows Job/FastEmbed。
+已观察 Job 成员需逐句柄确认退出；仅 Job 活跃计数归零不足以证明每个句柄已触发。
+Step 1/2 的 JSON 和报告是历史基线。

@@ -37,7 +37,7 @@ class GenerationContracts(unittest.TestCase):
                 if case["transport"] == "timeout":
                     effect = subprocess.TimeoutExpired("worker", 45)
                     with patch(
-                        "app.services.llm.provider.subprocess.run",
+                        "app.services.llm.provider.run_provider",
                         side_effect=effect,
                     ):
                         generate_response(
@@ -52,7 +52,7 @@ class GenerationContracts(unittest.TestCase):
                         "category": case["expected"],
                     }
                     with patch(
-                        "app.services.llm.provider.subprocess.run",
+                        "app.services.llm.provider.run_provider",
                         return_value=NS(stdout=json.dumps(envelope), returncode=0),
                     ):
                         generate_response(
@@ -138,7 +138,7 @@ class GenerationContracts(unittest.TestCase):
             with (
                 self.subTest(code=code),
                 patch(
-                    "app.services.llm.provider.subprocess.run",
+                    "app.services.llm.provider.run_provider",
                     return_value=NS(stdout=output, returncode=code),
                 ),
             ):

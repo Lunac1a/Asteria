@@ -1,0 +1,46 @@
+Workspace Lifecycle Permit — Step 1
+
+Process-local coordination, with global deletion exclusion. All Chat leaders,
+including new-session requests, register a token tagged by workspace/request ID.
+Followers continue to wait/replay without an independent write permit. Existing
+chat_slot(1), document_slot, maintenance, readiness and single-worker restrictions
+remain unchanged. This does not enable Session-level concurrency or cancellation.
+
+Chat: atomic admission -> recheck durable pending deletions -> existing ownership,
+replay, generation and persistence -> confirmed commit OR completed rollback ->
+release token -> Single-flight completion notification. A busy chat_slot and other
+ordinary failures use the same rollback-before-release path. The pending recheck
+closes the gap for requests that passed the HTTP gate before a deletion attempt.
+No session_id is required for admission; the newly created Session remains protected.
+
+Delete/recover: document_slot -> chat_slot -> atomic global deletion registration.
+If any Chat token exists, return 409 before prepare/file movement. No waiting or
+draining is added. The exclusive registration covers the existing protocol call,
+including recovery, and is cleared on exit. Pending PREPARED/COMMITTED operations
+still deny new writes through the unchanged persistent gate plus the Chat recheck.
+No PREPARED/COMMITTED/RESTORED/CLEANED stage or manifest behavior was changed.
+
+The coordinator mutex only guards in-memory admission, counters and flags. It is
+never held across SQL, LLM generation, slot acquisition or waits. Chat holds a token,
+not the mutex. Delete never waits for token release while holding other gates.
+
+Conservative unresolved-outcome handling
+If rollback raises, or an observed DBAPIError reports connection_invalidated, the
+coordinator retains an explicit uncertain flag while removing the active token.
+Subsequent Chat admission and Delete/recover registration fail with 503. There is
+no automatic reset, retry, outcome guess or new persistent state. This is not a
+successful cleanup claim: an operator must verify the database transaction/backend
+has settled, inspect durable ChatTurn/deletion state, then restart in the established
+single-process recovery workflow. Restart alone is not proof of a settled outcome.
+Normal confirmed SQL rejection followed by successful rollback releases capacity.
+This flag is local and does not rewrite the existing global readiness endpoint;
+/api/ready is not a guarantee that lifecycle admission is available in this case.
+Connection invalidation/rollback-failure behavior has unit fault-injection coverage,
+not a real network-partition experiment. Process crash/power-loss guarantees are
+not expanded; all existing recovery deployment assumptions remain necessary.
+
+Other mutations still depend on their existing global gates. Any later Session-level
+concurrency migration must include Learning mutations and Session deletion; this
+step does not claim those paths have been migrated to lifecycle tokens.
+
+Reproduction and results: tests/experiments/WORKSPACE_LIFECYCLE_REPORT.txt.

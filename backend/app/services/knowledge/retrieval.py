@@ -83,7 +83,7 @@ def run_worker(payload, timeout):
         worker_slot.release()
 
 
-def retrieve(db, workspace_id, question, document_ids=None, timeout_seconds=None):
+def retrieve(db, workspace_id, question, document_ids=None, timeout_seconds=None, *, query_worker=None):
     rows = (
         db.query(Chunk, Document)
         .join(Document, Chunk.document_id == Document.id)
@@ -106,9 +106,13 @@ def retrieve(db, workspace_id, question, document_ids=None, timeout_seconds=None
                 "Materials are not ready for search. Open Manage materials and reindex failed or outdated documents.",
             )
         return []
-    vector = run_worker({"texts": [question]}, min(settings.QUERY_TIMEOUT_SECONDS, timeout_seconds) if timeout_seconds is not None else settings.QUERY_TIMEOUT_SECONDS)[
-        "vectors"
-    ][0]
+    timeout = min(settings.QUERY_TIMEOUT_SECONDS, timeout_seconds) if timeout_seconds is not None else settings.QUERY_TIMEOUT_SECONDS
+    if settings.PERSISTENT_QUERY_WORKER_ENABLED:
+        if query_worker is None:
+            raise HTTPException(503, "Query embedding worker is unavailable")
+        vector = query_worker.embed(question, timeout)
+    else:
+        vector = run_worker({"texts": [question]}, timeout)["vectors"][0]
     by_id = {chunk.id: (chunk, document) for chunk, document in rows}
     scored = rank_candidates(
         vector,

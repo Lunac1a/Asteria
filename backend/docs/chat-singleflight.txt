@@ -1,0 +1,83 @@
+Chat Single-flight — Steps 1 and 2
+
+Scope
+One process-local registry coordinates overlapping POST /api/chat requests sharing
+request_id. It does not change chat_slot(1), session concurrency, indexing, Worker
+Supervisor or Recovery gates. Authentication and Recovery dependencies still run
+before coordination. Supported deployment remains one API process/worker.
+
+Lifecycle
+Registry registration is atomic under a short threading.Lock. The registry stores
+only the request fingerprint, completion event, capacity counters and failure metadata;
+it does not cache answers or retain DB Sessions/exception tracebacks.
+The leader enters the existing Chat implementation and its original chat_slot.
+On success, Commit has completed (or an already-persisted replay was returned)
+before the registry removes the entry and wakes followers. Followers close their
+authentication/read transaction before waiting, then read ChatTurn using their own
+Session and run the same persisted ownership/payload binding checks as replay.
+Follower reads do not acquire chat_slot or perform generation/writes.
+
+In-flight matching includes authenticated user_id, workspace_id, session_id,
+trimmed message, session_type, answer_mode, learning_mode and ui_locale. Differences
+return 409 immediately. None and an explicit session/type/locale are distinct while
+in flight. Existing persisted replay semantics are unchanged: optional session/type
+fields retain their old checks and ui_locale is not stored as an idempotency field.
+
+CHAT_SINGLEFLIGHT_WAIT_SECONDS defaults to 30 seconds (0.1–90 allowed). A follower
+timeout returns 504; it never removes, retries or cancels the leader. Later requests
+may still join that leader or retrieve its committed result. This is an independent
+wait deadline, not a guarantee that every valid leader completes within 30 seconds.
+
+Bounded followers (Step 2)
+CHAT_SINGLEFLIGHT_PER_REQUEST_LIMIT defaults to 4 and
+CHAT_SINGLEFLIGHT_GLOBAL_LIMIT defaults to 8. Both are nonnegative integers;
+zero rejects every new follower but does not reject leaders/durable replay.
+Limits are read when the process registry is constructed; restart to apply changes.
+These are conservative, untuned defaults: app/cli/local.py starts one Uvicorn
+worker with limit_concurrency=16; the installed AnyIO asyncio backend defaults to
+40 thread tokens, with no project override. Eight followers are below both limits
+and four prevents a single request consuming the entire follower budget.
+This is not a reservation of remaining threads/connections for other routes:
+authentication, idle HTTP connections and unrelated requests also consume capacity.
+Uvicorn can return 503 before the route runs when its own limit is reached.
+
+Under the registry lock, conflict checking precedes admission. Matching followers
+atomically reserve both counters or receive 429 without changing either counter.
+Each accepted follower receives a separate reservation tied to its flight object.
+The route releases it in finally after rollback/wait, including exceptions and
+timeouts, before reading the durable response. Release is idempotent under the
+same lock. Leader completion wakes followers but never resets their counters;
+each follower performs its own cleanup, including after the flight is removed.
+Old reservations cannot decrement a replacement flight's own follower count.
+The admission counter is keyed by request_id across flight generations: completed
+followers still consume its budget until their finally releases the reservation.
+Waiting never holds the registry lock. Capacity counts admitted waiters, not
+all HTTP requests or the read-only persistence replay after waiting finishes.
+There is no admission queue or automatic retry. An HTTP disconnect does not
+necessarily interrupt the synchronous route; its wait remains bounded by timeout.
+
+Failure
+Leader errors roll back its request Session before notifying followers/removing the
+entry. HTTPException status/detail is propagated to followers; unexpected failures
+return a generic follower 503 without SQL/internal text. The leader retains the
+original exception handling (e.g. unexpected Commit error returns 500).
+A leader denied chat_slot also completes/removes its registry entry immediately;
+joined followers receive 429. Later explicit attempts may register a new leader.
+No automatic request retry, queue, cancellation or in-memory answer cache is added.
+
+Boundaries
+Different request IDs still compete for the existing global chat_slot. Followers
+consume bounded-wait HTTP/threadpool resources even though DB connections are
+returned during waiting; this is not an unbounded-concurrency capacity guarantee.
+Process crashes lose registry entries; persisted ChatTurn remains the replay source.
+This does not guarantee exactly-once provider execution after crashes or uncertain
+Commit acknowledgement, and does not coordinate across processes.
+If the committed Session/turn is deleted before a follower reads it, the follower
+fails with 503 (or binding conflict) rather than using a cached/deleted answer.
+
+Verification
+From repository root, use the isolated PostgreSQL scripts and run:
+backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_singleflight.py --url postgresql+psycopg://concurrency_test@127.0.0.1:55489/workspace_concurrency_test --pgdata /tmp/asteria-concurrency-cross-NAME/pgdata --output backend/tests/experiments/evidence/singleflight-NEW
+Only a fresh dedicated cluster is accepted. See tests/experiments/CHAT_SINGLEFLIGHT_REPORT.txt.
+Earlier chat_idempotency.py and its JSON are the historical 429 baseline, not the
+expected behavior of this new same-request coordination path.

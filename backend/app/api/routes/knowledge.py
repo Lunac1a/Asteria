@@ -6,11 +6,13 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field, ConfigDict
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.deps import get_current_user_id
 from app.db.session import get_db
 from app.models.knowledge import Workspace, Document, Chunk
+from app.models.users import User
 from app.services.knowledge.retrieval import (
     data_root,
     model_id,
@@ -113,13 +115,21 @@ def create_workspace(
     name = payload.name.strip()
     if not name:
         raise HTTPException(422, "Workspace name cannot be blank")
-    if db.query(Workspace).filter_by(user_id=user_id).count() >= 100:
-        raise HTTPException(409, "Maximum 100 workspaces")
-    workspace = Workspace(user_id=user_id, name=name)
-    db.add(workspace)
-    db.commit()
-    db.refresh(workspace)
-    return workspace
+    try:
+        # PostgreSQL holds this user's row lock through commit/rollback. Under
+        # READ COMMITTED, the following COUNT sees the preceding creator's commit.
+        if db.scalar(select(User.id).where(User.id == user_id).with_for_update()) is None:
+            raise HTTPException(401, "Could not validate credentials")
+        if db.query(Workspace).filter_by(user_id=user_id).count() >= 100:
+            raise HTTPException(409, "Maximum 100 workspaces")
+        workspace = Workspace(user_id=user_id, name=name)
+        db.add(workspace)
+        db.commit()
+        db.refresh(workspace)
+        return workspace
+    except Exception:
+        db.rollback()
+        raise
 
 
 @router.get("/workspaces/{workspace_id}/documents", response_model=list[DocumentRead])

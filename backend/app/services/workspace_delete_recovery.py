@@ -26,6 +26,7 @@ from app.models.knowledge import Chunk, Document, SessionWorkspace, Workspace
 from app.models.workspace_delete_operation import PENDING, WorkspaceDeleteOperation as Operation
 from app.services.deletion_service import delete_sessions
 from app.services.knowledge.retrieval import owned_workspace
+from app.services import workspace_lifecycle
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,8 @@ def operation_gates():
         acquired_chat = chat_slot.acquire(blocking=False)
         if not acquired_chat:
             raise RecoveryConflict("Wait for the current answer to finish")
-        yield
+        with workspace_lifecycle.coordinator.deletion():
+            yield
     finally:
         if acquired_chat:
             chat_slot.release()

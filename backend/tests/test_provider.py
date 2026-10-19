@@ -83,7 +83,7 @@ class ProviderContractTests(unittest.TestCase):
 
     def test_total_deadline_does_not_put_credentials_in_argv(self):
         with patch(
-            "app.services.llm.provider.subprocess.run",
+            "app.services.llm.provider.run_provider",
             side_effect=subprocess.TimeoutExpired("worker", 45),
         ) as run:
             with self.assertRaisesRegex(RuntimeError, "45-second"):

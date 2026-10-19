@@ -18,6 +18,8 @@ from sqlalchemy.orm import Session
 from app.db.session import engine, get_db
 from app.models.workspace_delete_operation import PENDING, WorkspaceDeleteOperation
 from app.services.startup_recovery import recover_startup, storage_lease
+from app.services.knowledge.query_supervisor import QueryWorkerSupervisor
+from app.services.knowledge.retrieval import worker_slot, data_root
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +42,22 @@ def create_app():
                 app.state.recovery_ready = True
             except Exception:
                 logger.exception("Startup recovery failed; business traffic remains disabled")
+            if app.state.recovery_ready and settings.PERSISTENT_QUERY_WORKER_ENABLED:
+                # Complete initialization before serving. Failure aborts startup;
+                # runtime worker failures do not change the recovery readiness gate.
+                app.state.recovery_ready = False
+                if settings.EMBEDDING_BACKEND != "fastembed":
+                    raise RuntimeError("Persistent query worker requires EMBEDDING_BACKEND=fastembed")
+                worker = QueryWorkerSupervisor(settings.EMBEDDING_MODEL, data_root() / "models",
+                    worker_slot, settings.PERSISTENT_QUERY_STARTUP_TIMEOUT_SECONDS,
+                    restart_limit=settings.PERSISTENT_QUERY_RESTART_LIMIT,
+                    backoff_seconds=settings.PERSISTENT_QUERY_RESTART_BACKOFF_SECONDS,
+                    window_seconds=settings.PERSISTENT_QUERY_RESTART_WINDOW_SECONDS,
+                    failed_cycle_limit=settings.PERSISTENT_QUERY_FAILED_CYCLE_LIMIT)
+                app.state.query_worker = worker
+                lifetime.callback(worker.close)
+                worker.start()
+                app.state.recovery_ready = True
             try:
                 yield
             finally:
@@ -52,6 +70,7 @@ def create_app():
         lifespan=lifespan,
     )
     application.state.recovery_ready = False
+    application.state.query_worker = None
 
     @application.middleware("http")
     async def startup_gate(request: Request, call_next):

@@ -1,0 +1,53 @@
+Session Coordination Step 1
+
+Historical Step 1 scope below; opt-in Step 2 shared global-slot admission is now
+documented in session-chat-concurrency.txt. Default behavior remains Step 1.
+
+Order: authentication/HTTP recovery gate -> Single-flight (Chat only) -> Workspace
+lifecycle permit -> Session RLock (when session_id exists) -> existing chat_slot.
+Workspace Delete/recovery still uses document_slot -> chat_slot -> nonblocking
+lifecycle exclusion. It never waits for active permits while holding either gate.
+No coordinator mutex spans database access, waiting or LLM execution.
+
+Session Coordinator counts references for both holders and waiters. Registration
+and last-reference eviction share one short mutex, preventing two independent locks
+for the same active session. Waiting occurs outside that mutex. Success, exceptions
+and acquisition timeout all decrement the reference; zero removes the entry.
+RLock only permits same-thread nesting for Learning endpoints that call read()
+internally. Separate HTTP threads still exclude each other. No fairness is promised.
+
+SESSION_LOCK_WAIT_SECONDS defaults to 1 second, allowed range 0.01–10 seconds.
+This is an untuned short contention bound while global Chat capacity remains 1;
+timeout returns 409 with an explicit Session-update-in-progress message. Existing
+global slot denials retain their original 429 (Chat) / 409 (Learning/Delete).
+Single-flight followers still use their own bounded wait/replay semantics.
+
+Chat wraps its original execution inside the lifecycle/session scope. All Learning
+endpoints, including GET (which may create a legacy LearningContext), and Session
+Delete use session_operation. It wraps the whole function, so response readback and
+nested read calls remain coordinated. Original ownership/revision checks run inside
+the Session lock. The decorator reads SessionWorkspace only to tag the global permit;
+that pre-read is not an authorization decision or the lifecycle safety boundary.
+
+Success order: business Commit -> original global slot release -> Session release
+-> Workspace permit release -> Single-flight completion. Failure order: original
+global slot finally -> Rollback/outcome handling while Session and Workspace remain
+protected -> Session release -> Workspace release -> failure notification.
+An ExitStack intentionally delays Session release until rollback handling finishes.
+Pending deletion is rechecked after Session acquisition. If another operation set
+the lifecycle uncertain flag while a request waited, it receives 503 before writing.
+Uncertain DB outcomes keep the prior explicit fail-closed lifecycle behavior.
+
+New Chat requests without session_id acquire no Session lock; existing global Chat
+slot and Workspace permit protect creation/commit as before. Followers replay only.
+The Recovery state machine, manifest and T1/T2/T3 boundaries are unchanged.
+
+Limitations: process-local only, one API worker; no increased Chat capacity, queue,
+retry, cancellation, lock fairness or production capacity claim. Bounded waiting
+uses a request thread and may retain a read transaction/connection from authentication
+or SessionWorkspace lookup; this step does not optimize connection pooling. Learning
+GET now participates in bounded Session coordination even when no lazy write occurs.
+No auto-unlock on a client disconnect; the synchronous request performs its own
+bounded wait and finally cleanup. Future removal of chat_slot remains separate work.
+
+Tests and reproduction: tests/experiments/SESSION_COORDINATION_REPORT.txt.

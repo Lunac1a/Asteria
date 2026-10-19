@@ -18,12 +18,21 @@
 | 文件 | 负责什么 |
 | --- | --- |
 | `chat/answers.py` | 组织上下文、生成回答、协调引用校验，保留可验证的内容 |
+| `chat/singleflight.py` | 进程内相同 request_id 的原子登记、等待者双重配额、有限等待与失败通知；结果仍从数据库读取，不放宽全局 Chat 锁 |
+| `chat/capacity.py` | 默认保持原全局排他路径；显式启用后最多两个已有 Session 共享原 Chat 名额，旧入口仍排他 |
+| `workspace_lifecycle.py` | Chat 从 Admission 到 Commit／Rollback 的进程内许可，与 Workspace Delete/Recovery 排他协调；不改变恢复状态机 |
+| `session_coordination.py` | Chat、Learning 和 Session Delete 共用的进程内 Session 锁；有限等待与引用计数清理，不提高全局并发容量 |
 | `chat/routing.py` | 判断普通问答是否需要资料，读取上轮资料策略 |
 | `chat/language.py` | 决定回答使用中文还是英文，处理明确语言偏好 |
 | `chat/citations.py` | 检查引用和原文对应、纠正唯一可确定的编号、解析事实审计结果 |
 | `knowledge/retrieval.py` | 验证空间归属、提供数据与模型路径、调用索引子进程、检索就绪片段 |
 | `knowledge/scoring.py` | 对候选片段评分与排序，不调用模型生成答案 |
 | `knowledge/index_worker.py` | 在独立进程解析文档、切块、生成向量并限制资源；不持有业务数据库或模型服务凭据 |
+| `knowledge/persistent_query.py` | 显式启用时复用单个 Query Embedding 子进程，管理 READY、任务 ID、有限超时和清理 |
+| `knowledge/query_supervisor.py` | 单一生命周期线程、滚动重启预算、后台冷却恢复与失败周期上限；旧 Job 清理未确认时禁止替换 |
+| `knowledge/query_worker.py` | 独立进程内加载一次 FastEmbed，仅处理 Query Embedding；不访问数据库 |
+| `knowledge/windows_job.py` | Windows Job Object 进程树所有权、创建时绑定与退出确认 |
+| `llm/process.py` | Provider 的 Windows Job 进程树所有权、有界 IPC 与超时清理；退出未确认时拒绝后续调用 |
 | `learning/materials.py` | 识别学习规划、讲解或文档问答，选择文档、抽样概览和限定范围的检索 |
 | `learning/state.py` | 学习目标、观察、笔记快照与回顾生成 |
 | `learning/response.py` | 将模型生成的讲解与教学动作组成正文，并同步笔记下一步 |
@@ -36,6 +45,8 @@
 | `startup_recovery.py` | 本机生命周期锁、启动前数据库检查与未完成操作恢复；复用现有协议 |
 
 各目录的 `__init__.py` 只声明包，不执行业务操作，也不批量导入其他服务。
+
+Persistent Query Worker 默认关闭，使用说明和当前限制见 [运行说明](../../docs/persistent-query-worker.txt)。它不改变 Document Indexing、数据库事务或现有单 API Worker 部署限制。
 
 模型下载准备属于运行工具，已移到 `app/cli/prepare_embeddings.py`；现有本地 `prepare` 命令继续使用它。原空文件 `auth_service.py` 已移除；认证实现仍在 `api/routes/auth.py` 与 `core/deps.py`、`core/security.py`。
 

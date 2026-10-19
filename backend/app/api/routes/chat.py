@@ -2,8 +2,9 @@ import threading
 import logging
 import time
 import uuid
+from functools import partial
 from datetime import datetime, timezone, timedelta
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from typing import Literal
 from sqlalchemy.orm import Session
 from app.core.config import settings
@@ -22,6 +23,9 @@ from app.services.knowledge.retrieval import owned_workspace, retrieve
 from app.services.chat.answers import grounded_answer
 from app.services.chat.routing import decide, previous_decision, explicit_evidence, VERSION
 from app.services.chat.language import resolve
+from app.services.chat.singleflight import registry, fingerprint
+from app.services.chat.capacity import admission
+from app.services.workspace_lifecycle import chat_permit, session_operation
 
 router = APIRouter()
 chat_slot = threading.BoundedSemaphore(1)
@@ -34,32 +38,65 @@ def mode():
 @router.post("/chat", response_model=ChatResponse)
 def chat(
     payload: ChatRequest,
+    request: Request,
     user_id=Depends(get_current_user_id),
     db: Session = Depends(get_db),
 ):
-    evidence_deadline = time.perf_counter() + 75
-    citation_diagnostics = {}
-    if not chat_slot.acquire(blocking=False):
-        raise HTTPException(
-            429, "A chat is already running locally. Please try again shortly."
-        )
+    request_id = str(payload.request_id)
+    flight, leader = registry.register(request_id, fingerprint(payload, user_id))
+    if not leader:
+        # End authentication/recovery reads before waiting; do not retain a pool
+        # connection or a stale transaction snapshot while the leader commits.
+        try:
+            db.rollback()
+            registry.wait(flight, settings.CHAT_SINGLEFLIGHT_WAIT_SECONDS)
+        finally:
+            registry.release(flight)
+        response = persisted_response(db, payload, user_id)
+        if response is None:
+            raise HTTPException(503, "Completed chat result is unavailable. Please retry.")
+        return response
     try:
-        existing = db.get(ChatTurn, str(payload.request_id))
-        if existing:
-            binding = db.get(SessionWorkspace, existing.session_id)
-            if (
-                existing.user_id != user_id
-                or existing.question != payload.message.strip()
-                or existing.response.get("answer_mode", "smart") != payload.answer_mode
-                or existing.response.get("learning_mode", "direct")
-                != payload.learning_mode
-                or not binding
-                or binding.workspace_id != payload.workspace_id
-                or (payload.session_id and payload.session_id != existing.session_id)
-                or (payload.session_type is not None and payload.session_type != existing.response.get("session_type"))
-            ):
-                raise HTTPException(409, "Request ID already used for a different turn")
-            return existing.response
+        with chat_permit(db, payload.workspace_id, request_id, session_id=payload.session_id):
+            response = execute_chat(payload, request, user_id, db)
+    except BaseException as exc:
+        registry.complete(request_id, flight, exc)
+        raise
+    else:
+        registry.complete(request_id, flight)
+        return response
+
+
+def persisted_response(db, payload, user_id):
+    existing = db.get(ChatTurn, str(payload.request_id))
+    if existing:
+        binding = db.get(SessionWorkspace, existing.session_id)
+        if (
+            existing.user_id != user_id
+            or existing.question != payload.message.strip()
+            or existing.response.get("answer_mode", "smart") != payload.answer_mode
+            or existing.response.get("learning_mode", "direct") != payload.learning_mode
+            or not binding
+            or binding.workspace_id != payload.workspace_id
+            or (payload.session_id and payload.session_id != existing.session_id)
+            or (payload.session_type is not None and payload.session_type != existing.response.get("session_type"))
+        ):
+            raise HTTPException(409, "Request ID already used for a different turn")
+        return existing.response
+    return None
+
+
+def execute_chat(payload, request, user_id, db):
+    evidence_deadline = time.perf_counter() + 75
+    search = (partial(retrieve, query_worker=request.app.state.query_worker)
+              if settings.PERSISTENT_QUERY_WORKER_ENABLED else retrieve)
+    citation_diagnostics = {}
+    shared = settings.SESSION_CHAT_CONCURRENCY_ENABLED and bool(payload.session_id)
+    admission.acquire(chat_slot, shared)
+    try:
+        existing = persisted_response(db, payload, user_id)
+        if existing is not None:
+            return existing
         if not payload.workspace_id:
             raise HTTPException(422, "Select a Workspace before asking about materials")
         owned_workspace(db, payload.workspace_id, user_id)
@@ -155,7 +192,7 @@ def chat(
         knowledge_context = None
         if decision["action"] == "retrieve":
             try:
-                sources = retrieve(db, payload.workspace_id, search_question,
+                sources = search(db, payload.workspace_id, search_question,
                     **({"document_ids": previous["documents"]} if is_learning and previous.get("documents") else {}))
             except HTTPException as exc:
                 from app.services.runtime_metrics import record_error
@@ -171,7 +208,7 @@ def chat(
             from app.services.learning.materials import acquire
             sources, knowledge_context = acquire(
                 db, user_id, payload.workspace_id, question, history, learning_data,
-                previous, sources, retrieve, evidence_deadline, payload.answer_mode)
+                previous, sources, search, evidence_deadline, payload.answer_mode)
             decision = dict(decision, action="retrieve" if knowledge_context.get("use_documents") else "direct",
                             reason="learning_" + knowledge_context["task"])
         retrieval_ms = round((time.perf_counter() - started) * 1000, 2)
@@ -295,7 +332,7 @@ def chat(
         db.commit()
         return response
     finally:
-        chat_slot.release()
+        admission.release(chat_slot, shared)
 
 
 @router.get("/chat/turns/{request_id}")
@@ -400,6 +437,7 @@ def messages(
 
 
 @router.delete("/chat/sessions/{session_id}", status_code=204)
+@session_operation
 def delete_session(session_id: str, user_id=Depends(get_current_user_id), db: Session = Depends(get_db)):
     session = db.query(ChatSession).filter_by(id=session_id, user_id=user_id).first()
     if not session:
