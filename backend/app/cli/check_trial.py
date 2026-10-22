@@ -35,9 +35,11 @@ report = {
     "checks": {},
 }
 for name, endpoint in [
-    ("api", "http://127.0.0.1:18001/api/health"),
-    ("frontend_proxy", "http://localhost:3001/api/health"),
-    ("frontend", "http://localhost:3001/auth/login"),
+    ("api", f"http://127.0.0.1:{settings.APP_PORT}/api/health"),
+    ("ready", f"http://127.0.0.1:{settings.APP_PORT}/api/ready"),
+    ("frontend_proxy", f"{settings.FRONTEND_URL.rstrip('/')}/api/health"),
+    ("frontend_ready", f"{settings.FRONTEND_URL.rstrip('/')}/api/ready"),
+    ("frontend", f"{settings.FRONTEND_URL.rstrip('/')}/auth/login"),
 ]:
     try:
         with urlopen(endpoint, timeout=4) as response:

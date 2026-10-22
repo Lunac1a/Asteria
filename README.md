@@ -64,6 +64,10 @@ Pop-Location
 
 ### 启动与停止
 
+需要启用 Persistent Worker、核对 Readiness 或进行可控优雅关闭时，使用
+[Windows 部署基线](backend/docs/windows-deployment.md)中的前台启动流程。
+下方快捷脚本的停止方式为强制终止，不能替代优雅关闭验证。
+
 打开 Docker Desktop，在项目根目录执行：
 
 ```powershell
