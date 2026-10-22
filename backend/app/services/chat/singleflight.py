@@ -4,6 +4,7 @@ import threading
 
 from fastapi import HTTPException
 from app.core.config import settings
+from app.services.runtime_metrics import observation_id, failure_category
 
 
 @dataclass
@@ -12,6 +13,8 @@ class Flight:
     done: threading.Event = field(default_factory=threading.Event)
     failure: tuple | None = None
     followers: int = 0
+    flight_id: str | None = field(default_factory=observation_id)
+    failure_category: str | None = None
 
 
 @dataclass(eq=False)
@@ -19,6 +22,7 @@ class Follower:
     flight: Flight
     request_id: str
     released: bool = False
+    wait_failure_origin: str | None = None
 
 
 class Registry:
@@ -59,17 +63,24 @@ class Registry:
             elif error is not None:
                 # Never retain exception tracebacks, credentials or DB error text.
                 flight.failure = (503, "Chat request failed. Please retry.", None)
+            if error is not None:
+                flight.failure_category = failure_category(error)
             del self._running[request_id]
             flight.done.set()
 
     def wait(self, flight, timeout):
         # Event waiting is bounded and does not hold the registry lock.
         # A timed-out follower never changes the leader's ownership or lifecycle.
-        if isinstance(flight, Follower):
+        follower = flight if isinstance(flight, Follower) else None
+        if follower is not None:
             flight = flight.flight
         if not flight.done.wait(timeout):
+            if follower is not None:
+                follower.wait_failure_origin = "follower_wait_timeout"
             raise HTTPException(504, "Timed out waiting for the current chat request. The original request may still complete.")
         if flight.failure is not None:
+            if follower is not None:
+                follower.wait_failure_origin = "shared_execution"
             status, detail, headers = flight.failure
             raise HTTPException(status, detail, headers=headers)
 

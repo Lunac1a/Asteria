@@ -194,7 +194,7 @@ class PersistentQueryWorker:
                         self._cleanup()
                     except Exception:
                         # Retain the slot and Job on uncertainty. No automatic retry.
-                        logger.exception("Query worker cleanup unconfirmed; state=DEGRADED, slot retained")
+                        logger.error("Query worker cleanup unconfirmed; state=DEGRADED, slot retained")
                 raise HTTPException(503, "Query embedding worker failed or timed out") from exc
             self.gate.release()
             self.gate_held = False

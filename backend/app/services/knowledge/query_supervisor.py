@@ -1,5 +1,6 @@
 """Single lifecycle owner for query embedding; no queued or retried requests."""
-import logging
+import uuid
+from datetime import datetime, timezone
 import threading
 import time
 from collections import deque
@@ -7,7 +8,7 @@ from collections import deque
 from fastapi import HTTPException
 from app.services.knowledge.persistent_query import PersistentQueryWorker
 
-logger = logging.getLogger(__name__)
+from app.services.knowledge import lifecycle_events
 
 
 class QueryWorkerSupervisor:
@@ -38,10 +39,38 @@ class QueryWorkerSupervisor:
         self.restarts = 0
         self.exhausted = False
         self.initial_done = False
+        self.supervisor_run_id = str(uuid.uuid4())
+        self.worker_instance_id = None
+        self.event_sequence = 0
 
-    def _state(self, state):
+    def _event(self, event_type, reason="unknown", **fields):
+        # Called under condition; immutable scalar snapshot, no writer I/O here.
+        try:
+            self.event_sequence += 1
+            lifecycle_events.emit(dict(
+                kind="worker_lifecycle", version="worker-v1",
+                timestamp_utc=datetime.now(timezone.utc).isoformat(),
+                sequence=self.event_sequence, event_type=event_type, reason_code=reason,
+                supervisor_run_id=self.supervisor_run_id,
+                worker_instance_id=self.worker_instance_id,
+                attempt=self.restarts,
+                budget=dict(limit=self.restart_limit, window_seconds=self.window_seconds,
+                            window_restarts=sum(t > self.clock() - self.window_seconds for t in self.restart_times),
+                            cycle_attempts=self.cycle_attempts,
+                            failed_cycles=self.failed_cycles, failed_cycle_limit=self.failed_cycle_limit),
+                **fields))
+        except Exception:
+            pass
+
+    def _state(self, state, event_type=None, reason="unknown", **fields):
         # All calls hold condition. No model/IPC/cleanup work under this lock.
+        previous = self.state
         self.state = state
+        if event_type or state == "DEGRADED":
+            self._event(event_type or "supervisor_degraded", reason,
+                        previous_state=previous, new_state=state, **fields)
+            if state == "DEGRADED" and event_type:
+                self._event("supervisor_degraded", reason, previous_state=previous, new_state=state)
         self.condition.notify_all()
 
     def snapshot(self):
@@ -63,12 +92,18 @@ class QueryWorkerSupervisor:
             if not self.condition.wait_for(lambda: self.initial_done,
                                            self.startup_timeout + self.shutdown_timeout + 5):
                 self.stop.set()
-                self._state("DEGRADED")
+                self._state("DEGRADED", reason="startup_deadline")
                 raise TimeoutError("Query supervisor startup deadline exceeded")
             if self.state != "READY":
                 raise RuntimeError("Query worker initialization failed; startup aborted")
 
     def _initialize(self):
+        with self.condition:
+            previous_instance = self.worker_instance_id
+            self.worker_instance_id = str(uuid.uuid4())
+            self._event("initialization_started", "startup", replaces_worker_instance_id=previous_instance)
+            if self.restarts:
+                self._event("restart_attempted", "budget_available")
         try:
             worker = self.factory()
             with self.condition:
@@ -78,26 +113,33 @@ class QueryWorkerSupervisor:
                 if self.stop.is_set():
                     return
                 self.ready_since = self.clock()
-                self._state("READY")
+                self._state("READY", "initialization_completed", "ready", pid=worker.pid)
+                if self.restarts:
+                    self._event("restart_completed", "ready")
         except Exception:
-            logger.exception("Query worker initialization failed")
             with self.condition:
+                self._event("initialization_failed")
+                if self.restarts:
+                    self._event("restart_failed")
                 self._state("DEGRADED" if self.worker and self.worker.state == "DEGRADED" else "FAILED")
 
     def _terminate(self):
         with self.condition:
-            self._state("TERMINATING")
             worker = self.worker
+            self._state("TERMINATING", "cleanup_started" if worker else None, "cleanup")
         try:
             if worker:
                 worker.close()  # Wait/Job accounting outside the supervisor lock.
                 if worker.job is not None or worker.gate_held:
                     raise RuntimeError("Worker still owns resources after close")
+            if worker:
+                with self.condition:
+                    self._event("cleanup_confirmed", "checks_passed", cleanup_result="confirmed")
             return True
         except Exception:
-            logger.exception("Query supervisor cleanup unconfirmed; replacement forbidden")
             with self.condition:
-                self._state("DEGRADED")
+                self._event("cleanup_unconfirmed", "cleanup_uncertain", cleanup_result="unconfirmed")
+                self._state("DEGRADED", reason="cleanup_uncertain")
             return False
 
     def _run(self):
@@ -123,10 +165,12 @@ class QueryWorkerSupervisor:
                         self.cycle_attempts = 0
                         self._state("FAILED")
                     if self.state == "READY":
+                        failure_reason = "process_not_alive"
                         try:
                             alive = self.worker.is_alive()  # Zero-time OS probe only.
                         except Exception:
                             alive = False
+                            failure_reason = "liveness_probe_failed"
                         if alive:
                             # READY alone (or one successful query) cannot reset a
                             # flapping worker's failure history. Require a full window.
@@ -136,7 +180,7 @@ class QueryWorkerSupervisor:
                                 self.condition.notify_all()
                             self.condition.wait(timeout=.1)
                             continue
-                        self._state("FAILED")
+                        self._state("FAILED", "failure_detected", failure_reason)
                 # Only this thread performs lifecycle transitions and replacement.
                 if not self._terminate():
                     continue
@@ -148,7 +192,7 @@ class QueryWorkerSupervisor:
                         self.restart_times.popleft()
                     if self.restart_limit == 0:
                         self.exhausted = True
-                        self._state("MANUAL_REQUIRED")
+                        self._state("MANUAL_REQUIRED", "manual_required", "restart_disabled")
                         continue
                     # A slow failing initializer may outlive the rolling window.
                     # Bound attempts per unstable cycle too, so expiry cannot hide
@@ -158,15 +202,15 @@ class QueryWorkerSupervisor:
                         self.failed_cycles += 1
                         if self.failed_cycles >= self.failed_cycle_limit:
                             self.exhausted = True
-                            self._state("MANUAL_REQUIRED")
+                            self._state("MANUAL_REQUIRED", "manual_required", "failed_cycle_limit")
                         else:
                             self.cooldown_until = (self.restart_times[0] + self.window_seconds
                                                    if self.restart_times else now + self.window_seconds)
-                            self._state("COOLDOWN")
+                            self._state("COOLDOWN", "cooldown_entered", "restart_budget", retry_at_monotonic=self.cooldown_until)
                         continue
                     delay = min(30, self.backoff_seconds * 2 ** min(self.cycle_attempts, 5))
                     self.retry_at = now + delay
-                    self._state("FAILED")  # Backoff: fail requests immediately.
+                    self._state("FAILED", "restart_scheduled", "budget_available", retry_at_monotonic=self.retry_at)  # Backoff: fail requests immediately.
                     # A clock injection plus condition notification makes deadlines
                     # deterministic in tests; production uses monotonic time only.
                     while not self.stop.is_set() and self.clock() < self.retry_at:
@@ -183,10 +227,9 @@ class QueryWorkerSupervisor:
                     self._state("STARTING")
                 self._initialize()
         except Exception:
-            logger.exception("Query supervisor failed; automatic recovery disabled")
             with self.condition:
                 self.exhausted = True
-                self._state("DEGRADED")
+                self._state("DEGRADED", reason="supervisor_failure")
                 self.initial_done = True
                 self.condition.notify_all()
         finally:
@@ -195,10 +238,11 @@ class QueryWorkerSupervisor:
                 drained = self.condition.wait_for(lambda: not self.inflight, 30 + self.shutdown_timeout + 1)
             if not drained:
                 with self.condition:
-                    self._state("DEGRADED")
+                    self._state("DEGRADED", reason="inflight_not_drained")
+                    self._event("cleanup_unconfirmed", "inflight_not_drained", cleanup_result="unconfirmed")
             elif self._terminate():
                 with self.condition:
-                    self._state("STOPPED")
+                    self._state("STOPPED", "shutdown_completed", "checks_passed")
 
     def embed(self, question, timeout):
         with self.condition:
@@ -207,12 +251,14 @@ class QueryWorkerSupervisor:
             if self.inflight:
                 raise HTTPException(429, "Local indexer busy. Please try again shortly.")
             # One discoverer marks failure atomically; other requests see 503.
+            failure_reason = "process_not_alive"
             try:
                 alive = self.worker.is_alive()
             except Exception:
                 alive = False
+                failure_reason = "liveness_probe_failed"
             if not alive:
-                self._state("FAILED")
+                self._state("FAILED", "failure_detected", failure_reason)
                 raise HTTPException(503, "Query embedding worker is recovering or unavailable")
             worker = self.worker
             self.inflight = True
@@ -222,7 +268,7 @@ class QueryWorkerSupervisor:
             with self.condition:
                 self.inflight = False
                 if worker.state in {"FAILED", "DEGRADED"}:
-                    self._state(worker.state)
+                    self._state(worker.state, "failure_detected", "unknown")
                 self.condition.notify_all()
 
     def close(self):
@@ -234,10 +280,10 @@ class QueryWorkerSupervisor:
             thread.join(self.startup_timeout + 30 + 3 * self.shutdown_timeout + 6)
             if thread.is_alive():
                 with self.condition:
-                    self._state("DEGRADED")
+                    self._state("DEGRADED", reason="shutdown_deadline")
                 raise RuntimeError("Query supervisor shutdown could not be confirmed")
         elif self.worker is None:
             with self.condition:
-                self._state("STOPPED")
+                self._state("STOPPED", "shutdown_completed", "checks_passed")
         if self.state != "STOPPED":
             raise RuntimeError("Query supervisor is DEGRADED; resources remain owned")

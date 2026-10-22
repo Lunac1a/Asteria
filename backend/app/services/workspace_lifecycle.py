@@ -11,6 +11,7 @@ from sqlalchemy.exc import DBAPIError
 from app.models.workspace_delete_operation import PENDING, WorkspaceDeleteOperation
 from app.models.knowledge import SessionWorkspace
 from app.services import session_coordination
+from app.services.runtime_metrics import chat_stage
 
 
 class Coordinator:
@@ -69,34 +70,38 @@ coordinator = Coordinator()
 
 @contextmanager
 def chat_permit(db, workspace_id, request_id, session_id=None):
-    token = coordinator.admit(workspace_id, request_id)
-    locks = ExitStack()
+    with chat_stage("coordination_preparation"):
+        token = coordinator.admit(workspace_id, request_id)
+        locks = ExitStack()
     try:
         try:
-            locks.enter_context(session_coordination.coordinator.hold(session_id))
-            # A prior owner may have failed closed while this request waited.
-            if coordinator.snapshot()["uncertain"]:
-                raise HTTPException(503, "Workspace lifecycle requires transaction outcome verification")
-            # Recheck after atomic admission: the request's earlier HTTP gate
-            # may have run before a deletion/recovery operation completed.
-            if db.scalar(select(WorkspaceDeleteOperation.id).where(
-                    WorkspaceDeleteOperation.state.in_(PENDING)).limit(1)):
-                raise HTTPException(503, "Pending workspace deletion requires manual recovery")
+            with chat_stage("coordination_preparation"):
+                locks.enter_context(session_coordination.coordinator.hold(session_id))
+                # A prior owner may have failed closed while this request waited.
+                if coordinator.snapshot()["uncertain"]:
+                    raise HTTPException(503, "Workspace lifecycle requires transaction outcome verification")
+                # Recheck after atomic admission: the request's earlier HTTP gate
+                # may have run before a deletion/recovery operation completed.
+                if db.scalar(select(WorkspaceDeleteOperation.id).where(
+                        WorkspaceDeleteOperation.state.in_(PENDING)).limit(1)):
+                    raise HTTPException(503, "Pending workspace deletion requires manual recovery")
             yield
         except BaseException as exc:
-            if isinstance(exc, DBAPIError) and exc.connection_invalidated:
-                coordinator.uncertain()
-            try:
-                db.rollback()
-            except BaseException:
-                coordinator.uncertain()
-                raise
+            with chat_stage("cleanup"):
+                if isinstance(exc, DBAPIError) and exc.connection_invalidated:
+                    coordinator.uncertain()
+                try:
+                    db.rollback()
+                except BaseException:
+                    coordinator.uncertain()
+                    raise
             raise
     finally:
-        try:
-            locks.close()  # after commit or rollback, before lifecycle release
-        finally:
-            coordinator.release(token)
+        with chat_stage("cleanup"):
+            try:
+                locks.close()  # after commit or rollback, before lifecycle release
+            finally:
+                coordinator.release(token)
 
 
 def session_operation(function):
