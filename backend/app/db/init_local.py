@@ -12,5 +12,9 @@ if __name__ == "__main__":
     url = make_url(settings.DATABASE_URL)
     if url.host not in {"127.0.0.1", "localhost", "::1"} or not url.drivername.startswith("postgresql"):
         raise SystemExit("Schema setup is restricted to local PostgreSQL. No changes made.")
-    Base.metadata.create_all(engine)
+    from app.services.schema_compatibility import validate_schema
+
+    with engine.begin() as connection:
+        Base.metadata.create_all(connection)
+        validate_schema(connection)
     print("Local schema ready (additive tables only).")

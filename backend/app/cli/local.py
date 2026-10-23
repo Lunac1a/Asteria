@@ -77,6 +77,10 @@ def main():
         run_module("app.cli.prepare_embeddings", run_name="__main__")
     else:
         import uvicorn
+        from app.db.session import engine
+        from app.services.schema_compatibility import validate_startup
+
+        validate_startup(engine, settings.LOCAL_DATA_DIR)
 
         uvicorn.run(
             "app.main:app",

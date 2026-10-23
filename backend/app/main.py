@@ -32,6 +32,8 @@ def create_app():
         app.state.recovery_ready = False
         with ExitStack() as lifetime:
             try:
+                if (Path(settings.LOCAL_DATA_DIR) / '.restore-incomplete').exists():
+                    raise RuntimeError('Restore has not completed; business traffic remains disabled')
                 if enabled:
                     # Explicit operational attestation is still required for legacy
                     # processes and external writers which do not use this lease.
