@@ -16,7 +16,7 @@
     "predev": "node scripts/prepare-pdf.mjs"
   },
   "dependencies": {
-    "next": "^16.4.0",
+    "next": "16.4.1",
     "pdfjs-dist": "^6.4.299",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -29,7 +29,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.4.0",
+    "eslint-config-next": "16.4.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
