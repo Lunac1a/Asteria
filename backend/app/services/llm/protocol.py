@@ -2,7 +2,6 @@
 import json
 import logging
 import re
-from fastapi import HTTPException
 
 
 class GenerationError(RuntimeError):
@@ -20,6 +19,9 @@ class GenerationText(str):
 
 
 def failure(error, operation="chat"):
+    # HTTP translation is only needed in the API, not the standalone Provider.
+    from fastapi import HTTPException
+
     category = error.category
     logging.getLogger(__name__).warning("Generation rejected: operation=%s category=%s", operation, category)
     detail = ("Couldn't create your recap. Your conversation and learning notes are safe. Try again or keep learning."
