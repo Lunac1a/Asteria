@@ -84,3 +84,6 @@ Re-run the gates for each approved release SHA. For the remaining braces dev-too
 advisory, avoid untrusted glob input, keep CI isolated without production secrets,
 retain bounded job times and monitor the upstream fix; do not force-downgrade the
 Next.js lint configuration or hide the audit finding.
+
+
+Historical evidence note (2026-10-25): phase reports referenced above are local archives under `docs/archive/phase3/` or `docs/archive/phase4/`. Raw experiment evidence is retained locally and excluded from current Git tracking. See the maintained `backend/docs/verification.md` for evidence policy; these historical references are not fresh-clone prerequisites.

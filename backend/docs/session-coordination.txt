@@ -51,3 +51,6 @@ No auto-unlock on a client disconnect; the synchronous request performs its own
 bounded wait and finally cleanup. Future removal of chat_slot remains separate work.
 
 Tests and reproduction: tests/experiments/SESSION_COORDINATION_REPORT.txt.
+
+
+Historical evidence note (2026-10-25): phase reports referenced above are local archives under `docs/archive/phase3/` or `docs/archive/phase4/`. Raw experiment evidence is retained locally and excluded from current Git tracking. See the maintained `backend/docs/verification.md` for evidence policy; these historical references are not fresh-clone prerequisites.

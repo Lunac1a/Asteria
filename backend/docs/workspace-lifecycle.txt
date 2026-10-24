@@ -44,3 +44,6 @@ concurrency migration must include Learning mutations and Session deletion; this
 step does not claim those paths have been migrated to lifecycle tokens.
 
 Reproduction and results: tests/experiments/WORKSPACE_LIFECYCLE_REPORT.txt.
+
+
+Historical evidence note (2026-10-25): phase reports referenced above are local archives under `docs/archive/phase3/` or `docs/archive/phase4/`. Raw experiment evidence is retained locally and excluded from current Git tracking. See the maintained `backend/docs/verification.md` for evidence policy; these historical references are not fresh-clone prerequisites.

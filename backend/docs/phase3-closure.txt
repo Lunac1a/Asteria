@@ -109,3 +109,6 @@ HTTP=200/409、最终100；测试服务和两个独立集群均正常清理。�
 详见verification.json：完整Backend、Ruff、隔离PostgreSQL事务/Recovery测试通过；必要
 交错与资源清理再次核验；没有未处理的正确性阻断项，则满足本阶段默认关闭、单Worker范围的
 工程完成标准（本轮已满足）。该判断不等于生产全面并发启用、跨平台支持或系统最大容量验收。
+
+
+Historical evidence note (2026-10-25): phase reports referenced above are local archives under `docs/archive/phase3/` or `docs/archive/phase4/`. Raw experiment evidence is retained locally and excluded from current Git tracking. See the maintained `backend/docs/verification.md` for evidence policy; these historical references are not fresh-clone prerequisites.

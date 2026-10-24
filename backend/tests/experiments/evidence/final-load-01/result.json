@@ -1,8 +1,0 @@
-{
-  "cluster": "/tmp/asteria-concurrency-cross-session-chat-ff33885c767f433ea2f1c1ed89cb7dbc",
-  "http": "passed",
-  "coordination": "passed",
-  "regression_returncode": 0,
-  "cleanup_returncode": 0,
-  "cleanup": "waiting for server to shut down...... done\nserver stopped\nisolated_cluster_removed\n"
-}

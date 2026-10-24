@@ -1,45 +1,47 @@
 # Asteria
 
-**你的 Personal Learning Copilot。**
+**English** | [简体中文](README.zh-CN.md)
 
-把学习资料、问题和思考放在同一个空间里。从一个问题开始，在解释、练习与反馈中逐步理解，再用学习记录与回顾接续下一次探索。
+**Your personal learning copilot.**
 
-## 你可以用它做什么
+Bring your learning materials, questions, and ideas into one workspace. Start with a question, build understanding through explanations, practice, and feedback, and pick up where you left off with saved notes and recaps.
 
-- **整理学习空间**：按课程或主题组织 PDF、Markdown 和 TXT，管理资料与历史对话。
-- **随时提问**：解释概念、讨论想法，或结合自己的资料寻找答案。
-- **深入学习**：带着目标展开对话，获得解释、提示、练习与反馈；也可以直接要答案、跳过问题或改变重点。
-- **保留学习脉络**：学习对话常驻显示下一步、当前重点和笔记（桌面右栏、窄屏顶部卡片），支持编辑；结束时生成并调整回顾，下次继续学习。
+## What you can do
 
-## 亮点
+- **Organize learning workspaces:** group PDFs, Markdown, and text files by course or topic, alongside your conversations.
+- **Ask questions:** explore concepts, discuss ideas, or find answers grounded in your own materials.
+- **Learn with guidance:** work toward a goal through explanations, hints, exercises, and feedback. Ask for a direct answer, skip a question, or change focus at any time.
+- **Keep your learning context:** review and edit your next step, current focus, and notes during a session. Save a recap to continue later.
 
-- **自然使用资料**：无需选择检索模式，系统根据问题决定是否使用学习空间资料。
-- **可核对的来源**：资料回答可展开来源面板，查看引用片段与 PDF 原始页码。
-- **适应你的学习节奏**：问答与学习两种对话方式，学习过程不强制固定阶段。
-- **中英文交流**：支持简体中文与英文界面；回答语言遵循交流上下文与明确要求，历史内容保持原样。
-- **连接自己的模型**：填写兼容 OpenAI 的 API 地址、API Key 和模型名称即可配置服务。
-- **本地保存**：资料在本机解析与索引，学习记录保存在本地数据库。回答所需的上下文会发送给你配置的模型服务。
+## Features
 
-## 本地使用
+- **Context-aware retrieval:** the system decides when to use workspace materials, without requiring a retrieval-mode switch.
+- **Verifiable sources:** inspect cited passages and original PDF page numbers in the sources panel.
+- **Flexible learning:** switch between Q&A and guided learning without a mandatory sequence of stages.
+- **English and Chinese:** both interface languages are supported. Responses follow the conversation context and explicit language requests; saved history is preserved.
+- **Bring your own model:** configure an OpenAI-compatible endpoint, API key, and model name.
+- **Local storage:** documents are parsed and indexed locally, and learning records are stored in your local database. Context needed to answer a question is sent to your configured model service.
 
-当前提供 Windows / PowerShell 本地运行方式，需要 **Python 3.12、Node.js 22.13+、Docker Desktop**，以及可用的 OpenAI-compatible 模型服务。
+## Run locally
 
-### 首次安装
+The supported local workflow uses **Windows / PowerShell, Python 3.12, Node.js 22.13+, and Docker Desktop**, with an available OpenAI-compatible model service.
 
-克隆仓库并进入目录：
+### First-time setup
+
+Clone the repository:
 
 ```powershell
 git clone https://github.com/Lunac1a/Asteria.git
 cd Asteria
 ```
 
-为新环境创建本地 PostgreSQL：
+Create a local PostgreSQL instance for a new environment:
 
 ```powershell
 docker run -d --name asteria-local-mvp-db -p 127.0.0.1:55432:5432 -e POSTGRES_USER=asteria -e POSTGRES_PASSWORD=local-development-only -e POSTGRES_DB=asteria_local -v asteria-local-pg:/var/lib/postgresql postgres:18-alpine
 ```
 
-安装后端、生成本地配置并准备数据库与 Embedding 模型：
+Install the backend, generate local configuration, and prepare the database and embedding model:
 
 ```powershell
 Push-Location backend
@@ -51,7 +53,7 @@ python -m venv .venv
 Pop-Location
 ```
 
-安装并构建前端：
+Install and build the frontend:
 
 ```powershell
 Push-Location frontend
@@ -60,51 +62,77 @@ npm run build
 Pop-Location
 ```
 
-以上步骤用于全新环境；已有配置与数据库的用户直接使用下方启动方式。首次准备 Embedding 模型需要联网下载。
+These steps are for a new installation. If you already have configuration and a database, use the startup workflow below. Preparing the embedding model for the first time requires a download.
 
-### 启动与停止
+### Start and stop
 
-需要启用 Persistent Worker、核对 Readiness 或进行可控优雅关闭时，使用
-[Windows 部署基线](backend/docs/windows-deployment.md)中的前台启动流程。
-下方快捷脚本的停止方式为强制终止，不能替代优雅关闭验证。
+For Persistent Worker configuration, readiness checks, and controlled graceful shutdown, use the foreground workflow in the [Windows deployment guide](backend/docs/windows-deployment.md). The shortcut below uses forced termination when stopping and does not replace graceful-shutdown verification.
 
-打开 Docker Desktop，在项目根目录执行：
+Open Docker Desktop, then run from the repository root:
 
 ```powershell
 .\Start-Asteria.ps1
 ```
 
-打开 **[http://localhost:3001](http://localhost:3001)**，注册或登录，在 **Settings / 设置** 中填写模型 API 地址、API Key 和模型名称。接口地址填写 API 根路径，例如 `https://api.example.com/v1`。
+Open **[http://localhost:3001](http://localhost:3001)**, register or sign in, and configure your API endpoint, API key, and model name in **Settings**. Use the API base URL, for example `https://api.example.com/v1`.
 
-服务地址需要加入 `backend/.env` 的 `LLM_ALLOWED_BASE_URLS`，修改后重启后端。密钥只在设置页填写，不提交到 Git。
+Add the endpoint to `LLM_ALLOWED_BASE_URLS` in `backend/.env` and restart the backend after changing it. Enter your model key through Settings; do not commit it to Git.
 
-停止应用：
+Stop the application:
 
 ```powershell
 .\Stop-Asteria.ps1
 ```
 
-默认保留数据库；若也需要暂停数据库，可使用 `Stop-Asteria.ps1 -Database`，数据卷不会删除。
+The database stays running by default. To stop it too, use `Stop-Asteria.ps1 -Database`; its data volume is retained.
 
-### 开始你的第一次学习
+### Your first learning session
 
-1. 创建一个学习空间，例如一门课程或一个主题。
-2. 上传可读取的 PDF、UTF-8 Markdown 或 TXT，等待处理完成。
-3. 选择 **问答**，直接提问；或选择 **学习**，说明你想理解的目标。
-4. 需要时展开 Sources 核对资料，编辑 Learning Notes 记录自己的理解。
-5. 结束时编辑并保存 Recap，下次从首页或历史对话继续。
+1. Create a workspace for a course or topic.
+2. Upload readable PDFs, UTF-8 Markdown, or text files and wait for processing to finish.
+3. Choose **Q&A** to ask directly, or **Learn** to describe a learning goal.
+4. Open Sources to check supporting passages and edit Learning Notes as you go.
+5. Review and save the Recap at the end, then continue from your home page or conversation history.
 
-## 技术栈
+## Architecture and deployment scope
 
-Next.js · React · FastAPI · PostgreSQL · FastEmbed · OpenAI-compatible API
+```text
+Next.js → same-origin /api → FastAPI (single process) → PostgreSQL
+                               ├─ FastEmbed retrieval + Persistent Query Worker
+                               └─ Provider subprocess per call → OpenAI-compatible API
+```
 
-## 管理对话与学习空间
+The verified deployment scope is **one Windows API process with PostgreSQL**. The Worker Supervisor uses Windows Job Objects to manage process trees, bound recovery attempts, and stop recovery when cleanup cannot be confirmed. Linux, multiple API instances, and production capacity are outside the verified scope. Enable the Persistent Worker and optional session concurrency explicitly using the deployment guide; benchmark settings are not application defaults.
 
-在列表或当前对话顶部的「···」菜单中选择删除。删除对话会保留空间与资料；删除学习空间会同时删除所属资料和对话，目前仅允许在管理员确认的单实例维护模式下执行，普通运行默认拒绝。当前版本没有回收站，操作前请确认删除范围。维护与恢复步骤见 [Workspace 恢复操作说明](backend/docs/workspace-recovery.txt)。
+The backend includes request idempotency and Singleflight, Session/Workspace coordination, transactional persistence, HTTP stage timings, and Worker lifecycle events. The guides below cover deployment, backup, rollback, and incident response.
 
-## 开发与验证
+## Benchmark findings
 
-仓库结构、学习资料使用策略、自动测试和手动验收见 [开发说明](DEVELOPMENT.md)。
+A controlled import optimization was evaluated using real TCP HTTP, isolated PostgreSQL 18.6, offline FastEmbed, fixed synthetic documents, and a deterministic local Mock LLM, while preserving Provider subprocess isolation:
+
+| Matched A/B metric | Result |
+| --- | --- |
+| Mean Provider duration | 1623.98 → 1492.16 ms (8.12% lower) |
+| Mean server latency for successful Chat requests | 1766.80 → 1635.38 ms (7.44% lower) |
+| Provider CPU time per call | 10.30% lower |
+| Successful throughput at 1.5 offered req/s | 0.9917 req/s in both versions |
+| HTTP 429 rejection rate | 33.33% in both versions |
+
+Latency and CPU cost improved, but **capacity improvement was not demonstrated at this offered load**. These fixed-load, local-Mock results do not represent real-model or production performance. See the [benchmark summary](backend/docs/benchmark-summary.md) for methodology, correctness checks, and limitations.
+
+## Managing conversations and workspaces
+
+Use the **···** menu in a list or conversation header to delete an item. Deleting a conversation retains its workspace and documents. Deleting a workspace also removes its documents and conversations; this operation currently requires administrator-confirmed, single-instance maintenance mode and is rejected during normal operation by default. There is no recycle bin. Check the scope before deleting, and follow the [workspace recovery guide](backend/docs/workspace-recovery.txt) for maintenance and recovery.
+
+## Development and operations
+
+- [Development guide](backend/docs/development.md): repository structure, test commands, and material-use policies.
+- [Windows deployment](backend/docs/windows-deployment.md): configuration, startup, readiness, and graceful shutdown.
+- [Backup and restore](backend/docs/backup-restore.md) and [release and rollback](backend/docs/release-rollback.md).
+- [Incident response](backend/docs/incident-response.md) and [Worker lifecycle events](backend/docs/worker-lifecycle-events.md).
+- [Tests and evidence policy](backend/docs/verification.md) and [benchmark workload design](backend/docs/benchmark-workload-design.md).
+
+Executable regression tests live in `backend/tests/` and `frontend/tests/`; reusable experiment tools live in `backend/tests/experiments/`. Detailed historical reports are archived locally under `docs/`. Raw experiment outputs remain in the ignored `backend/tests/experiments/evidence/` and `.local/` directories and are not distributed with the current repository. Public documentation retains curated methods, results, and limitations.
 
 ## License
 

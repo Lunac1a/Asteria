@@ -218,7 +218,7 @@ def main(out, measure_gate=None):
         tracked_diff=subprocess.check_output(['git', 'diff', '--stat'], cwd=ROOT, text=True),
         hashes={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                 for p in [*Path(__file__).parent.glob('rag_c1*.py'),
-                          ROOT / 'BENCHMARK_WORKLOAD_DESIGN.md', BACKEND / 'requirements.txt']},
+                          BACKEND / 'docs/benchmark-workload-design.md', BACKEND / 'requirements.txt']},
         dataset_sha256=digest(json.dumps(data, sort_keys=True)),
         platform=platform.platform(), python=platform.python_version(),
         packages={d.metadata['Name']: d.version for d in importlib.metadata.distributions()}))

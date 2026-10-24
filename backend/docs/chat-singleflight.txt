@@ -81,3 +81,6 @@ backend/.venv/Scripts/python.exe -B backend/tests/experiments/chat_singleflight.
 Only a fresh dedicated cluster is accepted. See tests/experiments/CHAT_SINGLEFLIGHT_REPORT.txt.
 Earlier chat_idempotency.py and its JSON are the historical 429 baseline, not the
 expected behavior of this new same-request coordination path.
+
+
+Historical evidence note (2026-10-25): phase reports referenced above are local archives under `docs/archive/phase3/` or `docs/archive/phase4/`. Raw experiment evidence is retained locally and excluded from current Git tracking. See the maintained `backend/docs/verification.md` for evidence policy; these historical references are not fresh-clone prerequisites.

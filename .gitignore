@@ -30,7 +30,7 @@ frontend/.env.*
 *.log
 *.tmp
 *.temp
-# Reproducible cleanup inventories; important stage evidence stays visible.
+# Reproducible cleanup inventories (local only).
 /artifacts/repository-cleanup/
 
 # IDE / OS
@@ -44,3 +44,6 @@ frontend/public/pdf.worker.min.mjs
 
 # Private development notes
 /.local/
+
+# Raw experiment outputs: retain locally, publish curated documentation instead.
+/backend/tests/experiments/evidence/

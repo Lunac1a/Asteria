@@ -17,7 +17,7 @@ Recovery 默认禁止执行：管理员白名单 `RECOVERY_ADMIN_USER_IDS=[]`，
 | 路径 | 职责 |
 | --- | --- |
 | `backend/app/api` | 接口、认证与请求边界 |
-| `backend/app/services` | 按 chat、knowledge、learning、llm 归组的业务逻辑，详见 [职责说明](backend/app/services/README.md) |
+| `backend/app/services` | 按 chat、knowledge、learning、llm 归组的业务逻辑，详见 [职责说明](../app/services/README.md) |
 | `backend/app/models` / `schemas` | 数据模型与接口协议 |
 | `backend/app/cli` | 本地运行、状态检查和独立真实模型验收 |
 | `backend/tests` | Mock 模型、独立数据库的自动回归 |
@@ -28,7 +28,7 @@ Recovery 默认禁止执行：管理员白名单 `RECOVERY_ADMIN_USER_IDS=[]`，
 
 `data/`、`docs/`、`.local/` 是忽略提交的本地数据与工作记录，不属于安装依赖。上传文件、数据库、模型缓存和凭据保留在各自原位置。详细历史验收报告通过本地 `docs/README.md` 查找；一次性报告工具在 `data/tools/`，不参与应用启动。
 
-Workspace 安全、崩溃与恢复实验按阶段收录在本地 [.local/INDEX.txt](.local/INDEX.txt)。该索引和原始证据不会随 Git 发布；新克隆仓库使用 [恢复操作说明](backend/docs/workspace-recovery.txt)，不要依赖本机实验路径。
+Workspace 安全、崩溃与恢复实验按阶段收录在本地 [.local/INDEX.txt](../../.local/INDEX.txt)。该索引和原始证据不会随 Git 发布；新克隆仓库使用 [恢复操作说明](workspace-recovery.txt)，不要依赖本机实验路径。
 
 ## 日常检查
 
@@ -83,7 +83,7 @@ Mock 测试验证边界与执行契约；真实模型应逐项检查事实、限
 
 `STARTUP_RECOVERY_ENABLED` 默认关闭。启用时要求维护模式和单实例人工确认，并在整个 API 生命周期持有本机存储目录锁。Lifespan 完成数据库与文件检查、恢复 `PREPARED → RESTORED` 或清理 `COMMITTED → CLEANED` 后，才打开启动门禁；冲突或数据库不可用时保持 Not Ready。`/api/health` 表示存活，`/api/ready` 检查恢复就绪和未完成状态。Ready 不会解除维护模式限制；请求处理中不会自动恢复正在执行的删除操作。
 
-本机锁只约束遵守同一协议、使用相同存储目录的进程。旧版本、外部写入者及多实例运行仍不受支持；无法确认旧进程退出时不得启用恢复。人工兜底必须停机、保留证据、调用同一恢复校验，再重启复查，详见 [操作步骤与边界](backend/docs/workspace-recovery.txt)。
+本机锁只约束遵守同一协议、使用相同存储目录的进程。旧版本、外部写入者及多实例运行仍不受支持；无法确认旧进程退出时不得启用恢复。人工兜底必须停机、保留证据、调用同一恢复校验，再重启复查，详见 [操作步骤与边界](workspace-recovery.txt)。
 
 使用临时空间检查取消删除、删除对话后资料保留、删除空间后返回列表，以及上传或生成时的冲突提示。自动回归位于 test_deletion.py，使用独立数据库与临时文件。
 
