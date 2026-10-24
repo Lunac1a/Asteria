@@ -22,7 +22,7 @@ class DeletionTests(unittest.TestCase):
         test_dashboard.DashboardTests.setUp(self)
         with self.factory() as db:
             db.execute(text("PRAGMA foreign_keys=ON"))
-        self.temp = self.enterContext(tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parents[2] / "data"))
+        self.temp = self.enterContext(tempfile.TemporaryDirectory(prefix="asteria-deletion-"))
         self.root = Path(self.temp)
         self.enterContext(patch("app.api.routes.knowledge.data_root", return_value=self.root))
         (self.root / "uploads").mkdir()

@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import test_auth  # noqa: F401 - synthetic settings before application imports
 from app.cli.backup import backup, digest, safe_file, verify, restore, enum_predicate
@@ -12,7 +13,9 @@ from app.services.schema_compatibility import model_revision, validate_startup
 class BackupGuardsTests(unittest.TestCase):
     def setUp(self):
         self.temp = self.enterContext(tempfile.TemporaryDirectory())
-        self.root = Path(self.temp)
+        # Hosted Windows runners may expose TEMP through a junction/short path.
+        # Valid fixtures use its canonical path; production redirect guards stay intact.
+        self.root = Path(self.temp).resolve()
         self.bundle = self.root / 'bundle'
         self.bundle.mkdir()
         self.dump = self.bundle / 'database.dump'
@@ -31,6 +34,11 @@ class BackupGuardsTests(unittest.TestCase):
 
     def test_integrity(self):
         self.assertEqual(verify(self.bundle)['format'], 1)
+
+    def test_redirected_bundle_is_rejected(self):
+        with patch.object(Path, 'resolve', return_value=self.root / 'elsewhere'):
+            with self.assertRaisesRegex(ValueError, 'Redirected backup directory'):
+                verify(self.bundle)
 
     def test_missing_component(self):
         self.file.unlink()

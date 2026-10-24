@@ -19,8 +19,7 @@ class PersistentQueryProcessTests(unittest.TestCase):
         from app.services.knowledge import windows_job as native
         handles = []
         original = native.Job.launch
-        with tempfile.TemporaryDirectory(prefix="worker-deadline-",
-                dir=Path(__file__).resolve().parents[2] / ".local") as folder:
+        with tempfile.TemporaryDirectory(prefix="worker-deadline-") as folder:
             child = Path(folder) / "controlled_child.py"
             child.write_text(script, encoding="utf-8")
             worker = PersistentQueryWorker("synthetic", folder, threading.BoundedSemaphore(1),

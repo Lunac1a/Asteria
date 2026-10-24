@@ -57,7 +57,7 @@ class WorkspaceDeleteRecoveryTests(unittest.TestCase):
             test_dashboard.DashboardTests.setUp(self)
         self.bind = self.factory.kw["bind"]
         self.root = Path(self.enterContext(tempfile.TemporaryDirectory(
-            dir=Path(__file__).resolve().parents[2] / "data")))
+            prefix="asteria-recovery-")))
         self.enterContext(patch("app.api.routes.knowledge.data_root", return_value=self.root))
         (self.root / "uploads").mkdir()
         self.contents = [b"Synthetic alpha", b"Synthetic beta"]
